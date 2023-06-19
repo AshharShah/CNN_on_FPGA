@@ -1,0 +1,33 @@
+Title: Implement a Convolutional Neural Network (CNN) on an FPGA.
+
+Outcomes:
+- Good understanding of CNNs
+- Implementation skills using Verilog
+- Using FPGAs to design and test digital logic
+- Readiness for the embedded systems and AI job market.
+
+Background:
+Artificial Intelligence and Machine Learning are being used in more and 
+more applications in the world of today. Convolutional neural networks 
+are very popular in the image processing applications and they often make
+their way in the embedded systems. A convolutional neural network
+implemented implemented on an FPGA can be ideal for an embedded system
+for image processing because of its faster processing and low power consumption.
+
+Description:
+This includes implementing a traditional convolutional neural network on an FPGA
+using the Verilog HDL.
+
+Methodology:
+One possible approach to implementing the project can be the following roadmap:
+- Learn convolutional neural network basiscs
+- Implement CNN from scratch in high-level language (C, Python)
+- Revision/Introduction to Verilog HDL
+- Build simple designs in Verilog and burn and test them on FPGA
+- Build matrix multiplication in Verilog and burn and test them on FPGA
+- Build a CNN in Verilog and burn and test it on FPGA
+
+Will be helpful if you have:
+- Courses like Fundamentals of Logic Design, Computer Organization and Assembly Language, Intro to AI, etc.
+- Some familiarity with Verilog HDL
+- Interest in machine learning and low-level hardware design.
