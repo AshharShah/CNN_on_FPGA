@@ -1,0 +1,9 @@
+
+FPGA
+====
+[PICO-ICE repo fpga learning list] (https://pico-ice.tinyvision.ai/learn.html)
+
+
+ML
+==
+[GGML library implmenting tensors LLMs in C](https://news.ycombinator.com/item?id=36215651)
