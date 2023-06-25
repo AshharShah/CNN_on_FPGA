@@ -54,7 +54,6 @@ recursive:
     jal x1, func
     jal x1, umul
     add x7, x10, x7
-   
     add x10, x7, x0
     
 	ret
