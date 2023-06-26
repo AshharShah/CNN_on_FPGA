@@ -1,5 +1,5 @@
 .data
-p: .word 5
+p: .word 14
 q: .word 4
 r: .word 7
 s: .word 8
@@ -8,20 +8,7 @@ z: .word 4
 .globl main
 
 .text
-
-sum:
-	add x10, x10, x11
-    add x10, x10, x12
-    add x10, x10, x13
-    ret
-
-abc:
-	add x10, x11, x0
-
-max:
-	bge x11, x10, abc
-    ret
-    
+ 
 loop:
 	add x12, x10, x12
     addi x5, x5, -1
@@ -35,25 +22,7 @@ umul:
 	add x5, x11, x0
     bge x5, x0, loop
     ret
-    
-# l = line number
-# f(5)
-## x1  (fuuny)         
-## x10 (5)
-## x7  (11+8+6)   ---sp
-##.x1 beta
-##.x10 3
-##.x7 4          --sp
-# -------------f4
-## x1  (alpha)         
-## x10 (4)
-## x7  (11)   ---sp
-## ------------f3
-## x1  (alpha)         
-## x10 (3)
-## x7  (4)
-#----x10 = 25
-#----x1  = fuuny
+
 recursive:
 	# x10 = n
     # x7 = f(n-1) + 2*f(n-2) + 3*f(n-3)
@@ -62,7 +31,6 @@ recursive:
     addi sp, sp, -12
     sw x1, 8(sp)
     
-    # f(n-1)
     # f(n-1) will have its own x10 (n-1) and x7 so store these first
     sw x10, 4(sp)
     add x7, x0, x0
@@ -110,6 +78,27 @@ main:
     lw x13, s
     jal x1, func
     
+#----------------COMMENTS AND ROUGH WORK BELOW-------------------------------------------------------------------------
+
+# l = line number
+# f(5)
+## x1  (fuuny)         
+## x10 (5)
+## x7  (11+8+6)   ---sp
+##.x1 beta
+##.x10 3
+##.x7 4          --sp
+# -------------f4
+## x1  (alpha)         
+## x10 (4)
+## x7  (11)   ---sp
+## ------------f3
+## x1  (alpha)         
+## x10 (3)
+## x7  (4)
+#----x10 = 25
+#----x1  = fuuny
+
 # f(5) = f(4) + 2*f(3) + 3*f(2) = (f3 + 2f2 + 3f1) + 2(f2 + 2f1 + 3f0) + 3(2)
 #                               = [(f2+2f1+3f0) + 2(2)+3(1)] + 2[2+2(1)+3(0)]+6
 #								= [2+2(1)+3(0)  + 4   + 3]   + 2[2+2+0] + 6
