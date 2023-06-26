@@ -1,3 +1,3 @@
 Done with Supervised Machine Learning: Regression and Classification
-Finished week 2 of Advanced Learning algorithms.
-Currently doing practice lab for Week 2 and will move on to week 3 from tomorrow!
+Finished week 2 of Advanced Learning Algorithms.
+Currently doing practice lab for Week 2 and will move on to Week 3 from tomorrow!
