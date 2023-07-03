@@ -1,0 +1,2 @@
+1) Implemented CNN using tensorflow
+2) Implemented CNN Convolutional Class (Using Numpy)
