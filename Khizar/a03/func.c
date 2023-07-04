@@ -13,8 +13,10 @@ int func(int n) {
 
 int main() {
 
+    for(int i=0; i<50; ++i) {
+        printf("%d -> %d\n", i, func(i));
+    }
     
-    printf("%d\n", func(15));
 
 
     return 0;
