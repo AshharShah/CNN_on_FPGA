@@ -1,2 +1,4 @@
 1) Implemented CNN using tensorflow
 2) Implemented CNN Convolutional Class (Using Numpy)
+3) Implemented CNN Maxpooling Class (Using Numpy)
+4) Working On Softmax Class 
