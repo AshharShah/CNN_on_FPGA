@@ -1,6 +1,6 @@
-module datamemory(rs1, rs2, rd, writedata, regwrite, readdata1, readdata2);
+module registerfile(rs1, rs2, rd, writedata, regwrite, readdata1, readdata2);
 
-    input [5:0] rs1, rs2, rd;
+    input [4:0] rs1, rs2, rd;
     input [31:0] writedata;
     input regwrite;
 
