@@ -42,7 +42,7 @@ initial
         $dumpvars(2, tb_alu);
 
         //initialize some registers
-        #1
+        #1 // x0 = 0
         rd            = 5'b00000;
         instruction = {func7, rs2, rs1, func3, rd, opcode};
 
@@ -84,82 +84,103 @@ initial
         #1
         writedata     = {{28{1'b0}}, 4'b0101};
         
-        #2
+        #1
         rs1           = 5'b00000;
         instruction = {func7, rs2, rs1, func3, rd, opcode};
 
+        #1
         $display("readdata1 x0: %d", a);
 
-        #2
+        #1
         rs1           = 5'b00001;
         instruction = {func7, rs2, rs1, func3, rd, opcode};
 
+        #1
         $display("readdata1 x1: %d", a);
 
-        #2
+        #1
         rs1           = 5'b00010;
         instruction = {func7, rs2, rs1, func3, rd, opcode};
 
+        #1
         $display("readdata1 x2: %d", a);
 
-        #2
+        #1
         rs1           = 5'b00011;
         instruction = {func7, rs2, rs1, func3, rd, opcode};
 
+        #1
         $display("readdata1 x3: %d", a);
 
-        #2
+        #1
         rs1           = 5'b00100;
         instruction = {func7, rs2, rs1, func3, rd, opcode};
 
+        #1
         $display("readdata1 x4: %d", a);
 
-        #2
+        #1
+        rs1           = 5'b00101;
+        instruction = {func7, rs2, rs1, func3, rd, opcode};
+
+        #1
+        $display("readdata1 x5: %d", a);
+
+        // Testing ADD function
+        #1
         rs1           = 5'b00000;
         rs2           = 5'b00001;
-        opcode        = 7'b0110011;
+        opcode        = 7'b0110011; // R-format
         func7         = 7'b0000000;
         func3         = 3'b000;
-
         instruction = {func7, rs2, rs1, func3, rd, opcode};
 
-        $display("out first: %d", out);
+        #1
+        $display("out x0+x1: %d", out);
 
-        #2
+        #1
         rs1           = 5'b00001;
         rs2           = 5'b00010;
-        opcode        = 7'b0110011;
-        func7         = 7'b0000000;
-        func3         = 3'b000;
-
         instruction = {func7, rs2, rs1, func3, rd, opcode};
 
-        $display("out: %d", out);
+        #1
+        $display("out x1+x2: %d", out);
 
-        #2
+        #1
         rs1           = 5'b00010;
         rs2           = 5'b00011;
-        opcode        = 7'b0110011;
-        func7         = 7'b0000000;
-        func3         = 3'b000;
-
         instruction = {func7, rs2, rs1, func3, rd, opcode};
 
-        $display("out: %d", out);
+        #1
+        $display("out x2+x3: %d", out);
 
-        #2
+        #1
         rs1           = 5'b00011;
         rs2           = 5'b00100;
-        opcode        = 7'b0110011;
-        func7         = 7'b0000000;
-        func3         = 3'b000;
-
         instruction = {func7, rs2, rs1, func3, rd, opcode};
 
-        $display("out: %d", out);
+        #1
+        $display("out x3+x4: %d", out);
 
-        #2
-        $display("out: %d", out);
+        #1
+        rs1           = 5'b00000;
+        rs2           = 5'b00101;
+        instruction = {func7, rs2, rs1, func3, rd, opcode};
+
+        #1
+        $display("out x5+x0: %d", out);
+
+        // Testing LOAD function
+        #1
+        rs1           = 5'b00000;
+        rs2           = 5'b00001;
+        opcode        = 7'b0000011; // Store Word
+        func7         = 7'b0000000;
+        func3         = 3'b000;
+        instruction = {func7, rs2, rs1, func3, rd, opcode};
+
     end
+
+
 
 endmodule
