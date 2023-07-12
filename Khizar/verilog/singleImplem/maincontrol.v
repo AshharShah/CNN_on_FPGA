@@ -12,7 +12,7 @@ module maincontrol(instruction, branch, memread, memtoreg, aluop, memwrite, alus
               begin
                 alusrc <= 0;
                 memtoreg <= 0;
-                regwrite <= 0;
+                regwrite <= 1;
                 memread <= 0;
                 memwrite <= 0;
                 branch <= 0;
@@ -23,7 +23,7 @@ module maincontrol(instruction, branch, memread, memtoreg, aluop, memwrite, alus
                 alusrc <= 1;
                 memtoreg <= 1;
                 regwrite <= 1;
-                memread <= 0;
+                memread <= 1;
                 memwrite <= 0;
                 branch <= 0;
                 aluop <= 2'b00;
