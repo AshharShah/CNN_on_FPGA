@@ -1,0 +1,77 @@
+$date
+	Wed Jul 12 15:13:55 2023
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1s
+$end
+$scope module tb_alu $end
+$var wire 1 ! zero $end
+$var wire 1 " regwrite $end
+$var wire 4 # out [3:0] $end
+$var wire 1 $ memwrite $end
+$var wire 1 % memtoreg $end
+$var wire 1 & memread $end
+$var wire 1 ' branch $end
+$var wire 1 ( alusrc $end
+$var wire 2 ) aluop [1:0] $end
+$var wire 4 * aluctl [3:0] $end
+$var reg 4 + a [3:0] $end
+$var reg 4 , b [3:0] $end
+$var reg 3 - func3 [2:0] $end
+$var reg 7 . func7 [6:0] $end
+$var reg 32 / instruction [31:0] $end
+$var reg 7 0 opcode [6:0] $end
+$upscope $end
+$enddefinitions $end
+#0
+$dumpvars
+bx 0
+bx /
+bx .
+bx -
+bx ,
+bx +
+bx *
+bx )
+x(
+x'
+x&
+x%
+x$
+bx #
+x"
+x!
+$end
+#2
+b10 *
+b10 )
+0'
+0$
+0&
+0"
+0%
+0(
+1!
+b0 #
+b110011 /
+b0 -
+b0 .
+b110011 0
+b0 ,
+b0 +
+#4
+0!
+b1 #
+b1000000000110011 /
+b1 +
+#6
+b100000000000000110011 /
+b1 ,
+b0 +
+#8
+b10 #
+b100001000000000110011 /
+b1 +

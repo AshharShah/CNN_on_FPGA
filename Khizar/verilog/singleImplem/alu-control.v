@@ -8,17 +8,27 @@ module alucontrol(aluop, func7, func3, aluctl);
 
     always @ (aluop, func7, func3)
         begin
-          case ()
-            32: op <= 2;
-            34: op <= 6;
-            36: op <= 0;
-            37: op <= 1;
-            default: op <= 15;
-          endcase
+          if (aluop == 2'b00)
+            aluctl <= 4'b0010;
+          else if (aluop == 2'b01) 
+            aluctl <= 4'b0110;
+          else if (aluop == 2'b10)
+            begin
+              if (func7 == 7'b0000000)
+                begin
+                  if (func3 == 3'b000)
+                    aluctl <= 4'b0010;
+                  else if (func3 == 3'b111)
+                    aluctl <= 4'b0000;
+                  else if (func3 == 3'b110)
+                    aluctl <= 4'b0001;
+                end
+              else if (func7 == 7'b0100000)
+                begin
+                  if (func3 == 3'b000)
+                    aluctl <= 4'b0110;
+                end
+            end
         end
-
-
-
-
 
 endmodule
