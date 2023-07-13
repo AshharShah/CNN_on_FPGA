@@ -41,91 +41,6 @@ initial
         $dumpfile("myalu.vcd");
         $dumpvars(2, tb_alu);
 
-        //initialize some registers
-        #1 // x0 = 0
-        rd            = 5'b00000;
-        instruction = {func7, rs2, rs1, func3, rd, opcode};
-
-        #1
-        writedata     = {{28{1'b0}}, 4'b0000};
-
-        #1 // x1 = 1
-        rd            = 5'b00001;
-        instruction = {func7, rs2, rs1, func3, rd, opcode};
-
-        #1
-        writedata     = {{28{1'b0}}, 4'b0001};
-
-        #1 // x2 = 2
-        rd            = 5'b00010;
-        instruction = {func7, rs2, rs1, func3, rd, opcode};
-        
-        #1
-        writedata     = {{28{1'b0}}, 4'b0010};
-
-        #1 // x3 = 3
-        rd            = 5'b00011;
-        instruction = {func7, rs2, rs1, func3, rd, opcode};
-        
-        #1
-        writedata     = {{28{1'b0}}, 4'b0011};
-
-        #1 // x4 = 4
-        rd            = 5'b00100;
-        instruction = {func7, rs2, rs1, func3, rd, opcode};
-        
-        #1
-        writedata     = {{28{1'b0}}, 4'b0100};
-        
-        #1 // x5 = 5
-        rd            = 5'b00101;
-        instruction = {func7, rs2, rs1, func3, rd, opcode};
-        
-        #1
-        writedata     = {{28{1'b0}}, 4'b0101};
-        
-        #1
-        rs1           = 5'b00000;
-        instruction = {func7, rs2, rs1, func3, rd, opcode};
-
-        #1
-        $display("readdata1 x0: %d", a);
-
-        #1
-        rs1           = 5'b00001;
-        instruction = {func7, rs2, rs1, func3, rd, opcode};
-
-        #1
-        $display("readdata1 x1: %d", a);
-
-        #1
-        rs1           = 5'b00010;
-        instruction = {func7, rs2, rs1, func3, rd, opcode};
-
-        #1
-        $display("readdata1 x2: %d", a);
-
-        #1
-        rs1           = 5'b00011;
-        instruction = {func7, rs2, rs1, func3, rd, opcode};
-
-        #1
-        $display("readdata1 x3: %d", a);
-
-        #1
-        rs1           = 5'b00100;
-        instruction = {func7, rs2, rs1, func3, rd, opcode};
-
-        #1
-        $display("readdata1 x4: %d", a);
-
-        #1
-        rs1           = 5'b00101;
-        instruction = {func7, rs2, rs1, func3, rd, opcode};
-
-        #1
-        $display("readdata1 x5: %d", a);
-
         // Testing ADD function
         #1
         rs1           = 5'b00000;
@@ -180,7 +95,5 @@ initial
         instruction = {func7, rs2, rs1, func3, rd, opcode};
 
     end
-
-
 
 endmodule
