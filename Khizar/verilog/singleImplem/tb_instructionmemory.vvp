@@ -1,0 +1,112 @@
+#! /opt/homebrew/Cellar/icarus-verilog/11.0/bin/vvp
+:ivl_version "11.0 (stable)";
+:ivl_delay_selection "TYPICAL";
+:vpi_time_precision + 0;
+:vpi_module "/opt/homebrew/Cellar/icarus-verilog/11.0/lib/ivl/system.vpi";
+:vpi_module "/opt/homebrew/Cellar/icarus-verilog/11.0/lib/ivl/vhdl_sys.vpi";
+:vpi_module "/opt/homebrew/Cellar/icarus-verilog/11.0/lib/ivl/vhdl_textio.vpi";
+:vpi_module "/opt/homebrew/Cellar/icarus-verilog/11.0/lib/ivl/v2005_math.vpi";
+:vpi_module "/opt/homebrew/Cellar/icarus-verilog/11.0/lib/ivl/va_math.vpi";
+S_0x156704110 .scope module, "instructionmemory_tb" "instructionmemory_tb" 2 3;
+ .timescale 0 0;
+v0x15671cf00_0 .net "instruction", 31 0, v0x156706530_0;  1 drivers
+v0x15671cfc0_0 .var "pc", 9 0;
+S_0x156704280 .scope module, "uut" "instructionmemory" 2 9, 3 1 0, S_0x156704110;
+ .timescale 0 0;
+    .port_info 0 /INPUT 10 "pc";
+    .port_info 1 /OUTPUT 32 "instruction";
+v0x156706530_0 .var "instruction", 31 0;
+v0x15671cd90 .array "memfile", 1023 0, 31 0;
+v0x15671ce30_0 .net "pc", 9 0, v0x15671cfc0_0;  1 drivers
+E_0x156707ee0 .event edge, v0x15671ce30_0;
+    .scope S_0x156704280;
+T_0 ;
+    %pushi/vec4 1459640064, 0, 32;
+    %ix/load 3, 0, 0;
+    %flag_set/imm 4, 0;
+    %ix/load 4, 0, 0; Constant delay
+    %assign/vec4/a/d v0x15671cd90, 0, 4;
+    %pushi/vec4 1996773250, 0, 32;
+    %ix/load 3, 1, 0;
+    %flag_set/imm 4, 0;
+    %ix/load 4, 0, 0; Constant delay
+    %assign/vec4/a/d v0x15671cd90, 0, 4;
+    %pushi/vec4 1462392608, 0, 32;
+    %ix/load 3, 2, 0;
+    %flag_set/imm 4, 0;
+    %ix/load 4, 0, 0; Constant delay
+    %assign/vec4/a/d v0x15671cd90, 0, 4;
+    %pushi/vec4 1461737315, 0, 32;
+    %ix/load 3, 3, 0;
+    %flag_set/imm 4, 0;
+    %ix/load 4, 0, 0; Constant delay
+    %assign/vec4/a/d v0x15671cd90, 0, 4;
+    %pushi/vec4 2000975762, 0, 32;
+    %ix/load 3, 4, 0;
+    %flag_set/imm 4, 0;
+    %ix/load 4, 0, 0; Constant delay
+    %assign/vec4/a/d v0x15671cd90, 0, 4;
+    %pushi/vec4 1462458156, 0, 32;
+    %ix/load 3, 5, 0;
+    %flag_set/imm 4, 0;
+    %ix/load 4, 0, 0; Constant delay
+    %assign/vec4/a/d v0x15671cd90, 0, 4;
+    %end;
+    .thread T_0;
+    .scope S_0x156704280;
+T_1 ;
+    %wait E_0x156707ee0;
+    %load/vec4 v0x15671ce30_0;
+    %pad/u 12;
+    %ix/vec4 4;
+    %load/vec4a v0x15671cd90, 4;
+    %assign/vec4 v0x156706530_0, 0;
+    %jmp T_1;
+    .thread T_1, $push;
+    .scope S_0x156704110;
+T_2 ;
+    %vpi_call 2 13 "$dumpfile", "instructionmemory_tb.vcd" {0 0 0};
+    %vpi_call 2 14 "$dumpvars", 32'sb00000000000000000000000000000001, S_0x156704110 {0 0 0};
+    %delay 1, 0;
+    %pushi/vec4 0, 0, 10;
+    %store/vec4 v0x15671cfc0_0, 0, 10;
+    %delay 1, 0;
+    %vpi_call 2 20 "$display", "ins: %d", v0x15671cf00_0 {0 0 0};
+    %delay 1, 0;
+    %pushi/vec4 1, 0, 10;
+    %store/vec4 v0x15671cfc0_0, 0, 10;
+    %delay 1, 0;
+    %vpi_call 2 26 "$display", "ins: %d", v0x15671cf00_0 {0 0 0};
+    %delay 1, 0;
+    %pushi/vec4 2, 0, 10;
+    %store/vec4 v0x15671cfc0_0, 0, 10;
+    %delay 1, 0;
+    %vpi_call 2 32 "$display", "ins: %d", v0x15671cf00_0 {0 0 0};
+    %delay 1, 0;
+    %pushi/vec4 3, 0, 10;
+    %store/vec4 v0x15671cfc0_0, 0, 10;
+    %delay 1, 0;
+    %vpi_call 2 38 "$display", "ins: %d", v0x15671cf00_0 {0 0 0};
+    %delay 1, 0;
+    %pushi/vec4 4, 0, 10;
+    %store/vec4 v0x15671cfc0_0, 0, 10;
+    %delay 1, 0;
+    %vpi_call 2 44 "$display", "ins: %d", v0x15671cf00_0 {0 0 0};
+    %delay 1, 0;
+    %pushi/vec4 5, 0, 10;
+    %store/vec4 v0x15671cfc0_0, 0, 10;
+    %delay 1, 0;
+    %vpi_call 2 50 "$display", "ins: %d", v0x15671cf00_0 {0 0 0};
+    %delay 1, 0;
+    %pushi/vec4 6, 0, 10;
+    %store/vec4 v0x15671cfc0_0, 0, 10;
+    %delay 1, 0;
+    %vpi_call 2 56 "$display", "ins: %d", v0x15671cf00_0 {0 0 0};
+    %end;
+    .thread T_2;
+# The file index is used to find the file name in the following table.
+:file_names 4;
+    "N/A";
+    "<interactive>";
+    "instructionmemory_tb.v";
+    "./instructionmemory.v";
