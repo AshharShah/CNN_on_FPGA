@@ -1,12 +1,12 @@
-module alu(aluctl, a, b, out, zero);
+module alu(aluctl, a, b, out, zero, overflow);
 
-    input [3:0] aluctl;
+    input [3:0] aluctl; 
 
     input [31:0] a;
     input [31:0] b;
 
-    output reg [31:0] out; // see overflow
-    output zero;
+    output reg [31:0] out;
+    output zero, overflow;
 
     assign zero = (out == 0);
 
