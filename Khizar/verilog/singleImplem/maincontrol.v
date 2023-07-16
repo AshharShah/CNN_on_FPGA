@@ -63,6 +63,7 @@ module maincontrol(instruction, branch, memread, memtoreg, aluop, memwrite, alus
                 regwrite <= 0;
                 memread <= 0;
                 memwrite <= 0;
+                memtoreg <= 0;
                 branch <= 0;
                 aluop <= 2'b00;
               end
