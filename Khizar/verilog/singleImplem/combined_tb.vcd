@@ -1,0 +1,76 @@
+$date
+	Sun Jul 16 12:26:55 2023
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1s
+$end
+$scope module combined_tb $end
+$var wire 1 ! overflow $end
+$var wire 1 " zero $end
+$var wire 32 # writedata [31:0] $end
+$var wire 1 $ regwrite $end
+$var wire 32 % readdata [31:0] $end
+$var wire 32 & mux_out [31:0] $end
+$var wire 1 ' memwrite $end
+$var wire 1 ( memtoreg $end
+$var wire 1 ) memread $end
+$var wire 32 * instruction [31:0] $end
+$var wire 32 + immediate [31:0] $end
+$var wire 1 , branch $end
+$var wire 32 - b [31:0] $end
+$var wire 1 . alusrc $end
+$var wire 2 / aluop [1:0] $end
+$var wire 4 0 aluctl [3:0] $end
+$var wire 32 1 alu_out [31:0] $end
+$var wire 32 2 a [31:0] $end
+$var reg 10 3 pc [9:0] $end
+$upscope $end
+$enddefinitions $end
+#0
+$dumpvars
+bx 3
+bx 2
+bx 1
+bx 0
+bx /
+x.
+bx -
+x,
+bx +
+bx *
+x)
+x(
+x'
+bx &
+bx %
+x$
+bx #
+x"
+z!
+$end
+#1
+0"
+b1 1
+b10 0
+b0 2
+b1 &
+b0 /
+0,
+0'
+1)
+1$
+1(
+1.
+b1 +
+b100000000000010000011 *
+b0 3
+#3
+x"
+bx 1
+bx 2
+b100001000000100000011 *
+b1 3
+#4

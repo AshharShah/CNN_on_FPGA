@@ -1,98 +1,60 @@
 `include "maincontrol.v"
-`include "alu-control.v"
+`include "alucontrol.v"
 `include "alu.v"
 `include "registerfile.v"
+`include "instructionmemory.v"
+`include "adder.v"
+`include "datamemory.v"
+`include "immediate-gen.v"
+`include "mux2_1.v"
 
-module tb_alu;
+module combined_tb;
 
-reg [6:0] opcode;
-reg [6:0] func7;
-reg [2:0] func3;
-reg [4:0] rs1, rs2, rd;
-reg [31:0] instruction;
-
-reg [31:0] writedata;
+reg [9:0] pc;
 
 wire branch, memread, memtoreg, memwrite, alusrc, regwrite, zero;
 wire [1:0] aluop;
 wire [3:0] aluctl;
-wire [31:0] a, b;
-wire [31:0] out;
+wire [31:0] instruction, a, b, immediate, mux_out, alu_out, writedata, readdata;
 
-maincontrol  uutA(instruction[6:0], branch, memread, memtoreg, aluop, memwrite, alusrc, regwrite);
-alucontrol   uutB(aluop, instruction[31:25], instruction[14:12], aluctl);
-alu          uutC(aluctl, a, b, out, zero);
-registerfile uutD(instruction[19:15], instruction[24:20], instruction[11:7], writedata, regwrite, a, b);
-
-initial 
-    begin
-        rs1           = 5'b00000;
-        rs2           = 5'b00000;
-        rd            = 5'b00000;
-        opcode        = 7'b0110011;
-        func7         = 7'b0000000;
-        func3         = 3'b000;
-
-        instruction = {func7, rs2, rs1, func3, rd, opcode};
-    end
+instructionmemory   uutA(pc, instruction);
+maincontrol         uutB(instruction[6:0], branch, memread, memtoreg, aluop, memwrite, alusrc, regwrite);
+alucontrol          uutC(aluop, instruction[31:25], instruction[14:12], aluctl);
+registerfile        uutF(instruction[19:15], instruction[24:20], instruction[11:7], writedata, regwrite, a, b);
+immediategen        uutD(instruction, immediate);
+mux2_1              uutE(b, immediate, alusrc, mux_out);
+alu                 uutG(aluctl, a, mux_out, alu_out, zero, overflow);
+datamemory          uutH(alu_out[9:0], b, memread, memwrite, readdata); // decreased address to 10 bits, change later
+mux2_1              uutI(alu_out, readdata, memtoreg, writedata);
 
 initial
     begin
-        $dumpfile("myalu.vcd");
-        $dumpvars(2, tb_alu);
-
-        // Testing ADD function
-        #1
-        rs1           = 5'b00000;
-        rs2           = 5'b00001;
-        opcode        = 7'b0110011; // R-format
-        func7         = 7'b0000000;
-        func3         = 3'b000;
-        instruction = {func7, rs2, rs1, func3, rd, opcode};
+        $dumpfile("combined_tb.vcd");
+        $dumpvars(1, combined_tb);
 
         #1
-        $display("out x0+x1: %d", out);
+        pc = 0;
 
         #1
-        rs1           = 5'b00001;
-        rs2           = 5'b00010;
-        instruction = {func7, rs2, rs1, func3, rd, opcode};
+        $display("pc: %d", pc);
+        $display("ins: %d", instruction);
+        $display("branch %d, memread %d, memtoreg %d, aluop %d, memwrite %d, alusrc %d, regwrite %d", branch, memread, memtoreg, aluop, memwrite, alusrc, regwrite);
+        $display("alu_ctl %d, writedata %d, a %d, b %",  aluctl, writedata, a, b);
+        $display("immediate %d, mux_out %d",  immediate, mux_out);
+        $display("alu_out %d",  alu_out);
+        $display("readdata %d",  readdata);
 
         #1
-        $display("out x1+x2: %d", out);
+        pc = 1;
 
         #1
-        rs1           = 5'b00010;
-        rs2           = 5'b00011;
-        instruction = {func7, rs2, rs1, func3, rd, opcode};
-
-        #1
-        $display("out x2+x3: %d", out);
-
-        #1
-        rs1           = 5'b00011;
-        rs2           = 5'b00100;
-        instruction = {func7, rs2, rs1, func3, rd, opcode};
-
-        #1
-        $display("out x3+x4: %d", out);
-
-        #1
-        rs1           = 5'b00000;
-        rs2           = 5'b00101;
-        instruction = {func7, rs2, rs1, func3, rd, opcode};
-
-        #1
-        $display("out x5+x0: %d", out);
-
-        // Testing LOAD function
-        #1
-        rs1           = 5'b00000;
-        rs2           = 5'b00001;
-        opcode        = 7'b0000011; // Store Word
-        func7         = 7'b0000000;
-        func3         = 3'b000;
-        instruction = {func7, rs2, rs1, func3, rd, opcode};
+        $display("pc: %d", pc);
+        $display("ins: %d", instruction);
+        $display("branch %d, memread %d, memtoreg %d, aluop %d, memwrite %d, alusrc %d, regwrite %d", branch, memread, memtoreg, aluop, memwrite, alusrc, regwrite);
+        $display("alu_ctl %d, writedata %d, a %d, b %",  aluctl, writedata, a, b);
+        $display("immediate %d, mux_out %d",  immediate, mux_out);
+        $display("alu_out %d",  alu_out);
+        $display("readdata %d",  readdata);
 
     end
 

@@ -1,0 +1,30 @@
+$date
+	Sun Jul 16 11:19:52 2023
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1s
+$end
+$scope module adder_tb $end
+$var wire 32 ! out [31:0] $end
+$var reg 32 " in1 [31:0] $end
+$var reg 32 # in2 [31:0] $end
+$upscope $end
+$enddefinitions $end
+#0
+$dumpvars
+bx #
+bx "
+bx !
+$end
+#1
+b1001000000001001111 !
+b1000100000000001111 #
+b100000001000000 "
+#3
+b1111 #
+b11110 !
+b1111 "
+#4

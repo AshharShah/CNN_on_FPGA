@@ -1,0 +1,49 @@
+#! /opt/homebrew/Cellar/icarus-verilog/11.0/bin/vvp
+:ivl_version "11.0 (stable)";
+:ivl_delay_selection "TYPICAL";
+:vpi_time_precision + 0;
+:vpi_module "/opt/homebrew/Cellar/icarus-verilog/11.0/lib/ivl/system.vpi";
+:vpi_module "/opt/homebrew/Cellar/icarus-verilog/11.0/lib/ivl/vhdl_sys.vpi";
+:vpi_module "/opt/homebrew/Cellar/icarus-verilog/11.0/lib/ivl/vhdl_textio.vpi";
+:vpi_module "/opt/homebrew/Cellar/icarus-verilog/11.0/lib/ivl/v2005_math.vpi";
+:vpi_module "/opt/homebrew/Cellar/icarus-verilog/11.0/lib/ivl/va_math.vpi";
+S_0x13e6091f0 .scope module, "adder_tb" "adder_tb" 2 3;
+ .timescale 0 0;
+v0x13e61d170_0 .var "in1", 31 0;
+v0x13e61d220_0 .var "in2", 31 0;
+v0x13e61d2d0_0 .net "out", 31 0, L_0x13e61d3a0;  1 drivers
+S_0x13e608330 .scope module, "uut" "adder" 2 8, 3 1 0, S_0x13e6091f0;
+ .timescale 0 0;
+    .port_info 0 /INPUT 32 "in1";
+    .port_info 1 /INPUT 32 "in2";
+    .port_info 2 /OUTPUT 32 "out";
+v0x13e60bfe0_0 .net "in1", 31 0, v0x13e61d170_0;  1 drivers
+v0x13e61cfb0_0 .net "in2", 31 0, v0x13e61d220_0;  1 drivers
+v0x13e61d060_0 .net "out", 31 0, L_0x13e61d3a0;  alias, 1 drivers
+L_0x13e61d3a0 .arith/sum 32, v0x13e61d170_0, v0x13e61d220_0;
+    .scope S_0x13e6091f0;
+T_0 ;
+    %vpi_call 2 12 "$dumpfile", "adder_tb.vcd" {0 0 0};
+    %vpi_call 2 13 "$dumpvars", 32'sb00000000000000000000000000000001, S_0x13e6091f0 {0 0 0};
+    %delay 1, 0;
+    %pushi/vec4 16448, 0, 32;
+    %store/vec4 v0x13e61d170_0, 0, 32;
+    %pushi/vec4 278543, 0, 32;
+    %store/vec4 v0x13e61d220_0, 0, 32;
+    %delay 1, 0;
+    %vpi_call 2 20 "$display", "out: %d", v0x13e61d2d0_0 {0 0 0};
+    %delay 1, 0;
+    %pushi/vec4 15, 0, 32;
+    %store/vec4 v0x13e61d170_0, 0, 32;
+    %pushi/vec4 15, 0, 32;
+    %store/vec4 v0x13e61d220_0, 0, 32;
+    %delay 1, 0;
+    %vpi_call 2 27 "$display", "out: %d", v0x13e61d2d0_0 {0 0 0};
+    %end;
+    .thread T_0;
+# The file index is used to find the file name in the following table.
+:file_names 4;
+    "N/A";
+    "<interactive>";
+    "adder_tb.v";
+    "./adder.v";
