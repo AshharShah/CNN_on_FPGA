@@ -5,7 +5,7 @@
 `include "instructionmemory.v"
 `include "adder.v"
 `include "datamemory.v"
-`include "immediate-gen.v"
+`include "immediategen.v"
 `include "mux2_1.v"
 
 
@@ -39,7 +39,7 @@ mux2_1              uutI(alu_out, readdata, memtoreg, writedata);
 
 initial
     begin
-        $dumpfile("combined_tb.vcd");
+        $dumpfile("./vcd/combined_tb.vcd");
         $dumpvars(2, combined_tb);
 
         #1
@@ -154,6 +154,9 @@ initial
         pc = 9;
 
         #1
+        pc = 9;
+
+        #1
         $display("\npc: %d", pc);
         $display("ins: %d", instruction);
         $display("branch %d, memread %d, memtoreg %d, aluop %d, memwrite %d, alusrc %d, regwrite %d", branch, memread, memtoreg, aluop, memwrite, alusrc, regwrite);
@@ -260,6 +263,30 @@ initial
 
         #1
         pc = 18;
+
+        #1
+        $display("\npc: %d", pc);
+        $display("ins: %d", instruction);
+        $display("branch %d, memread %d, memtoreg %d, aluop %d, memwrite %d, alusrc %d, regwrite %d", branch, memread, memtoreg, aluop, memwrite, alusrc, regwrite);
+        $display("alu_ctl %d, writedata %d, a %d, b %",  aluctl, writedata, a, b);
+        $display("immediate %d, mux_out %d",  immediate, mux_out);
+        $display("alu_out %d",  alu_out);
+        $display("readdata %d",  readdata);
+
+        #1
+        pc = 19;
+
+        #1
+        $display("\npc: %d", pc);
+        $display("ins: %d", instruction);
+        $display("branch %d, memread %d, memtoreg %d, aluop %d, memwrite %d, alusrc %d, regwrite %d", branch, memread, memtoreg, aluop, memwrite, alusrc, regwrite);
+        $display("alu_ctl %d, writedata %d, a %d, b %",  aluctl, writedata, a, b);
+        $display("immediate %d, mux_out %d",  immediate, mux_out);
+        $display("alu_out %d",  alu_out);
+        $display("readdata %d",  readdata);
+
+        #1
+        pc = 20;
 
         #1
         $display("\npc: %d", pc);

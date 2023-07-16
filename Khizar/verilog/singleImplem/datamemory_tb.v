@@ -12,7 +12,7 @@ module datamemory_tb;//(address, writedata, memread, memwrite, readdata);
 
     initial 
         begin
-            $dumpfile("datamemory_tb.vcd");
+            $dumpfile("./vcd/datamemory_tb.vcd");
             $dumpvars(2, datamemory_tb);
 
             #1

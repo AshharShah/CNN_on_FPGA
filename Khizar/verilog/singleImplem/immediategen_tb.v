@@ -1,6 +1,6 @@
 `include "immediate-gen.v"
 
-module immediate_gen_tb;
+module immediategen_tb;
 
 reg [6:0] opcode;
 
@@ -12,8 +12,8 @@ immediategen uut(instruction, result);
 
 initial 
     begin
-        $dumpfile("immediate-gen-tb-dump.vcd");
-        $dumpvars(1, immediate_gen_tb);
+        $dumpfile("./vcd/immediategen_tb.vcd");
+        $dumpvars(1, immediategen_tb);
 
         #2
         opcode = 7'b0000011; // LOAD

@@ -10,7 +10,7 @@ module instructionmemory_tb;
 
     initial
         begin
-            $dumpfile("instructionmemory_tb.vcd");
+            $dumpfile("./vcd/instructionmemory_tb.vcd");
             $dumpvars(1, instructionmemory_tb);
 
             #1

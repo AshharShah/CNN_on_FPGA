@@ -11,7 +11,7 @@ module mux2_1_tb;
 
     initial
         begin
-            $dumpfile("mux2_1_tb.vcd");
+            $dumpfile("./vcd/mux2_1_tb.vcd");
             $dumpvars(1, mux2_1_tb);
             
             #1

@@ -9,7 +9,7 @@ module adder_tb;
 
     initial 
         begin
-            $dumpfile("adder_tb.vcd");
+            $dumpfile("./vcd/adder_tb.vcd");
             $dumpvars(1, adder_tb);
 
             #1

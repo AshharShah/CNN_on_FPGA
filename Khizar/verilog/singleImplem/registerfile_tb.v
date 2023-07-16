@@ -13,7 +13,7 @@ module registerfile_tb;
     //initialize some registers
     initial
         begin
-            $dumpfile("registerfile_tb_dump.vcd");
+            $dumpfile("./vcd/registerfile_tb.vcd");
             $dumpvars(1, registerfile_tb);
 
             #1
