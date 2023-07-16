@@ -20,6 +20,8 @@ module alucontrol(aluop, func7, func3, aluctl);
                     aluctl <= 4'b0010;
                   else if (func3 == 3'b111)
                     aluctl <= 4'b0000;
+                  else if (func3 == 3'b100)
+                    aluctl <= 4'b1100;
                   else if (func3 == 3'b110)
                     aluctl <= 4'b0001;
                 end
