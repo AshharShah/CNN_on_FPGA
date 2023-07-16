@@ -46,6 +46,16 @@ module maincontrol(instruction, branch, memread, memtoreg, aluop, memwrite, alus
                 branch <= 1;
                 aluop <= 2'b01;
               end
+            7'b0010011: // for addi (i-type)
+              begin
+                alusrc <= 1;
+                regwrite <= 1;
+                memtoreg <= 0;
+                memread <= 0;
+                memwrite <= 0;
+                branch <= 0;
+                aluop <= 2'b00;
+              end
 
             default: 
               begin
