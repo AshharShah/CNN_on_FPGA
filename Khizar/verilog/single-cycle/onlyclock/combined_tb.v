@@ -44,7 +44,7 @@ module combined_tb;
             pc = 0;
             clk = 0;
 
-            for(i = 0; i < 32; i = i + 1)
+            for(i = 0; i < 44; i = i + 1)
                 begin
                     #5
                     $display("ins: %d", instruction);
