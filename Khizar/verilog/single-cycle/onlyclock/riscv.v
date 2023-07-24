@@ -12,14 +12,16 @@ module combined_tb;
 
     reg [9:0] pc;
     reg clk;
-    
+    reg [1:0] state;
+    reg select;
+
     wire branch, memread, memtoreg, memwrite, alusrc, regwrite, zero;
     wire [1:0] aluop;
     wire [3:0] aluctl;
     wire [31:0] instruction, a, b, immediate, mux_out, alu_out, writedata, readdata, sumA, sumB;
 
     instructionmemory   uutA(clk, pc, instruction);
-    maincontrol         uutB(clk, instruction[6:0], branch, memread, memtoreg, aluop, memwrite, alusrc, regwrite);
+    maincontrol         uutB(state, instruction[6:0], branch, memread, memtoreg, aluop, memwrite, alusrc, regwrite);
     registerfile        uutF(clk, instruction[19:15], instruction[24:20], instruction[11:7], writedata, regwrite, a, b);
     immediategen        uutD(instruction, immediate);
     alucontrol          uutC(aluop, instruction[31:25], instruction[14:12], aluctl);                   
@@ -28,38 +30,40 @@ module combined_tb;
     datamemory          uutH(clk, alu_out[9:0], b, memread, memwrite, readdata); // decreased address to 10 bits, change later
     mux2_1              uutI(alu_out, readdata, memtoreg, writedata);
 
-    //adder               uutJ(pc, 4, pc);
+    //adder               uutJ(pc, 1, pc);
     // adder               uutK(immediate, pc, sumB);
-    // mux2_1              uutL(sumA, sumB, select, pc);
+    //mux2_1              uutL(pc, sumB, select, newpc);
 
     integer i;
 
     always #1 clk = ~clk;
 
+    always @(posedge clk) 
+        begin
+            if (state == 0)
+                begin
+                    //immediate = ins[7], ins[25:30]
+                    pc = (branch & zero) ?  pc+immediate : pc+1;
+                    state = state + 1;        
+                end
+            else if (state == 5)
+                begin
+                    state = 0;
+                end
+            else
+                state = state + 1;
+        end
+
     initial
         begin
-            $dumpfile("../vcd/combined_tb_clock.vcd");
+            $dumpfile("../vcd/tb_automate_pc_1.vcd");
             $dumpvars(2, combined_tb);
 
-            pc = 0;
+            pc = -1;
             clk = 0;
+            state = 0;
 
-            for(i = 0; i < 44; i = i + 1)
-                begin
-                    #6
-                    pc = i;
-                    $display("---------------pc: %d", pc);
-
-                end
-                    // #2
-                    // $display("ins: %d", instruction);
-                    // $display("branch %d, memread %d, memtoreg %d, aluop %d, memwrite %d, alusrc %d, regwrite %d", branch, memread, memtoreg, aluop, memwrite, alusrc, regwrite);
-                    // $display("alu_ctl %d, writedata %d, a %d, b %",  aluctl, writedata, a, b);
-                    // $display("immediate %d, mux_out %d",  immediate, mux_out);
-                    // $display("alu_out %d",  alu_out);
-                    // $display("readdata %d",  readdata);
-
-            #340 $finish;
+            #400 $finish;
         end
 
 endmodule

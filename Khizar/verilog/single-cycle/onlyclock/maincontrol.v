@@ -1,12 +1,14 @@
-module maincontrol(clk, instruction, branch, memread, memtoreg, aluop, memwrite, alusrc, regwrite);
+module maincontrol(state, instruction, branch, memread, memtoreg, aluop, memwrite, alusrc, regwrite);
 
-    input clk;
+    input [1:0] state;
     input [6:0] instruction;
 
     output reg branch, memread, memtoreg, memwrite, alusrc, regwrite;
     output reg [1:0] aluop;
 
-    always @ (posedge clk)
+    
+
+    always @ (state, instruction)
         begin
           case (instruction)
             7'b0110011: 
@@ -69,6 +71,18 @@ module maincontrol(clk, instruction, branch, memread, memtoreg, aluop, memwrite,
                 aluop <= 2'b00;
               end
           endcase
+
+          if (state == 0 | state == 1)
+          begin
+             alusrc <= 0;
+             regwrite <= 0;
+             memread <= 0;
+             memwrite <= 0;
+             memtoreg <= 0;
+             branch <= 0;
+             aluop <= 2'b00;
+          end
+
         end
 
 endmodule
