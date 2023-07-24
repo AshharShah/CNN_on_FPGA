@@ -7,3 +7,7 @@ FPGA
 ML
 ==
 [GGML library implmenting tensors LLMs in C](https://news.ycombinator.com/item?id=36215651)
+
+RISC-V
+======
+[Berkeley cs61c risc-v assembly lab](https://inst.eecs.berkeley.edu/~cs61c/fa18/labs/3/)  

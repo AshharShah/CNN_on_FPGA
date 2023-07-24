@@ -1,0 +1,267 @@
+$date
+	Wed Jul 12 23:16:25 2023
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1s
+$end
+$scope module tb_alu $end
+$var wire 1 ! zero $end
+$var wire 1 " regwrite $end
+$var wire 32 # out [31:0] $end
+$var wire 1 $ memwrite $end
+$var wire 1 % memtoreg $end
+$var wire 1 & memread $end
+$var wire 1 ' branch $end
+$var wire 32 ( b [31:0] $end
+$var wire 1 ) alusrc $end
+$var wire 2 * aluop [1:0] $end
+$var wire 4 + aluctl [3:0] $end
+$var wire 32 , a [31:0] $end
+$var reg 3 - func3 [2:0] $end
+$var reg 7 . func7 [6:0] $end
+$var reg 32 / instruction [31:0] $end
+$var reg 7 0 opcode [6:0] $end
+$var reg 5 1 rd [4:0] $end
+$var reg 5 2 rs1 [4:0] $end
+$var reg 5 3 rs2 [4:0] $end
+$var reg 32 4 writedata [31:0] $end
+$scope module uutA $end
+$var wire 7 5 instruction [6:0] $end
+$var reg 2 6 aluop [1:0] $end
+$var reg 1 ) alusrc $end
+$var reg 1 ' branch $end
+$var reg 1 & memread $end
+$var reg 1 % memtoreg $end
+$var reg 1 $ memwrite $end
+$var reg 1 " regwrite $end
+$upscope $end
+$scope module uutB $end
+$var wire 2 7 aluop [1:0] $end
+$var wire 3 8 func3 [2:0] $end
+$var wire 7 9 func7 [6:0] $end
+$var reg 4 : aluctl [3:0] $end
+$upscope $end
+$scope module uutC $end
+$var wire 4 ; aluctl [3:0] $end
+$var wire 1 ! zero $end
+$var wire 32 < b [31:0] $end
+$var wire 32 = a [31:0] $end
+$var reg 32 > out [31:0] $end
+$upscope $end
+$scope module uutD $end
+$var wire 5 ? rd [4:0] $end
+$var wire 1 " regwrite $end
+$var wire 5 @ rs1 [4:0] $end
+$var wire 5 A rs2 [4:0] $end
+$var wire 32 B writedata [31:0] $end
+$var reg 32 C readdata1 [31:0] $end
+$var reg 32 D readdata2 [31:0] $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+#0
+$dumpvars
+bx D
+bx C
+bx B
+b0 A
+b0 @
+b0 ?
+bx >
+bx =
+bx <
+b10 ;
+b10 :
+b0 9
+b0 8
+b10 7
+b10 6
+b110011 5
+bx 4
+b0 3
+b0 2
+b0 1
+b110011 0
+b110011 /
+b0 .
+b0 -
+bx ,
+b10 +
+b10 *
+0)
+bx (
+0'
+0&
+0%
+0$
+bx #
+1"
+x!
+$end
+#2
+b0 4
+b0 B
+#3
+1!
+b0 #
+b0 >
+b0 (
+b0 <
+b0 D
+b0 ,
+b0 =
+b0 C
+b1 ?
+b10110011 /
+b1 1
+#4
+b1 4
+b1 B
+#5
+b10 ?
+b100110011 /
+b10 1
+#6
+b10 4
+b10 B
+#7
+b11 ?
+b110110011 /
+b11 1
+#8
+b11 4
+b11 B
+#9
+b100 ?
+b1000110011 /
+b100 1
+#10
+b100 4
+b100 B
+#11
+b101 ?
+b1010110011 /
+b101 1
+#12
+b101 4
+b101 B
+#15
+0!
+b1 #
+b1 >
+b1 ,
+b1 =
+b1 C
+b1 @
+b1000001010110011 /
+b1 2
+#17
+b10 #
+b10 >
+b10 ,
+b10 =
+b10 C
+b10 @
+b10000001010110011 /
+b10 2
+#19
+b11 #
+b11 >
+b11 ,
+b11 =
+b11 C
+b11 @
+b11000001010110011 /
+b11 2
+#21
+b100 #
+b100 >
+b100 ,
+b100 =
+b100 C
+b100 @
+b100000001010110011 /
+b100 2
+#23
+b101 #
+b101 >
+b101 ,
+b101 =
+b101 C
+b101 @
+b101000001010110011 /
+b101 2
+#25
+b1 #
+b1 >
+b1 (
+b1 <
+b1 D
+b0 ,
+b0 =
+b0 C
+b0 @
+b1 A
+b100000000001010110011 /
+b1 3
+b0 2
+#27
+b11 #
+b11 >
+b10 (
+b10 <
+b10 D
+b1 ,
+b1 =
+b1 C
+b1 @
+b10 A
+b1000001000001010110011 /
+b10 3
+b1 2
+#29
+b101 #
+b101 >
+b11 (
+b11 <
+b11 D
+b10 ,
+b10 =
+b10 C
+b10 @
+b11 A
+b1100010000001010110011 /
+b11 3
+b10 2
+#31
+b111 #
+b111 >
+b100 (
+b100 <
+b100 D
+b11 ,
+b11 =
+b11 C
+b11 @
+b100 A
+b10000011000001010110011 /
+b100 3
+b11 2
+#33
+b101 #
+b101 >
+b101 (
+b101 <
+b101 D
+b0 ,
+b0 =
+b0 C
+b0 @
+b101 A
+b10100000000001010110011 /
+b101 3
+b0 2
+#34
