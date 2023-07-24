@@ -3,16 +3,16 @@ module instructionmemory(clk, pc, instruction);
     input clk;
     input [9:0] pc; // change later
     
-    output reg [31:0] instruction;
+    output wire [31:0] instruction;
 
-    reg [31:0] memfile [0:1023]; // increase memory size later
+    reg [7:0] memfile [0:1023]; // increase memory size later
 
     initial
         begin // write instructions here
             // x0 = 0 already done
 
             //  addi x10, x0,  1     
-            memfile[0] <= 32'b0000_0000_0001___00000___000___01010___001_0011;          //  x10     =   1
+            {memfile[3], memfile[2], memfile[1], memfile[0]} <= 32'b0000_0000_0001___00000___000___0101______0___001_0011;          //  x10     =   1
 
             //  addi x11, x10, 1
             memfile[1] <= 32'b0000_0000_0001___01010___000___01011___001_0011;          //  x11     =   2
@@ -151,9 +151,13 @@ module instructionmemory(clk, pc, instruction);
 
         end
 
-    always @ (posedge clk)
-        begin
-            instruction <= memfile[pc];
-        end
+    
+    assign instruction = {memfile[pc+3], memfile[pc+2], memfile[pc+1], memfile[pc]};
+
+
+    //        ins[7:0]
+    //        ins[15:0]
+    //        .....
+    //        ....
 
 endmodule

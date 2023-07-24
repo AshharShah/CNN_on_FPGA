@@ -44,20 +44,12 @@ module combined_tb;
             pc = 0;
             clk = 0;
 
-            for(i = 0; i < 44; i = i + 1)
+            for(i = 0; i < 44; i = i + 4)
                 begin
-                    #6
+                    #2
                     pc = i;
-                    $display("---------------pc: %d", pc);
-
+                    $display("te pc: %d", pc);
                 end
-                    // #2
-                    // $display("ins: %d", instruction);
-                    // $display("branch %d, memread %d, memtoreg %d, aluop %d, memwrite %d, alusrc %d, regwrite %d", branch, memread, memtoreg, aluop, memwrite, alusrc, regwrite);
-                    // $display("alu_ctl %d, writedata %d, a %d, b %",  aluctl, writedata, a, b);
-                    // $display("immediate %d, mux_out %d",  immediate, mux_out);
-                    // $display("alu_out %d",  alu_out);
-                    // $display("readdata %d",  readdata);
 
             #340 $finish;
         end

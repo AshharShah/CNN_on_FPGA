@@ -11,7 +11,7 @@ module immediategen(instruction, result);
                 7'b0100011: result <= {{19{instruction[31]}}, instruction[31:25], instruction[11:7]};
                 7'b1100011: result <= {{18{instruction[31]}}, instruction[31], instruction[7], instruction[30:25], instruction[11:8], 1'b0};
                     
-                default: result <= 0;
+                default: result <= 5;
             endcase
         end
 
