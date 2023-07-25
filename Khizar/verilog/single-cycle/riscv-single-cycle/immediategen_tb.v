@@ -12,7 +12,7 @@ immediategen uut(instruction, result);
 
 initial 
     begin
-        $dumpfile("./vcd/immediategen_tb.vcd");
+        $dumpfile("../vcd/immediategen_tb.vcd");
         $dumpvars(1, immediategen_tb);
 
         #2

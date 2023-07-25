@@ -12,7 +12,7 @@ module alucontrol_tb;//(aluop, func7, func3, aluctl);
 
     initial 
         begin
-            $dumpfile("./vcd/alucontrol_tb.vcd");
+            $dumpfile("../vcd/alucontrol_tb.vcd");
             $dumpvars(1, alucontrol_tb);
 
             #1

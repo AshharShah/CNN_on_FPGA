@@ -1,74 +1,33 @@
 module maincontrol(clk, instruction, branch, memread, memtoreg, aluop, memwrite, alusrc, regwrite);
 
-    input clk;
-    input [6:0] instruction;
+  //opcode types
+  localparam I = 7'b0010011;
+  localparam S = 7'b0100011;
+  localparam SB = 7'b1100011;
+  localparam I_LD = 7'b0000011;
 
-    output reg branch, memread, memtoreg, memwrite, alusrc, regwrite;
-    output reg [1:0] aluop;
+  input clk;
+  input [6:0] instruction;
 
-    always @ (instruction)
-        begin
-          case (instruction)
-            7'b0110011: 
-              begin
-                alusrc <= 0;
-                memtoreg <= 0;
-                regwrite <= 1;
-                memread <= 0;
-                memwrite <= 0;
-                branch <= 0;
-                aluop <= 2'b10;
-              end
-            7'b0000011: 
-              begin
-                alusrc <= 1;
-                memtoreg <= 1;
-                regwrite <= 1;
-                memread <= 1;
-                memwrite <= 0;
-                branch <= 0;
-                aluop <= 2'b00;
-              end
-            7'b0100011:
-              begin
-                alusrc <= 1;
-                regwrite <= 0;
-                memread <= 0;
-                memwrite <= 1;
-                branch <= 0;
-                aluop <= 2'b00;
-              end
-            7'b1100011: 
-              begin
-                alusrc <= 0;
-                regwrite <= 0;
-                memread <= 0;
-                memwrite <= 0;
-                branch <= 1;
-                aluop <= 2'b01;
-              end
-            7'b0010011: // for addi (i-type)
-              begin
-                alusrc <= 1;
-                regwrite <= 1;
-                memtoreg <= 0;
-                memread <= 0;
-                memwrite <= 0;
-                branch <= 0;
-                aluop <= 2'b00;
-              end
+  output reg branch, memread, memtoreg, memwrite, alusrc, regwrite;
+  output reg [1:0] aluop;
 
-            default: 
-              begin
-                alusrc <= 0;
-                regwrite <= 0;
-                memread <= 0;
-                memwrite <= 0;
-                memtoreg <= 0;
-                branch <= 0;
-                aluop <= 2'b00;
-              end
-          endcase
-        end
+  always @ (instruction)
+    begin
+      case (instruction)
+        7'b0110011:
+          {aluop, alusrc, memtoreg, regwrite, memread, memwrite, branch} = 8'b10_0_0_1_0_0_0;
+        7'b0000011:
+          {aluop, alusrc, memtoreg, regwrite, memread, memwrite, branch} = 8'b00_1_1_1_1_0_0;
+        7'b0100011:
+          {aluop, alusrc, memtoreg, regwrite, memread, memwrite, branch} = 8'b00_1_0_0_0_1_0;
+        7'b1100011:
+          {aluop, alusrc, memtoreg, regwrite, memread, memwrite, branch} = 8'b01_0_0_0_0_0_1;
+        7'b0010011: // for addi (i-type)
+          {aluop, alusrc, memtoreg, regwrite, memread, memwrite, branch} = 8'b00_1_0_1_0_0_0;
+        default:
+          {aluop, alusrc, memtoreg, regwrite, memread, memwrite, branch} = 8'b00_0_0_0_0_0_0;
+      endcase
+    end
 
 endmodule

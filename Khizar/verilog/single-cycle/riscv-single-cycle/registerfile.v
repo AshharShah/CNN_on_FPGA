@@ -18,9 +18,9 @@ module registerfile(clk, rs1, rs2, rd, writedata, regwrite, readdata1, readdata2
     assign readdata2 = regfile[rs2];
 
     always @ (posedge clk)
-        begin
-          if (regwrite == 1 & rd != 0)
-              regfile[rd] <= writedata;          
-        end
+      begin
+        if (regwrite == 1 & rd != 0)
+          regfile[rd] <= writedata;          
+      end
 
 endmodule

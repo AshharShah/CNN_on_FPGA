@@ -18,7 +18,7 @@ module combined_tb;
     wire [3:0] aluctl;
     wire [31:0] instruction, a, b, immediate, mux_out, alu_out, writedata, readdata, sumA, sumB;
 
-    instructionmemory   uutA(clk, pc, instruction);
+    instructionmemory   uutA(pc, instruction);
     maincontrol         uutB(clk, instruction[6:0], branch, memread, memtoreg, aluop, memwrite, alusrc, regwrite);
     registerfile        uutF(clk, instruction[19:15], instruction[24:20], instruction[11:7], writedata, regwrite, a, b);
     immediategen        uutD(instruction, immediate);
@@ -38,15 +38,15 @@ module combined_tb;
 
     initial
         begin
-            $dumpfile("../vcd/combined_tb_clock.vcd");
+            $dumpfile("../vcd/combined_tb_a.vcd");
             $dumpvars(2, combined_tb);
 
-            pc = 0;
+            pc = -1;
             clk = 0;
 
-            for(i = 0; i < 44; i = i + 4)
+            for(i = 0; i < 200; i = i + 4)
                 begin
-                    #2
+                    #6
                     pc = i;
                     $display("te pc: %d", pc);
                 end

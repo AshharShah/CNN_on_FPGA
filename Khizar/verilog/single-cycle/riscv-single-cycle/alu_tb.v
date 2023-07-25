@@ -12,7 +12,7 @@ alu          uutC(aluctl, a, b, out, zero, overflow);
 
 initial
     begin
-        $dumpfile("./vcd/alu_tb.vcd");
+        $dumpfile("../vcd/alu_tb.vcd");
         $dumpvars(1, alu_tb);
 
         // Testing AND function

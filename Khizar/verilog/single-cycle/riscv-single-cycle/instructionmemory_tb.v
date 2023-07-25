@@ -15,6 +15,9 @@ module instructionmemory_tb;
             $dumpfile("../vcd/tb_instructionmemory.vcd");
             $dumpvars(1, instructionmemory_tb);
 
+            $readmemh("instructions.txt", instructionmemory_tb.uut.memfile);
+            #10
+
             for(i = 0; i < NUMBER_OF_INSTRUCTIONS; i = i + 4)
                 begin
                     #1
@@ -23,6 +26,13 @@ module instructionmemory_tb;
                     #1
                     $display("pc: %d, ins: %d", pc, instruction);
                 end
+            
+            #5
+            for(i = 0; i < NUMBER_OF_INSTRUCTIONS; i = i + 4)
+                begin
+                    $display("memfile %d == %d", i, uut.memfile[i]);
+                end
+
         end
 
 endmodule

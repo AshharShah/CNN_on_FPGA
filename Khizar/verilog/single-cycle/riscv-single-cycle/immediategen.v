@@ -2,8 +2,9 @@ module immediategen(instruction, result);
 
     //opcode types
     localparam I = 7'b0010011;
-    //localparam S = 7'b0000011;
     localparam S = 7'b0100011;
+    localparam SB = 7'b1100011;
+    localparam I_LD = 7'b0000011;
 
     input [31:0] instruction;
 
@@ -12,14 +13,14 @@ module immediategen(instruction, result);
     always @ (instruction)
         begin
             case (instruction[6:0])
-                7'b0000011, 7'b0010011: 
-                    result = {{20{instruction[31]}}, instruction[31:20]};
-                7'b0100011: 
-                    result = {{19{instruction[31]}}, instruction[31:25], instruction[11:7]};
-                7'b1100011: 
-                    result = {{18{instruction[31]}}, instruction[31], instruction[7], instruction[30:25], instruction[11:8], 1'b0};
+                I_LD, I: 
+                    result <= {{20{instruction[31]}}, instruction[31:20]};
+                S: 
+                    result <= {{19{instruction[31]}}, instruction[31:25], instruction[11:7]};
+                SB: 
+                    result <= {{18{instruction[31]}}, instruction[31], instruction[7], instruction[30:25], instruction[11:8], 1'b0};
                     
-                default: result <= 5;
+                default: result <= 0;
             endcase
         end
 
