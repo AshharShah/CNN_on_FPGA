@@ -12,7 +12,7 @@ module riscv_tb;
             $dumpfile("../vcd/riscv.vcd");
             $dumpvars(2, riscv_tb);
 
-            $readmemh("ins", core.uutA.memfile);
+            $readmemh("ins.txt", core.uutA.memfile);
             
             #1
             clk = 0;
