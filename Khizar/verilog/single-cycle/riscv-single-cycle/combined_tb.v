@@ -19,7 +19,7 @@ module combined_tb;
     wire [31:0] instruction, a, b, immediate, mux_out, alu_out, writedata, readdata, sumA, sumB;
 
     instructionmemory   uutA(pc, instruction);
-    maincontrol         uutB(clk, instruction[6:0], branch, memread, memtoreg, aluop, memwrite, alusrc, regwrite);
+    maincontrol         uutB(instruction[6:0], branch, memread, memtoreg, aluop, memwrite, alusrc, regwrite);
     registerfile        uutF(clk, instruction[19:15], instruction[24:20], instruction[11:7], writedata, regwrite, a, b);
     immediategen        uutD(instruction, immediate);
     alucontrol          uutC(aluop, instruction[31:25], instruction[14:12], aluctl);                   
@@ -38,12 +38,14 @@ module combined_tb;
 
     initial
         begin
-            $dumpfile("../vcd/combined_tb_a.vcd");
+            $dumpfile("../vcd/combined_tb_b.vcd");
             $dumpvars(2, combined_tb);
 
+            $readmemh("ins", uutA.memfile);
             pc = -1;
             clk = 0;
 
+            #2
             for(i = 0; i < 200; i = i + 4)
                 begin
                     #6

@@ -6,7 +6,9 @@ module instructionmemory_tb;
     wire [31:0] instruction;
 
     integer i;
-    integer NUMBER_OF_INSTRUCTIONS = 43 * 4;
+    integer MEM_LOCATIONS_PER_INS   = 4;
+    integer NUMBER_OF_INSTRUCTIONS  = 43;
+    integer MEM_LOCATIONS           = 0;
 
     instructionmemory uut(pc, instruction);
 
@@ -15,24 +17,27 @@ module instructionmemory_tb;
             $dumpfile("../vcd/tb_instructionmemory.vcd");
             $dumpvars(1, instructionmemory_tb);
 
-            $readmemh("instructions.txt", instructionmemory_tb.uut.memfile);
             #10
+            MEM_LOCATIONS = NUMBER_OF_INSTRUCTIONS * MEM_LOCATIONS_PER_INS;
+            $readmemh("ins", instructionmemory_tb.uut.memfile);
 
-            for(i = 0; i < NUMBER_OF_INSTRUCTIONS; i = i + 4)
+            #5
+            for(i = 0; i < MEM_LOCATIONS; i = i + 4)
                 begin
                     #1
                     pc = i;
 
                     #1
-                    $display("pc: %d, ins: %d", pc, instruction);
+                    $display("pc: %d, ins: %h", pc, instruction);
                 end
             
             #5
-            for(i = 0; i < NUMBER_OF_INSTRUCTIONS; i = i + 4)
+            for(i = 0; i < MEM_LOCATIONS; i = i + 4)
                 begin
-                    $display("memfile %d == %d", i, uut.memfile[i]);
+                    $display("memfile %d == %h", i,   instructionmemory_tb.uut.memfile[i]);
+                    $display("memfile %d == %h", i+1, instructionmemory_tb.uut.memfile[i+1]);
+                    $display("memfile %d == %h", i+2, instructionmemory_tb.uut.memfile[i+2]);
+                    $display("memfile %d == %h", i+3, instructionmemory_tb.uut.memfile[i+3]);
                 end
-
         end
-
 endmodule
