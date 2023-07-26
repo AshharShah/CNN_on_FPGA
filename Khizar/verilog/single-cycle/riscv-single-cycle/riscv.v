@@ -1,5 +1,3 @@
-`include "maincontrol.v"
-`include "alucontrol.v"
 `include "alu.v"
 `include "registerfile.v"
 `include "instructionmemory.v"
@@ -8,6 +6,8 @@
 `include "immediategen.v"
 `include "mux2_1.v"
 `include "pc.v"
+`include "alucontrol.v"
+`include "maincontrol.v"
 
 module riscv(clk, rst);
 
@@ -21,7 +21,7 @@ module riscv(clk, rst);
     wire [3:0] aluctl;
     wire [31:0] instruction, a, b, immediate, mux_out, alu_out, writedata, readdata, sumA, sumB;
 
-    assign select = branch & immediate;
+    assign select = branch & zero;
 
     adder               uutJ(pc, 4, sumA);
     adder               uutK(immediate, pc, sumB);

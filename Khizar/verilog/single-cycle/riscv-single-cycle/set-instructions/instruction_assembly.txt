@@ -24,6 +24,7 @@ xor x22, x14, x17
 addi x25, x22, 0
 nop
 lw x26, 4(x0)
+beq x26, x26, 18
 addi x27, x26, 0
 nop
 lw x30, 0(x0)
@@ -41,3 +42,7 @@ addi x4, x5, 0
 addi x4, x6, 0
 addi x4, x7, 0
 addi x4, x8, 0
+addi x10, x10, 0
+addi x11, x11, 0
+addi x12, x12, 0
+addi x13, x13, 0
