@@ -23,21 +23,21 @@ module riscv(clk, rst);
 
     assign select = branch & zero;
 
-    adder               uutJ(pc, 4, sumA);
-    adder               uutK(immediate, pc, sumB);
-    mux2_1              uutL(sumA, sumB, select, newpc);
-    pc                  uutP(clk, rst, newpc, pc);
+    adder               adder(pc, 4, sumA);
+    adder               adder2(immediate, pc, sumB);
+    mux2_1              mux1(sumA, sumB, select, newpc);
+    pc                  pcmod(clk, rst, newpc, pc);
 
-    instructionmemory   uutA(pc, instruction);
-    maincontrol         uutB(instruction[6:0], branch, memread, memtoreg, aluop, memwrite, alusrc, regwrite);
-    registerfile        uutF(clk, instruction[19:15], instruction[24:20], instruction[11:7], writedata, regwrite, a, b);
-    immediategen        uutD(instruction, immediate);
+    instructionmemory   insmem(pc, instruction);
+    maincontrol         maincon(instruction[6:0], branch, memread, memtoreg, aluop, memwrite, alusrc, regwrite);
+    registerfile        regfile(clk, instruction[19:15], instruction[24:20], instruction[11:7], writedata, regwrite, a, b);
+    immediategen        immgen(instruction, immediate);
 
-    alucontrol          uutC(aluop, instruction[31:25], instruction[14:12], aluctl);                   
-    mux2_1              uutE(b, immediate, alusrc, mux_out);
-    alu                 uutG(aluctl, a, mux_out, alu_out, zero, overflow);
+    alucontrol          alucon(aluop, instruction[31:25], instruction[14:12], aluctl);                   
+    mux2_1              mux2(b, immediate, alusrc, mux_out);
+    alu                 alu(aluctl, a, mux_out, alu_out, zero, overflow);
 
-    datamemory          uutH(clk, alu_out[9:0], b, memread, memwrite, readdata);
-    mux2_1              uutI(alu_out, readdata, memtoreg, writedata);
+    datamemory          datamem(clk, alu_out[9:0], b, memread, memwrite, readdata);
+    mux2_1              mux3(alu_out, readdata, memtoreg, writedata);
 
 endmodule

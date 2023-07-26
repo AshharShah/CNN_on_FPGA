@@ -1,0 +1,42 @@
+[*]
+[*] GTKWave Analyzer v3.3.107 (w)1999-2020 BSI
+[*] Wed Jul 26 18:26:36 2023
+[*]
+[dumpfile] "/Users/khizeralishah/CNN_on_FPGA/Khizar/verilog/single-cycle/vcd/riscv.vcd"
+[dumpfile_mtime] "Wed Jul 26 18:16:37 2023"
+[dumpfile_size] 15655
+[savefile] "/Users/khizeralishah/CNN_on_FPGA/Khizar/verilog/single-cycle/vcd/riscv.gtkw"
+[timestart] 49
+[size] 1268 1050
+[pos] 411 -26
+*-2.430669 56 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] riscv_tb.
+[treeopen] riscv_tb.core.
+[sst_width] 193
+[signals_width] 268
+[sst_expanded] 1
+[sst_vpaned_height] 523
+@28
+riscv_tb.core.clk
+riscv_tb.core.rst
+@24
+riscv_tb.core.pc[31:0]
+@22
+riscv_tb.core.instruction[31:0]
+@24
+riscv_tb.core.immediate[31:0]
+riscv_tb.core.alu_out[31:0]
+@28
+riscv_tb.core.memread
+@24
+riscv_tb.core.readdata[31:0]
+@29
+riscv_tb.core.memwrite
+@24
+riscv_tb.core.b[31:0]
+@28
+riscv_tb.core.regwrite
+@24
+riscv_tb.core.writedata[31:0]
+[pattern_trace] 1
+[pattern_trace] 0

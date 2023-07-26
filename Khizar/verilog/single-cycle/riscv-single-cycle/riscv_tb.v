@@ -10,20 +10,21 @@ module riscv_tb;
     initial
         begin
             $dumpfile("../vcd/riscv.vcd");
-            $dumpvars(2, riscv_tb);
+            $dumpvars(4, riscv_tb);
 
-            $readmemh("./set-instructions/ins.txt", core.uutA.memfile);
-            
-            #1
+            $readmemh("./set-instructions/ins.txt", core.insmem.memfile);
+
             clk = 0;
 
             #1
             rst = 1;
 
-            #3
+            #1
             rst = 0;
 
-            #200 $finish;
+            
+
+            #70 $finish;
         end
 
 endmodule
