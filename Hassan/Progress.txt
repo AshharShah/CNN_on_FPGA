@@ -4,3 +4,4 @@ Done with Advanced Learning Algorithms
 Done with Unsupervised Machine Learning, Recommenders, Reinforcement Learning
 Machine Learning Specialization from Coursera completed.
 >>>>>>> efd8112ef6f7fbc9fcce06ca97283c379117788f
+Have completed making a CNN for real time facial recognition using a webcam.
