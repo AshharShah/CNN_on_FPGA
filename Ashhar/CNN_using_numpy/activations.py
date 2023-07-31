@@ -34,5 +34,23 @@ class Softmax:
         softmax = np.exp(dense_output) / np.sum(np.exp(dense_output), axis=0)
         return softmax
 
-    def backward():
-        return
+    def backward(self, dE_dY, alpha):
+
+        for i, gradient in enumerate(dE_dY):
+
+            if gradient == 0:
+                continue
+            # convert raw scores or logits into probability-like values that can be interpreted as class probabilities
+            transformation_eq = np.exp(self.output)
+            # the normalization constant S_total is used to normalize the transformed values in transformation_eq such that they sum up to 1
+            S_total = np.sum(transformation_eq)
+
+            dY_dZ = -transformation_eq[i]*transformation_eq / (S_total**2)
+            dY_dZ[i] = transformation_eq[i] * \
+                (S_total - transformation_eq[i]) / (S_total**2)
+
+            print(transformation_eq)
+
+            print(dY_dZ)
+
+        return S_total
