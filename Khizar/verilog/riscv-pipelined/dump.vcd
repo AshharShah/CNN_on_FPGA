@@ -1,0 +1,141 @@
+$date
+	Wed Jul 26 22:49:38 2023
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1s
+$end
+$scope module riscv_tb $end
+$var reg 1 ! clk $end
+$var reg 1 " rst $end
+$scope module core $end
+$var wire 1 ! clk $end
+$var wire 1 # overflow $end
+$var wire 1 " rst $end
+$var wire 1 $ select $end
+$var wire 1 % zero $end
+$var wire 32 & writedata [31:0] $end
+$var wire 32 ' sumB [31:0] $end
+$var wire 32 ( sumA [31:0] $end
+$var wire 1 ) regwrite $end
+$var wire 32 * readdata [31:0] $end
+$var wire 32 + pc [31:0] $end
+$var wire 32 , newpc [31:0] $end
+$var wire 32 - mux_out [31:0] $end
+$var wire 1 . memwrite $end
+$var wire 1 / memtoreg $end
+$var wire 1 0 memread $end
+$var wire 32 1 instruction [31:0] $end
+$var wire 32 2 immediate [31:0] $end
+$var wire 1 3 branch $end
+$var wire 32 4 b [31:0] $end
+$var wire 1 5 alusrc $end
+$var wire 2 6 aluop [1:0] $end
+$var wire 4 7 aluctl [3:0] $end
+$var wire 32 8 alu_out [31:0] $end
+$var wire 32 9 a [31:0] $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+#0
+$dumpvars
+bx 9
+bx 8
+bx 7
+bx 6
+x5
+bx 4
+x3
+bx 2
+bx 1
+x0
+x/
+x.
+bx -
+bx ,
+bx +
+bx *
+x)
+bx (
+bx '
+bx &
+x%
+x$
+z#
+x"
+x!
+$end
+#1
+0!
+#2
+b0 *
+0$
+b1 &
+b1 -
+b100 ,
+b0 6
+15
+0/
+1)
+00
+0.
+03
+0%
+b1 8
+b10 7
+b1 '
+b1 2
+b0 9
+b100 (
+b100000000010100010011 1
+b0 +
+1"
+1!
+#3
+0!
+#4
+1!
+#5
+0!
+0"
+#6
+b10 &
+b10 8
+b1000 ,
+b1 9
+b101 '
+b1000 (
+b101010000010110010011 1
+b100 +
+1!
+#7
+0!
+#8
+b11 &
+b11 8
+b10 -
+b10 2
+b1100 ,
+b1010 '
+b1100 (
+b1001010000011000010011 1
+b1000 +
+1!
+#9
+0!
+#10
+1%
+b0 &
+b0 -
+b0 8
+b0 2
+b10000 ,
+b0 4
+b0 9
+b1100 '
+b10000 (
+b10011 1
+b1100 +
+1!
