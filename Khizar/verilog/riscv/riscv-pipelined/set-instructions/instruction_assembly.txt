@@ -1,3 +1,7 @@
+nop
+nop
+nop
+nop
 addi x10, x0, 1
 addi x11, x10, 1
 beq x10, x11, label

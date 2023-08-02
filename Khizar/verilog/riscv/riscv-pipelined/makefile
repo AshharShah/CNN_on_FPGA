@@ -1,5 +1,5 @@
 all: ins cpp tb vv
-	gtkwave ../vcd/riscv_pipeline.gtkw	
+	gtkwave ../vcd/riscv_pipeline.gtkw
 
 cpp:
 	./set-instructions/a.out ./set-instructions/instructions_hex.hex ./set-instructions/ins.txt
