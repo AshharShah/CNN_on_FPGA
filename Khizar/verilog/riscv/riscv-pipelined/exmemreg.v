@@ -9,6 +9,19 @@ module exmemreg(clk, sumB,    zero,    alures,    b_id, rd_id, branch_id, memrea
     output reg [31:0] sumB_ex, alures_ex, b_ex;
     output reg [4:0] rd_ex;
 
+    initial 
+    begin
+        zero_ex     <=  0;
+        branch_ex   <=  0;
+        memread_ex  <=  0;
+        memtoreg_ex <=  0;
+        memwrite_ex <=  0;
+        sumB_ex     <=  0;
+        alures_ex   <=  0;
+        b_ex        <=  0;
+        rd_ex       <=  0;
+    end
+
     always @(posedge clk) 
     begin
         zero_ex     <=  zero;

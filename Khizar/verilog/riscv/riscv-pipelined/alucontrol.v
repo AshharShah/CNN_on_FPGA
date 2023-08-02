@@ -1,7 +1,7 @@
 module alucontrol(aluop, func7, func3, aluctl);
 
     input [1:0] aluop;
-    input [6:0] func7;
+    input func7;
     input [2:0] func3;
 
     output reg [3:0] aluctl;
@@ -16,7 +16,7 @@ module alucontrol(aluop, func7, func3, aluctl);
             2'b10:
               begin
                 case (func7)
-                    7'b0000000:
+                    1'b0:
                       begin
                         case (func3)
                             3'b000:
@@ -29,7 +29,7 @@ module alucontrol(aluop, func7, func3, aluctl);
                               aluctl <= 4'b0001;
                         endcase
                       end
-                    7'b0100000:
+                    1'b1:
                       begin
                         case (func3)
                             3'b000:

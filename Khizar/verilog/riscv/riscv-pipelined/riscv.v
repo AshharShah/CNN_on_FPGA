@@ -22,18 +22,23 @@ module riscv(clk, rst);
     wire memtoreg,    branch,    memread,    memwrite,    alusrc,    regwrite;
     wire memtoreg_if, branch_if, memread_if, memwrite_if, alusrc_if, regwrite_if;
     wire memtoreg_id, branch_id, memread_id, memwrite_id, alusrc_id;
-    wire memtoreg_ex, branch_ex, memread_ex, memwrite_ex;
-    wire memtoreg_wb;
+    wire memtoreg_ex, memread_ex, memwrite_ex;
+    wire memtoreg_wb, func7, func7_id, zero;
 
-    wire [1:0] aluop, aluop_id;
+    wire [1:0] aluop, aluop_if, aluop_id;
     
     wire [3:0] aluctl;
-    wire [31:0] ins;
+    wire [31:0] ins, ins_if;
+    wire [4:0] rd_id, rd_ex, rd_wb;
 
-    wire [31:0] sumB,       pc,     alures,     rd_id, b,    a,   writedata,   zero;
-    wire [31:0] sumB_if,    pc_if,  alures_ex,  rd_ex, b_id, a_id,    readdata,    zero_ex;
-    wire [31:0] sumB_id,    pc_id,  alures_wb,  rd_wb, b_ex, readdata_wb;
+    wire [31:0] sumB,       pc,     alures,     b,    a,   writedata, mux_out;
+    wire [31:0] sumB_if,    pc_if,  alures_ex,  b_id, a_id,    readdata;
+    wire [31:0] sumB_id,    pc_id,  alures_wb,  b_ex, readdata_wb;
+    wire [31:0] immediate, immediate_id;
+    wire [2:0] func3, func3_id;
+
     wire [31:0] sumB_ex;
+    wire        zero_ex, branch_ex, pcsrc;
 
     pc                  pcmod(clk, rst, newpc, pc);
     adder               adder(pc, 4, sumA);
@@ -60,7 +65,8 @@ module riscv(clk, rst);
     exmemreg            ex1(clk, sumB,    zero,    alures,    b_id, rd_id, branch_id, memread_id, memtoreg_id, memwrite_id, 
                                  sumB_ex, zero_ex, alures_ex, b_ex, rd_ex, branch_ex, memread_ex, memtoreg_ex, memwrite_ex);
     datamemory          datamem(clk, alures_ex, b_ex, memread_ex, memwrite_ex, readdata);
-    assign pcsrc =      branch_ex & zero_ex;
+    
+    assign pcsrc = branch_ex & zero_ex;
 
     //wb
     memwbreg            wb1(clk, readdata,    alures_ex, rd_ex, memtoreg_ex, 

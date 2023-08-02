@@ -3,7 +3,7 @@ module datamemory(clk, address, writedata, memread, memwrite, readdata);
     input clk;
     input memread, memwrite;
     input [31:0] writedata;
-    input [9:0] address; // change later
+    input [31:0] address; // change later
     
     output wire [31:0] readdata;
 

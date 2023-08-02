@@ -9,7 +9,7 @@ module riscv_tb;
 
     initial
         begin
-            $dumpfile("../vcd/riscv.vcd");
+            $dumpfile("../vcd/riscv_pipeline.vcd");
             $dumpvars(4, riscv_tb);
 
             $readmemh("./set-instructions/ins.txt", core.insmem.memfile);
