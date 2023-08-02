@@ -2,3 +2,5 @@
 ./verilog/single-cycle/vcd
 ./verilog/single-cycle/vvp
 *.DS_Store
+*./vcd
+*./vvp
