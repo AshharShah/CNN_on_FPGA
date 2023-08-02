@@ -44,13 +44,13 @@ module riscv(clk, rst);
     adder               adder(pc, 4, sumA);
     mux2_1              mux1(sumA, sumB_ex, pcsrc, newpc);
     instructionmemory   insmem(pc, ins);
-    maincontrol         maincon(ins[6:0], branch, memread, memtoreg, aluop, memwrite, alusrc, regwrite);
+    maincontrol         maincon(ins_if[6:0], branch, memread, memtoreg, aluop, memwrite, alusrc, regwrite);
     
     //if
     ifidreg             if1(clk, pc, ins, pc_if, ins_if);
 
     registerfile        regfile(clk, ins_if[19:15], ins_if[24:20], rd_wb, writedata, regwrite_wb, a, b);
-    immediategen        immgen(ins, immediate);
+    immediategen        immgen(ins_if, immediate);
     
     //id
     idexreg             id1(clk, pc_if, a,    b,    immediate,    ins_if[30], ins_if[14:12], ins_if[11:7], branch, memread, memtoreg, aluop, memwrite, alusrc, regwrite, 
