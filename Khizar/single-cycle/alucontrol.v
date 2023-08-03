@@ -12,7 +12,12 @@ module alucontrol(aluop, func7, func3, aluctl);
             2'b00:
               aluctl <= 4'b0010;
             2'b01:
-              aluctl <= 4'b0110;
+              case (func3)
+                3'b000:
+                  aluctl <= 4'b0110;
+                3'b101:
+                  aluctl <= 4'b0111;
+              endcase
             2'b10:
               begin
                 case (func7)

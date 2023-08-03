@@ -4,7 +4,7 @@ module riscv_tb;
 
     reg clk, rst;
     riscv core(clk, rst);
-    
+
     always #1 clk = ~clk;
 
     initial
@@ -22,9 +22,9 @@ module riscv_tb;
             #1
             rst = 0;
 
-            
 
-            #70 $finish;
+
+            #1000 $finish;
         end
 
 endmodule
