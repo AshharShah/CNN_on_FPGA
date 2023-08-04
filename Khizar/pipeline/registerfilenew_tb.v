@@ -1,4 +1,4 @@
-`include "registerfile.v"
+`include "registerfilenew.v"
 
 module registerfile_tb;
 
@@ -9,7 +9,7 @@ module registerfile_tb;
     wire [31:0] readdata1, readdata2;
 
     //rs1, rs2, rd, writedata, regwrite, readdata1, readdata2
-    registerfile uut(clk, rs1, rs2, rd, writedata, regwrite, readdata1, readdata2);
+    registerfilenew uut(clk, rs1, rs2, rd, writedata, regwrite, readdata1, readdata2);
 
     always #1 clk = ~clk;
 
@@ -17,9 +17,14 @@ module registerfile_tb;
     initial
         begin
             $dumpfile("../vcd/registerfile_tb.vcd");
-            $dumpvars(1, registerfile_tb);
+            $dumpvars(3, registerfile_tb);
 
             clk = 0;
+            rs1 = 0;
+            rs2 = 0;
+            rd  = 0;
+            writedata = 0;
+            regwrite = 0;
 
             #3
             regwrite = 1;
@@ -51,24 +56,32 @@ module registerfile_tb;
             #3
             rs1           = 5'b00000;
             rs2           = 5'b00001;
-            $display("x0: %d", readdata1);
+
+            #3
+            $display("x0...: %d", readdata1);
             $display("x1: %d", readdata2);
 
             #3
             rs1           = 5'b00010;
             rs2           = 5'b00011;
+
+            #3
             $display("x2: %d", readdata1);
             $display("x3: %d", readdata2);
 
             #3
             rs1           = 5'b00100;
             rs2           = 5'b00101;
+
+            #3
             $display("x4: %d", readdata1);
             $display("x5: %d", readdata2);
 
             #3
             rs1           = 5'b00010;
             rs2           = 5'b00100;
+
+            #3
             $display("x2: %d", readdata1);
             $display("x4: %d", readdata2);
 
@@ -84,15 +97,17 @@ module registerfile_tb;
             #3
             rs1           = 5'b00001;
             rs2           = 5'b00011;
+
+            #3
             $display("x1: %d", readdata1);
             $display("x3: %d", readdata2);
 
             #3
             regwrite = 1;
+            rs2           = 5'b00011;
             rd            = 5'b00011;
             writedata     = {{28{1'b0}}, 4'b0111};
             rs1           = 5'b00001;
-            rs2           = 5'b00011;
             $display("...rs1 (x1): %d", readdata1);
             $display("...rs2 (x3): %d", readdata2);
 

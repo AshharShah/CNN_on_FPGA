@@ -1,5 +1,5 @@
 `include "alu.v"
-`include "registerfile.v"
+`include "registerfilenew.v"
 `include "instructionmemory.v"
 `include "adder.v"
 `include "datamemory.v"
@@ -51,7 +51,7 @@ module riscv(clk, rst);
     //if
     ifidreg             if1(clk, pc, ins, pc_if, ins_if);
 
-    registerfile        regfile(clk, ins_if[19:15], ins_if[24:20], rd_wb, writedata, regwrite_wb, a, b);
+    registerfilenew     regfile(clk, ins_if[19:15], ins_if[24:20], rd_wb, writedata, regwrite_wb, a, b);
     immediategen        immgen(ins_if, immediate);
 
     //id
