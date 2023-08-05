@@ -1,6 +1,6 @@
-module ifidreg(clk, pc, ins, pc_if, ins_if);
+module ifidreg(clk, enable_if, pc, ins, pc_if, ins_if);
 
-    input clk;
+    input clk, enable_if;
     input [31:0] pc, ins;
 
     output reg [31:0] pc_if, ins_if;
@@ -13,8 +13,11 @@ module ifidreg(clk, pc, ins, pc_if, ins_if);
 
     always @(posedge clk) 
     begin
-        pc_if       <=  pc;
-        ins_if      <= ins; 
+        if (enable_if == 1)
+        begin
+            pc_if       <=  pc;
+            ins_if      <= ins; 
+        end
     end
 
 endmodule

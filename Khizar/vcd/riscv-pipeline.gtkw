@@ -1,21 +1,21 @@
 [*]
-[*] GTKWave Analyzer v3.3.114 (w)1999-2023 BSI
-[*] Fri Aug  4 10:21:49 2023
+[*] GTKWave Analyzer v3.3.107 (w)1999-2020 BSI
+[*] Sat Aug  5 10:07:50 2023
 [*]
-[dumpfile] "/home/pc3/Khizar/CNN_on_FPGA/Khizar/vcd/riscv_pipeline.vcd"
-[dumpfile_mtime] "Fri Aug  4 10:21:05 2023"
-[dumpfile_size] 43518
-[savefile] "/home/pc3/Khizar/CNN_on_FPGA/Khizar/vcd/riscv-pipeline.gtkw"
-[timestart] 22
-[size] 1850 1006
-[pos] 248 45
-*-2.000000 33 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[dumpfile] "/Volumes/myData/CNN_on_FPGA/Khizar/vcd/riscv_pipeline.vcd"
+[dumpfile_mtime] "Sat Aug  5 10:02:07 2023"
+[dumpfile_size] 61760
+[savefile] "/Volumes/myData/CNN_on_FPGA/Khizar/vcd/riscv-pipeline.gtkw"
+[timestart] 56
+[size] 1435 997
+[pos] -276 -1
+*-2.507631 60 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] riscv_tb.
 [treeopen] riscv_tb.core.
 [sst_width] 278
 [signals_width] 251
 [sst_expanded] 1
-[sst_vpaned_height] 501
+[sst_vpaned_height] 758
 @28
 riscv_tb.rst
 riscv_tb.clk
@@ -52,10 +52,8 @@ riscv_tb.core.immediate_id[31:0]
 riscv_tb.core.a_id[31:0]
 [color] 6
 riscv_tb.core.b_id[31:0]
-@25
 [color] 6
 riscv_tb.core.alu_in1[31:0]
-@24
 [color] 6
 riscv_tb.core.alu_in2[31:0]
 [color] 6
@@ -101,5 +99,10 @@ riscv_tb.core.regwrite_wb
 @24
 [color] 2
 riscv_tb.core.readdata_wb[31:0]
+@28
+riscv_tb.core.hdetect.enable_control
+riscv_tb.core.hdetect.enable_if
+@29
+riscv_tb.core.hdetect.enable_pc
 [pattern_trace] 1
 [pattern_trace] 0

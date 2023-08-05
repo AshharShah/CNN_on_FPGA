@@ -19,12 +19,10 @@ module riscv_tb;
             #1
             rst = 1;
 
-            #15
+            #2
             rst = 0;
 
-
-
-            #350 $finish;
+            #150 $finish;
         end
 
 endmodule

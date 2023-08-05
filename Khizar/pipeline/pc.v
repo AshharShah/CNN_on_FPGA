@@ -1,6 +1,6 @@
-module pc(clk, rst, in, out);
+module pc(clk, rst, in, enable, out);
     
-    input clk, rst;
+    input clk, rst, enable;
     input [31:0] in;
     output reg [31:0] out;
 
@@ -8,8 +8,8 @@ module pc(clk, rst, in, out);
         begin
             if (rst == 1)
                 out <= 0;
-            else
-                out <= in;        
+            else if (enable == 1)
+                out <= in;
         end
 
 endmodule

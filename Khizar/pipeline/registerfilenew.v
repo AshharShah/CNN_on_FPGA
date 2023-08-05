@@ -22,7 +22,7 @@ module registerfilenew(clk, rs1, rs2, rd, writedata, regwrite, readdata1, readda
     always @ (posedge clk)
     begin
         if (regwrite == 1 & rd != 0)
-            regfile[rd] <= writedata;
+          regfile[rd] <= writedata;
 
     end
 
