@@ -8,7 +8,6 @@ module maincontrol(opcode, branch, memread, memtoreg, aluop, memwrite, alusrc, r
   localparam R    = 7'b0110011;
   //localparam J    = 7'b1101111;
 
-  input enable_hazard_control;
   input [6:0] opcode;
 
   output reg branch, memread, memtoreg, memwrite, alusrc, regwrite;

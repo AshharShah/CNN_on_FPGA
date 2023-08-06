@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.3.107 (w)1999-2020 BSI
-[*] Sun Aug  6 10:55:50 2023
+[*] Sat Aug  5 18:09:51 2023
 [*]
 [dumpfile] "/Volumes/myData/CNN_on_FPGA/Khizar/vcd/riscv_pipeline.vcd"
-[dumpfile_mtime] "Sun Aug  6 10:48:51 2023"
-[dumpfile_size] 17512
+[dumpfile_mtime] "Sat Aug  5 18:07:02 2023"
+[dumpfile_size] 60034
 [savefile] "/Volumes/myData/CNN_on_FPGA/Khizar/vcd/riscv-pipeline.gtkw"
-[timestart] 9
+[timestart] 5
 [size] 1680 997
 [pos] -1 -1
-*-2.000000 18 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-2.507631 16 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] riscv_tb.
 [treeopen] riscv_tb.core.
 [treeopen] riscv_tb.core.bpred.
@@ -18,7 +18,7 @@
 [sst_width] 278
 [signals_width] 251
 [sst_expanded] 1
-[sst_vpaned_height] 758
+[sst_vpaned_height] 591
 @28
 riscv_tb.rst
 riscv_tb.clk
@@ -41,6 +41,8 @@ riscv_tb.core.pc_if[31:0]
 riscv_tb.core.if1.enable_if
 riscv_tb.core.if1.flush_if
 riscv_tb.core.bpred.flush_if
+@200
+-
 @22
 [color] 3
 riscv_tb.core.ins_if[31:0]
@@ -74,9 +76,10 @@ riscv_tb.core.immediate[31:0]
 @28
 [color] 3
 riscv_tb.core.alusrc
-@24
+@25
 [color] 6
 riscv_tb.core.pc_id[31:0]
+@24
 [color] 6
 riscv_tb.core.immediate_id[31:0]
 [color] 6

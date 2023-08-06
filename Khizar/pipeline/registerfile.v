@@ -23,6 +23,5 @@ module registerfile(clk, rs1, rs2, rd, writedata, regwrite, readdata1, readdata2
         regfile[rd] <= writedata;
       
     end
-      
 
 endmodule

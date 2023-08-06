@@ -16,16 +16,16 @@
 `include "mux3_1.v"
 `include "hazarddetectionunit.v"
 `include "mux2_1b.v"
+`include "branchpredictionunit.v"
 
 module riscv(clk, rst);
 
     input clk, rst;
 
-    wire memtoreg,    branch,    memread,    memwrite,    alusrc,    regwrite,    zero,    func7,    pcsrc;
-    wire memtoreg_if, branch_if, memread_if, memwrite_if, alusrc_if, regwrite_if, zero_ex, func7_id;
+    wire memtoreg,    branch,    memread,    memwrite,    alusrc,    regwrite,    pcsrc;
     wire memtoreg_id, branch_id, memread_id, memwrite_id, alusrc_id, regwrite_cn;
-    wire memtoreg_ex, branch_ex, memread_ex, memwrite_ex;
-    wire memtoreg_wb, enable_pc, enable_if,  memwrite_cn;
+    wire memtoreg_ex, branch_ex, memread_ex, memwrite_ex, zero,      func7;
+    wire memtoreg_wb, enable_pc, enable_if,  memwrite_cn, zero_ex,   func7_id;
 
     wire [1:0] aluop, aluop_if, aluop_id, forwardA, forwardB;
     wire [2:0] func3, func3_id;
@@ -38,28 +38,31 @@ module riscv(clk, rst);
     wire [31:0] sumB_ex,    newpc,  mux_out,    b_ex,    sumA;
 
     //new
-    wire enable_control;
+    wire enable_control, flush_if;
 
     pc                  pcmod(clk, rst, newpc, enable_pc, pc);
     adder               adder(pc, 4, sumA);
-    mux2_1              mux1(sumA, sumB_ex, pcsrc, newpc);
+    mux2_1              mux1(sumA, sumB, pcsrc, newpc);
     instructionmemory   insmem(pc, ins);
     
     //if
-    ifidreg             if1(clk, enable_if, pc, ins, pc_if, ins_if);
+    ifidreg             if1(clk, enable_if, flush_if, pc, ins, pc_if, ins_if);
     
-    hazarddetectionunit hdetect(memread_id, ins_if[19:15], ins_if[24:20], rd_id, enable_if, enable_pc, enable_control);
-    mux2_1b             mux4(0, regwrite, enable_control, regwrite_cn);
-    mux2_1b             mux5(0, memwrite, enable_control, memwrite_cn);
-
+    hazarddetectionunit hdetect(branch, memread_id, ins_if[19:15], ins_if[24:20], rd_id, enable_if, enable_pc, enable_control);
+    mux2_1b             mux4(1'b0, regwrite, enable_control, regwrite_cn);
+    mux2_1b             mux5(1'b0, memwrite, enable_control, memwrite_cn);
+    
     registerfilenew     regfile(clk, ins_if[19:15], ins_if[24:20], rd_wb, writedata, regwrite_wb, a, b);
+    adder               adder2(immediate, pc_if, sumB);
+
+branchpredictionunit    bpred(ins_if[19:15], ins_if[24:20], rd_id, branch, a, b, pcsrc, flush_if);
+    
     immediategen        immgen(ins_if, immediate);
     maincontrol         maincon(ins_if[6:0], branch, memread, memtoreg, aluop, memwrite, alusrc, regwrite);
 
     //id
     idexreg             id1(clk, pc_if, a,    b,    immediate,    ins_if[30], ins_if[14:12], ins_if[11:7], branch,    memread,    memtoreg,    aluop,    memwrite_cn,    alusrc, regwrite_cn, ins_if[19:15], ins_if[24:20],
                                  pc_id, a_id, b_id, immediate_id, func7_id,   func3_id,      rd_id,        branch_id, memread_id, memtoreg_id, aluop_id, memwrite_id, alusrc_id, regwrite_id, rs1_id,        rs2_id);
-    adder               adder2(immediate_id, pc_id, sumB);
     alucontrol          alucon(aluop_id, func7_id, func3_id, aluctl);
     mux2_1              mux2(b_id, immediate_id, alusrc_id, mux_out);
     forwardingunit      fwdunit(rs1_id, rs2_id, rd_ex, regwrite_ex, rd_wb, regwrite_wb, forwardA, forwardB);
@@ -68,11 +71,11 @@ module riscv(clk, rst);
     alu                 alu(aluctl, alu_in1, alu_in2, alures, zero, overflow);
 
     //ex
-    exmemreg            ex1(clk, sumB,    zero,    alures,    b_id, rd_id, branch_id, memread_id, memtoreg_id, memwrite_id, regwrite_id,
-                                 sumB_ex, zero_ex, alures_ex, b_ex, rd_ex, branch_ex, memread_ex, memtoreg_ex, memwrite_ex, regwrite_ex);
+    exmemreg            ex1(clk, zero,    alures,    b_id, rd_id, branch_id, memread_id, memtoreg_id, memwrite_id, regwrite_id,
+                                 zero_ex, alures_ex, b_ex, rd_ex, branch_ex, memread_ex, memtoreg_ex, memwrite_ex, regwrite_ex);
     datamemory          datamem(clk, alures_ex, b_ex, memread_ex, memwrite_ex, readdata);
 
-    assign pcsrc = branch_ex & zero_ex;
+    //assign pcsrc = branch_ex & zero_ex;
 
     //wb
     memwbreg            wb1(clk, readdata,    alures_ex, rd_ex, memtoreg_ex, regwrite_ex,

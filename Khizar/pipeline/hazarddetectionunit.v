@@ -1,13 +1,13 @@
-module hazarddetectionunit(memread_id, rs1_if, rs2_if, rd_id, enable_if, enable_pc, enable_control);
+module hazarddetectionunit(branch, memread_id, rs1_if, rs2_if, rd_id, enable_if, enable_pc, enable_control);
 
-    input memread_id;
+    input memread_id, branch;
     input [4:0] rs1_if, rs2_if, rd_id;
     
     output reg enable_if, enable_pc, enable_control;
 
-    always @ (rs1_if, rs2_if, memread_id, rd_id)
+    always @ (rs1_if, rs2_if, memread_id, rd_id, branch)
     begin
-        if (memread_id & ((rd_id == rs1_if) | (rd_id == rs2_if)))
+        if ((branch | memread_id) & (rd_id == rs1_if | rd_id == rs2_if))
             begin
                 enable_control <= 0;
                 enable_pc      <= 0;
