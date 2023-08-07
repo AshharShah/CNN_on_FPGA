@@ -45,12 +45,40 @@ class Softmax:
             # the normalization constant S_total is used to normalize the transformed values in transformation_eq such that they sum up to 1
             S_total = np.sum(transformation_eq)
 
-            dY_dZ = -transformation_eq[i]*transformation_eq / (S_total**2)
+            dY_dZ = -transformation_eq[i]*transformation_eq / (S_total**2) # when i is not equal to l
             dY_dZ[i] = transformation_eq[i] * \
-                (S_total - transformation_eq[i]) / (S_total**2)
+                (S_total - transformation_eq[i]) / (S_total**2)    # when i is equal to l
 
-            print(transformation_eq)
+            # gradient of output Z with respect to the weight and input
+            dZ_dw = self.flattened_image
+            dZ_dX = self.weight
 
-            print(dY_dZ)
+            # gradient of the loss with respect to the output
+            dE_dZ = gradient * dY_dZ
 
-        return S_total
+
+            # print(dZ_dw[np.newaxis].T.shape)
+            # print(dE_dZ[np.newaxis].shape)
+
+            # print(dE_dZ[np.newaxis])
+
+            # calculate the gradient of the loss with respect to the weight
+            dE_dw = dZ_dw[np.newaxis].T @ dE_dZ[np.newaxis]
+
+            # print(dE_dw.shape)
+
+            # calculate the gradient of the loss with respect to the bias
+            dE_db = dE_dZ
+
+            # update the wight and the bias
+            self.weight =  self.weight - alpha*dE_dw
+            self.bias = self.bias - alpha*dE_db
+
+            # calculate the gradient of the loss with respect to the input
+            dE_dX = dZ_dX @ dE_dZ
+
+            # reshape back to the original (13x13x1) image before the flatten operation
+            print(dE_dX.reshape(self.original_shape).shape)
+
+
+        return dE_dX.reshape(self.original_shape)
