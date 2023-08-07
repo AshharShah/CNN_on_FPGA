@@ -1,0 +1,31 @@
+[*]
+[*] GTKWave Analyzer v3.3.107 (w)1999-2020 BSI
+[*] Fri Aug  4 13:31:08 2023
+[*]
+[dumpfile] "/Volumes/myData/CNN_on_FPGA/Khizar/vcd/registerfile_tb.vcd"
+[dumpfile_mtime] "Fri Aug  4 13:27:44 2023"
+[dumpfile_size] 1592
+[savefile] "/Volumes/myData/CNN_on_FPGA/Khizar/vcd/regfile.gtkw"
+[timestart] 1
+[size] 1523 772
+[pos] -1 -1
+*-2.171582 11 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[sst_width] 193
+[signals_width] 236
+[sst_expanded] 1
+[sst_vpaned_height] 534
+@28
+registerfile_tb.clk
+registerfile_tb.regwrite
+@24
+registerfile_tb.rs1[4:0]
+registerfile_tb.rs2[4:0]
+@22
+registerfile_tb.rd[4:0]
+@24
+registerfile_tb.writedata[31:0]
+@22
+registerfile_tb.readdata1[31:0]
+registerfile_tb.readdata2[31:0]
+[pattern_trace] 1
+[pattern_trace] 0

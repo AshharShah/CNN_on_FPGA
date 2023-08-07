@@ -1,0 +1,41 @@
+nop
+nop
+nop
+nop
+addi x10, x0, 1
+nop
+nop
+nop
+addi x11, x10, 1
+addi x13, x10, 3
+addi x12, x10, 2
+sw x10, 0(x0)
+addi x28, x0, 1
+add x14, x13, x11
+beq x10, x11, label
+sw x11, 0(x0)
+sw x12, 4(x0)
+addi x15, x14, 0
+addi x31, x0, 1 
+lw x30, 0(x0)
+lw x18, 4(x0)
+sub x16, x15, x11
+lw x26, 4(x0)
+addi x31, x30, 0
+addi x19, x18, 0
+and x20, x10, x18
+addi x17, x16, 0
+or x21, x11, x16
+label: addi x27, x26, 0
+addi x23, x20, 0
+xor x22, x14, x17
+addi x24, x21, 0
+sw x19, 19(x10)
+lw x5, 10(x11)
+addi x25, x22, 0
+sw x24, 8(x16)
+lw x6, 13(x12)
+lw x7, 14(x15)
+sw x25, 12(x17)
+lw x8, 22(x25)
+sw x30, 21(x18)

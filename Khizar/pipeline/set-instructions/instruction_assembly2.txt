@@ -1,0 +1,123 @@
+nop
+nop
+nop
+nop
+addi x10, x0, 1  
+addi x11, x10, 1   
+beq x10, x11, label  
+addi x12, x10, 2     
+sw x10, 0(x0)         
+nop
+nop
+nop
+nop
+addi x13, x10, 3     
+add x14, x13, x11   
+addi x15, x14, 0      
+sub x16, x15, x11    
+addi x17, x16, 0      
+sw x11, 0(x0)         
+nop
+nop
+nop
+nop
+sw x12, 4(x0)         
+label:
+nop
+nop
+nop
+nop
+lw x18, 4(x0)         
+nop
+nop
+nop
+nop
+addi x19, x18, 0         
+and x20, x10, x18        
+addi x23, x20, 0        
+or x21, x11, x16           
+addi x24, x21, 0        
+xor x22, x14, x17        
+addi x25, x22, 0         
+nop
+lw x26, 4(x0)        
+nop
+nop
+nop
+nop
+beq x26, x26, label2
+addi x27, x26, 0
+nop
+lw x30, 0(x0)
+nop
+nop
+nop
+nop
+addi x31, x30, 0
+sw x24, 8(x16)
+nop
+nop
+nop
+nop
+sw x25, 12(x17)
+nop
+nop
+nop
+nop
+sw x19, 19(x10)
+nop
+nop
+nop
+nop
+sw x30, 21(x18)
+nop
+nop
+nop
+nop
+lw x5, 10(x11)
+nop
+nop
+nop
+nop
+lw x6, 13(x12)
+nop
+nop
+nop
+nop
+lw x7, 14(x15)
+nop
+nop
+nop
+nop
+lw x8, 22(x25)
+nop
+nop
+nop
+nop
+addi x4, x5, 0
+addi x4, x6, 0
+addi x4, x7, 0
+addi x4, x8, 0
+label2:
+addi x10, x10, 0
+addi x11, x11, 0
+addi x12, x12, 0
+addi x13, x13, 0
+addi x14, x14, 0
+addi x15, x15, 0
+addi x16, x16, 0
+addi x17, x17, 0
+addi x18, x18, 0
+addi x19, x19, 0
+addi x20, x20, 0
+addi x21, x21, 0
+addi x22, x22, 0
+addi x23, x23, 0
+addi x24, x24, 0
+addi x25, x25, 0
+addi x26, x26, 0
+addi x27, x27, 0
+addi x28, x28, 0
+addi x29, x29, 0
+addi x30, x30, 0
+addi x31, x31, 0
