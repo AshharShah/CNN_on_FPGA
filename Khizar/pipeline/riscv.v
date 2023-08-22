@@ -49,8 +49,8 @@ module riscv(clk, rst);
     ifidreg             if1(clk, enable_if, pc, ins, pc_if, ins_if);
     
     hazarddetectionunit hdetect(memread_id, ins_if[19:15], ins_if[24:20], rd_id, enable_if, enable_pc, enable_control);
-    mux2_1b             mux4(0, regwrite, enable_control, regwrite_cn);
-    mux2_1b             mux5(0, memwrite, enable_control, memwrite_cn);
+    mux2_1b             mux4(1'b0, regwrite, enable_control, regwrite_cn);
+    mux2_1b             mux5(1'b0, memwrite, enable_control, memwrite_cn);
 
     registerfilenew     regfile(clk, ins_if[19:15], ins_if[24:20], rd_wb, writedata, regwrite_wb, a, b);
     immediategen        immgen(ins_if, immediate);

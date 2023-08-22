@@ -3,6 +3,7 @@
 module riscv_tb;
 
     reg clk, rst;
+    integer i;
     riscv core(clk, rst);
 
     always #1 clk = ~clk;
@@ -12,7 +13,7 @@ module riscv_tb;
             $dumpfile("../vcd/riscv_pipeline.vcd");
             $dumpvars(4, riscv_tb);
 
-            $readmemh("./set-instructions/ins.txt", core.insmem.memfile);
+            $readmemh("./set-instructions/binary-instructions.txt", core.insmem.memfile);
 
             clk = 0;
 
@@ -24,5 +25,4 @@ module riscv_tb;
 
             #150 $finish;
         end
-
 endmodule
