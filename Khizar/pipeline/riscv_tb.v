@@ -13,7 +13,7 @@ module riscv_tb;
             $dumpfile("../vcd/riscv_pipeline.vcd");
             $dumpvars(4, riscv_tb);
 
-            $readmemh("./set-instructions/binary-instructions.txt", core.insmem.memfile);
+            $readmemh("./set-instructions/test-final.hex", core.insmem.memfile);
 
             clk = 0;
 

@@ -172,7 +172,7 @@ void read_data()
 	ifstream file;
 	string word;
 	vector<datafile> stored;
-	file.open("test.asm");
+	file.open("test-1.asm");
 	int flag;
 	int start = 0;
 	if (file.is_open())
@@ -365,24 +365,8 @@ ll gethex(vector<int> temp)
 void hexa()
 {
 	ofstream file;
-	file.open("MCode.mc", std::ios_base::app);
-	file << "0x";
-	string s;
-	ll temppc = pccount;
-	if (temppc == 0)
-	{
-		s += '0';
-	}
-	while (temppc != 0)
-	{
-		char e = h(temppc % 16);
-		temppc /= 16;
-		s += e;
-	}
+	file.open("test-1.hex", std::ios_base::app);
 
-	reverse(s.begin(), s.end());
-	file << s << " ";
-	file << "0x";
 	for (int i = 0; i < 32; i++)
 	{
 		vector<int> t;
@@ -519,6 +503,7 @@ void IFunction(int index, int index1)
 			binary[j--] = imme % 2;
 			imme /= 2;
 		}
+
 		hexa();
 		return;
 	}
@@ -1418,7 +1403,7 @@ int main()
 	read_data();
 
 	ofstream files;
-	files.open("MCode.mc");
+	files.open("test-1.hex");
 	files.close();
 	formats();
 	ifstream myFile;
@@ -1442,20 +1427,4 @@ int main()
 	preprocess();
 	process();
 	myFile.close();
-	ofstream file;
-	file.open("MCode.mc", std::ios_base::app);
-	string s = "-------------------------------------------------------";
-	file << s << endl;
-
-	// Print the Data Memory Part in Increasing Address Order
-	for (int i = 0; i < 400; i++)
-	{
-		file << datamemory[i] << " ";
-		if ((i + 1) % 4 == 0)
-		{
-			file << endl;
-		}
-	}
-	file << s << endl;
-	file.close();
 }
