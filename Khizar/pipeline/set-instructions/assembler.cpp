@@ -13,6 +13,9 @@ vector<string> codeinit;
 vector<string> code;
 vector<string> Format;
 
+string hex_file_name;
+string asm_file_name;
+
 ll sizeI, sizeA;
 
 int binary[32];
@@ -365,7 +368,7 @@ ll gethex(vector<int> temp)
 void hexa()
 {
 	ofstream file;
-	file.open("test-1.hex", std::ios_base::app);
+	file.open(hex_file_name, std::ios_base::app);
 
 	for (int i = 0; i < 32; i++)
 	{
@@ -1396,35 +1399,43 @@ void setlabel()
 }
 
 // Driver Code
-int main()
+int main(int argc, char *argv[])
 {
 	for (int i = 0; i < 4000; i++)
 		datamemory[i] = "00";
 	read_data();
 
-	ofstream files;
-	files.open("test-1.hex");
-	files.close();
-	formats();
-	ifstream myFile;
-	myFile.open("./test-1.asm");
-	string line;
-	int flag = 0;
-	while (getline(myFile, line))
+	int test_cases = atoi(argv[1]);
+
+	for (int i = 1; i <= test_cases; ++i)
 	{
-		if (line == ".data")
-			flag = 1;
-		if (line == ".text")
+		hex_file_name = "./test-" + i + ".hex";
+		asm_file_name = "./test-" + i + ".asm";
+
+		ofstream files;
+		files.open(hex_file_name);
+		files.close();
+		formats();
+		ifstream myFile;
+		myFile.open(asm_file_name);
+		string line;
+		int flag = 0;
+		while (getline(myFile, line))
 		{
-			flag = 0;
-			continue;
+			if (line == ".data")
+				flag = 1;
+			if (line == ".text")
+			{
+				flag = 0;
+				continue;
+			}
+			if (flag != 1)
+				codeinit.push_back(line);
 		}
-		if (flag != 1)
-			codeinit.push_back(line);
+		shift();
+		setlabel();
+		preprocess();
+		process();
+		myFile.close();
 	}
-	shift();
-	setlabel();
-	preprocess();
-	process();
-	myFile.close();
 }

@@ -1,6 +1,7 @@
 number = 1
+test_cases = 3
 
-all: compile asm ins tb vv compare gt
+all: compile asm assemble ins tb vv compare gt
 run: asm ins tb vv compare gt
 
 compile: ./set-instructions/assembler.cpp ./set-instructions/hex-corrector.cpp ./set-instructions/test-cases-check.cpp
@@ -9,7 +10,10 @@ compile: ./set-instructions/assembler.cpp ./set-instructions/hex-corrector.cpp .
 	g++ -o ./set-instructions/test-cases-check.out ./set-instructions/test-cases-check.cpp
 
 asm: ./set-instructions/assembler.out
-	./set-instructions/assembler.out
+	./set-instructions/assembler.out $(test_cases)
+
+assemble:
+
 
 ins: ./set-instructions/hex-corrector.out
 	./set-instructions/hex-corrector.out ./set-instructions/test-$(number).hex ./set-instructions/test-final.hex
