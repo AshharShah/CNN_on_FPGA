@@ -16,6 +16,10 @@ vector<string> Format;
 string hex_file_name;
 string asm_file_name;
 
+int i_test_case;
+
+string datamemory[4000];
+
 ll sizeI, sizeA;
 
 int binary[32];
@@ -28,8 +32,6 @@ typedef struct
 } lab;
 
 vector<lab> Label;
-
-string datamemory[4000]; // Initial Size of Data Memory is Fixed 4000 Bytes
 
 struct datafile
 {
@@ -175,7 +177,7 @@ void read_data()
 	ifstream file;
 	string word;
 	vector<datafile> stored;
-	file.open("test-1.asm");
+	file.open(asm_file_name);
 	int flag;
 	int start = 0;
 	if (file.is_open())
@@ -1401,16 +1403,17 @@ void setlabel()
 // Driver Code
 int main(int argc, char *argv[])
 {
-	for (int i = 0; i < 4000; i++)
-		datamemory[i] = "00";
-	read_data();
-
 	int test_cases = atoi(argv[1]);
 
-	for (int i = 1; i <= test_cases; ++i)
+	for (i_test_case = 1; i_test_case <= test_cases; ++i_test_case)
 	{
-		hex_file_name = "./test-" + i + ".hex";
-		asm_file_name = "./test-" + i + ".asm";
+
+		for (int i = 0; i < 4000; i++)
+			datamemory[i] = "00";
+		read_data();
+
+		hex_file_name = "./test-" + to_string(i_test_case) + ".hex";
+		asm_file_name = "./test-" + to_string(i_test_case) + ".asm";
 
 		ofstream files;
 		files.open(hex_file_name);
@@ -1420,6 +1423,7 @@ int main(int argc, char *argv[])
 		myFile.open(asm_file_name);
 		string line;
 		int flag = 0;
+
 		while (getline(myFile, line))
 		{
 			if (line == ".data")
@@ -1432,10 +1436,24 @@ int main(int argc, char *argv[])
 			if (flag != 1)
 				codeinit.push_back(line);
 		}
+
 		shift();
 		setlabel();
 		preprocess();
 		process();
+		
+		code.empty();
+		Label.empty();
+		Format.empty();
 		myFile.close();
+		codeinit.empty();
+		datalabel.empty();
+		
+		pccount = 0;
+		
+		for (int i = 0; i < 32; ++i)
+			binary[i] = 0;
+		for (int i = 0; i < 4000; ++i)
+			datamemory[i] = "";
 	}
 }
