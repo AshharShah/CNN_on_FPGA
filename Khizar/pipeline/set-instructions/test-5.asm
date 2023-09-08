@@ -2,6 +2,11 @@ nop
 nop
 nop
 nop
+sw x0, 0(x0)
+nop
+nop
+nop
+nop
 lw x30, 0(x0)
 nop
 nop

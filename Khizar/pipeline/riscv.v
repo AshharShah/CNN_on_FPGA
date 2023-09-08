@@ -34,7 +34,7 @@ module riscv(clk, rst);
 
     wire [31:0] sumB,       pc,     alures,     b,       a,       immediate,    readdata,    ins;
     wire [31:0] sumB_if,    pc_if,  alures_ex,  b_id,    a_id,    immediate_id, readdata_wb, ins_if;
-    wire [31:0] sumB_id,    pc_id,  alures_wb,  alu_in1, alu_in2, writedata;
+    wire [31:0] sumB_id,    pc_id,  alures_wb,  alu_in1, alu_in2, writedata,    alu_2_bef;
     wire [31:0] sumB_ex,    newpc,  mux_out,    b_ex,    sumA;
 
     //new
@@ -61,14 +61,15 @@ module riscv(clk, rst);
                                  pc_id, a_id, b_id, immediate_id, func7_id,   func3_id,      rd_id,        branch_id, memread_id, memtoreg_id, aluop_id, memwrite_id, alusrc_id, regwrite_id, rs1_id,        rs2_id);
     adder               adder2(immediate_id, pc_id, sumB);
     alucontrol          alucon(aluop_id, func7_id, func3_id, aluctl);
-    mux2_1              mux2(b_id, immediate_id, alusrc_id, mux_out);
+    //mux2_1              mux2(b_id, immediate_id, alusrc_id, mux_out);
     forwardingunit      fwdunit(rs1_id, rs2_id, rd_ex, regwrite_ex, rd_wb, regwrite_wb, forwardA, forwardB);
     mux3_1              fwdAmux(a_id, alures_ex, writedata, forwardA, alu_in1);
-    mux3_1              fwdBmux(mux_out, alures_ex, writedata, forwardB, alu_in2);
+    mux3_1              fwdBmux(b_id, alures_ex, writedata, forwardB, alu_2_bef);
+    mux2_1              mux6(alu_2_bef, immediate_id, alusrc_id, alu_in2);
     alu                 alu(aluctl, alu_in1, alu_in2, alures, zero, overflow);
 
     //ex
-    exmemreg            ex1(clk, sumB,    zero,    alures,    b_id, rd_id, branch_id, memread_id, memtoreg_id, memwrite_id, regwrite_id,
+    exmemreg            ex1(clk, sumB,    zero,    alures,    alu_2_bef, rd_id, branch_id, memread_id, memtoreg_id, memwrite_id, regwrite_id,
                                  sumB_ex, zero_ex, alures_ex, b_ex, rd_ex, branch_ex, memread_ex, memtoreg_ex, memwrite_ex, regwrite_ex);
     datamemory          datamem(clk, alures_ex, b_ex, memread_ex, memwrite_ex, readdata);
 
