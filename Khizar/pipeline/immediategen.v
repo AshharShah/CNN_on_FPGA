@@ -19,7 +19,7 @@ module immediategen(instruction, result);
                 S: 
                     result <= {{19{instruction[31]}}, instruction[31:25], instruction[11:7]};
                 SB: 
-                    result <= {{18{instruction[31]}}, instruction[31], instruction[7], instruction[30:25], instruction[11:8], 1'b0};
+                    result <= {{19{instruction[31]}}, instruction[31], instruction[7], instruction[30:25], instruction[11:8], 1'b0};
                 //J:
                 //    result <= {{11{instruction[31]}}, instruction[31], instruction[19:12], instruction[20], instruction[30:21], 1'b0};
                     

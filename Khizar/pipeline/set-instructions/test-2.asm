@@ -1,5 +1,4 @@
-label1:
-nop
+label1: nop
 nop
 nop
 nop
@@ -18,8 +17,7 @@ nop
 nop
 nop
 nop
-label2:
-addi x26, x0, 1
+label2: addi x26, x0, 1
 nop
 nop
 nop

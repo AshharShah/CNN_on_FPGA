@@ -3,7 +3,9 @@
 module riscv_tb;
 
     reg clk, rst;
+
     integer i;
+
     riscv core(clk, rst);
 
     always #1 clk = ~clk;
@@ -13,7 +15,9 @@ module riscv_tb;
             $dumpfile("../vcd/riscv_pipeline.vcd");
             $dumpvars(4, riscv_tb);
 
-            $readmemh("./set-instructions/test-final.hex", core.insmem.memfile);
+            //$readmemh({"./set-instructions/test-", test_case_number, ".hex"}, core.insmem.memfile);
+            $readmemh("./set-instructions/corrected-test-2.hex", core.insmem.memfile);
+
 
             clk = 0;
 
@@ -23,6 +27,6 @@ module riscv_tb;
             #2
             rst = 0;
 
-            #150 $finish;
+            #350 $finish;
         end
 endmodule

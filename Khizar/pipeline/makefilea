@@ -1,0 +1,30 @@
+number = 1
+test_cases = 3
+
+all: compile asm ins tb vv compare gt
+run: asm ins tb vv compare gt
+
+compile: ./set-instructions/assembler.cpp ./set-instructions/hex-corrector.cpp ./set-instructions/test-cases-check.cpp
+	g++ -o ./set-instructions/assembler.out ./set-instructions/assembler.cpp
+	g++ -o ./set-instructions/hex-corrector.out ./set-instructions/hex-corrector.cpp
+	g++ -o ./set-instructions/test-cases-check.out ./set-instructions/test-cases-check.cpp
+
+asm: ./set-instructions/assembler.out
+	./set-instructions/assembler.out $(test_cases)
+
+ins: ./set-instructions/hex-corrector.out
+	./set-instructions/hex-corrector.out test_cases
+
+tb: riscv_tb.v
+	iverilog -o ../vvp/tb_riscv_pipe.vvp riscv_tb.v
+
+vv: ../vvp/tb_riscv_pipe.vvp
+	vvp ../vvp/tb_riscv_pipe.vvp
+	
+compare:
+	tail -n +10 ../vcd/riscv_pipeline.vcd > ../vcd/test-$(number)-comp.txt
+	diff ../vcd/test-$(number).txt ../vcd/test-$(number)-comp.txt > ../vcd/result-$(number).txt
+	./set-instructions/test-cases-check.out ../vcd/result-$(number).txt
+
+gt:
+	gtkwave ../vcd/riscv_pipeline.gtkw
