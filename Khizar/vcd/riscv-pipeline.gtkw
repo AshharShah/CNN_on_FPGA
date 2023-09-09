@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.3.107 (w)1999-2020 BSI
-[*] Fri Sep  8 16:30:18 2023
+[*] Sat Sep  9 10:14:44 2023
 [*]
 [dumpfile] "/Volumes/myData/fyp/CNN_on_FPGA/Khizar/vcd/riscv_pipeline.vcd"
-[dumpfile_mtime] "Fri Sep  8 16:21:35 2023"
-[dumpfile_size] 104139
+[dumpfile_mtime] "Sat Sep  9 10:03:47 2023"
+[dumpfile_size] 114416
 [savefile] "/Volumes/myData/fyp/CNN_on_FPGA/Khizar/vcd/riscv-pipeline.gtkw"
-[timestart] 92
-[size] 1280 971
+[timestart] 132
+[size] 1280 1024
 [pos] -1 -1
-*-2.670593 102 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-3.670593 102 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] riscv_tb.
 [treeopen] riscv_tb.core.
 [sst_width] 278
