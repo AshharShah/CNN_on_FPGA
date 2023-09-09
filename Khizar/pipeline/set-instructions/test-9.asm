@@ -51,6 +51,11 @@ addi x8,  x8,  0   # 2
 addi x9,  x9,  0   # XX
 addi x10, x10, 0   # 1
 addi x11, x11, 0   # 2
+sll  x11, x11, x10   # 2 << 1  = 4
+sll  x11, x11, x10   # 4 << 1  = 8
+sll  x11, x11, x10   # 8 << 1  = 16
+sll  x11, x11, x10   # 16 << 1 = 32
+sll  x11, x11, x10   # 32 << 1 = 64
 addi x12, x12, 0   # 3
 addi x13, x13, 0   # 4
 addi x14, x14, 0   # 6
@@ -61,6 +66,7 @@ addi x18, x18, 0   # 3
 addi x19, x19, 0   # 3
 addi x20, x20, 0   # 1
 addi x21, x21, 0   # 6
+sll  x21, x20, x10   # 6 << 1 = 12
 addi x22, x22, 0   # 2
 addi x23, x23, 0   # 1
 addi x24, x24, 0   # 6
