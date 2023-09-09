@@ -27,6 +27,8 @@ module alucontrol(aluop, func7, func3, aluctl);
                               aluctl <= 4'b0000;
                             3'b100:
                               aluctl <= 4'b1100;
+                            3'b101:
+                              aluctl <= 4'b0100;
                             3'b110:
                               aluctl <= 4'b0001;
                         endcase
