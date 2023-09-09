@@ -13,7 +13,7 @@ module alucontrol(aluop, func7, func3, aluctl);
               aluctl <= 4'b0010;
             2'b01:
               aluctl <= 4'b0110;
-            2'b10:
+            2'b10: // for R-type instructions
               begin
                 case (func7)
                     1'b0:

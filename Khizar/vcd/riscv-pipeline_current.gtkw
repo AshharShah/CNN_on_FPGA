@@ -1,0 +1,108 @@
+[*]
+[*] GTKWave Analyzer v3.3.107 (w)1999-2020 BSI
+[*] Tue Aug 22 10:40:21 2023
+[*]
+[dumpfile] "/Volumes/myData/newfyp/CNN_on_FPGA/Khizar/vcd/riscv_pipeline.vcd"
+[dumpfile_mtime] "Tue Aug 22 10:39:45 2023"
+[dumpfile_size] 45544
+[savefile] "/Volumes/myData/newfyp/CNN_on_FPGA/Khizar/vcd/riscv-pipeline.gtkw"
+[timestart] 0
+[size] 1435 997
+[pos] -1 -1
+*-2.507631 88 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] riscv_tb.
+[treeopen] riscv_tb.core.
+[sst_width] 278
+[signals_width] 251
+[sst_expanded] 1
+[sst_vpaned_height] 758
+@28
+riscv_tb.rst
+riscv_tb.clk
+@24
+[color] 2
+riscv_tb.core.pc[31:0]
+[color] 2
+riscv_tb.core.sumA[31:0]
+@22
+[color] 2
+riscv_tb.core.ins[31:0]
+@24
+[color] 3
+riscv_tb.core.pc_if[31:0]
+@22
+[color] 3
+riscv_tb.core.ins_if[31:0]
+@24
+[color] 3
+riscv_tb.core.a[31:0]
+[color] 3
+riscv_tb.core.b[31:0]
+[color] 3
+riscv_tb.core.immediate[31:0]
+@28
+[color] 3
+riscv_tb.core.alusrc
+@24
+[color] 6
+riscv_tb.core.pc_id[31:0]
+[color] 6
+riscv_tb.core.immediate_id[31:0]
+[color] 6
+riscv_tb.core.a_id[31:0]
+[color] 6
+riscv_tb.core.b_id[31:0]
+[color] 6
+riscv_tb.core.alu_in1[31:0]
+[color] 6
+riscv_tb.core.alu_in2[31:0]
+[color] 6
+riscv_tb.core.sumB[31:0]
+[color] 6
+riscv_tb.core.mux_out[31:0]
+@28
+[color] 6
+riscv_tb.core.alusrc_id
+@24
+[color] 6
+riscv_tb.core.aluop_id[1:0]
+[color] 6
+riscv_tb.core.alures[31:0]
+@28
+[color] 6
+riscv_tb.core.zero
+riscv_tb.core.zero_ex
+riscv_tb.core.pcsrc
+@24
+riscv_tb.core.sumB_ex[31:0]
+[color] 4
+riscv_tb.core.b_ex[31:0]
+@28
+riscv_tb.core.forwardA[1:0]
+@24
+[color] 4
+riscv_tb.core.alures_ex[31:0]
+@28
+riscv_tb.core.memread_ex
+riscv_tb.core.memwrite_ex
+@24
+riscv_tb.core.readdata[31:0]
+[color] 2
+riscv_tb.core.alures_wb[31:0]
+[color] 2
+riscv_tb.core.rd_wb[4:0]
+[color] 2
+riscv_tb.core.memtoreg_wb
+@28
+[color] 2
+riscv_tb.core.regwrite_wb
+@24
+[color] 2
+riscv_tb.core.readdata_wb[31:0]
+@28
+riscv_tb.core.hdetect.enable_control
+riscv_tb.core.hdetect.enable_if
+@29
+riscv_tb.core.hdetect.enable_pc
+[pattern_trace] 1
+[pattern_trace] 0
