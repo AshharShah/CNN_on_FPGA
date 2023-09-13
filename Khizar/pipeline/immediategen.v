@@ -1,11 +1,11 @@
 module immediategen(instruction, result);
 
     //opcode types
-    localparam I = 7'b0010011;
-    localparam S = 7'b0100011;
-    localparam SB = 7'b1100011;
+    localparam I    = 7'b0010011;
+    localparam S    = 7'b0100011;
+    localparam SB   = 7'b1100011;
     localparam I_LD = 7'b0000011;
-    //localparam J = 7'b1101111;
+    //localparam J    = 7'b1101111;
 
     input [31:0] instruction;
 
