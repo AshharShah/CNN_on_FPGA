@@ -18,6 +18,7 @@ module alu(aluctl, a, b, out, zero, overflow);
                 2: out <= a + b;
                 3: out <= a << b; // do b[4:0] later
                 4: out <= a >> b;
+                5: out <= a >> b;
                 6: out <= a - b;
                 7: out <= (a < b ? 1: 0);
                 12: out <= a ^ b;

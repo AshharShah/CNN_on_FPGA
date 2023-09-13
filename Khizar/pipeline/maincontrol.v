@@ -20,9 +20,9 @@ module maincontrol(opcode, branch, memread, memtoreg, aluop, memwrite, alusrc, r
       R:
         {aluop, alusrc, memtoreg, regwrite, memread, memwrite, branch} <= 8'b10_0_0_1_0_0_0;
       I_LD:
-        {aluop, alusrc, memtoreg, regwrite, memread, memwrite, branch} <= 8'b00_1_1_1_1_0_0;
+        {aluop, alusrc, memtoreg, regwrite, memread, memwrite, branch} <= 8'b11_1_1_1_1_0_0;
       S:
-        {aluop, alusrc, memtoreg, regwrite, memread, memwrite, branch} <= 8'b00_1_0_0_0_1_0;
+        {aluop, alusrc, memtoreg, regwrite, memread, memwrite, branch} <= 8'b11_1_0_0_0_1_0;
       SB:
         {aluop, alusrc, memtoreg, regwrite, memread, memwrite, branch} <= 8'b01_0_0_0_0_0_1;
       I: // for addi (i-type)
