@@ -37,3 +37,7 @@ class MaxPoolingLayer:
         for patch, h, w in self.patches_generator(image):
             max_pooling_output[h, w] = np.amax(patch, axis=(0, 1))
         return max_pooling_output
+
+    def back_prop(self, dE_dY):
+
+        return 0

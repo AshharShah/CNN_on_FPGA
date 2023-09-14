@@ -45,9 +45,11 @@ class Softmax:
             # the normalization constant S_total is used to normalize the transformed values in transformation_eq such that they sum up to 1
             S_total = np.sum(transformation_eq)
 
-            dY_dZ = -transformation_eq[i]*transformation_eq / (S_total**2) # when i is not equal to l
+            # when i is not equal to l
+            dY_dZ = -transformation_eq[i]*transformation_eq / (S_total**2)
             dY_dZ[i] = transformation_eq[i] * \
-                (S_total - transformation_eq[i]) / (S_total**2)    # when i is equal to l
+                (S_total - transformation_eq[i]) / \
+                (S_total**2)    # when i is equal to l
 
             # gradient of output Z with respect to the weight and input
             dZ_dw = self.flattened_image
@@ -55,7 +57,6 @@ class Softmax:
 
             # gradient of the loss with respect to the output
             dE_dZ = gradient * dY_dZ
-
 
             # print(dZ_dw[np.newaxis].T.shape)
             # print(dE_dZ[np.newaxis].shape)
@@ -71,7 +72,7 @@ class Softmax:
             dE_db = dE_dZ
 
             # update the wight and the bias
-            self.weight =  self.weight - alpha*dE_dw
+            self.weight = self.weight - alpha*dE_dw
             self.bias = self.bias - alpha*dE_db
 
             # calculate the gradient of the loss with respect to the input
@@ -79,6 +80,5 @@ class Softmax:
 
             # reshape back to the original (13x13x1) image before the flatten operation
             print(dE_dX.reshape(self.original_shape).shape)
-
 
         return dE_dX.reshape(self.original_shape)

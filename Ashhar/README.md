@@ -15,4 +15,5 @@
     9) Added Softmax layer for the final output (inclusive Dense layer)
     10) Tested the Softmax layer forward propogation
     11) Displayed the output of the first pass of the neural network
-    12) Computed the loss and working on the backward propogation for the softmax layer
+    12) Computed the loss
+    13) Computed the back prpogation for the Sigmoid / Dense Layer
