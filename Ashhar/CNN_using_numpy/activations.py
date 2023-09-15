@@ -19,7 +19,7 @@ class Softmax:
         self.weight = np.random.randn(input_shape, output_shape)/input_shape
         self.bias = np.zeros(output_shape)
 
-    def forward(self, image):
+    def forward_prop(self, image):
         # store the orignal shape of the image for back propogation
         self.original_shape = image.shape
         # flatten the image for the ANN dense layer
@@ -34,7 +34,7 @@ class Softmax:
         softmax = np.exp(dense_output) / np.sum(np.exp(dense_output), axis=0)
         return softmax
 
-    def backward(self, dE_dY, alpha):
+    def back_prop(self, dE_dY, alpha):
 
         for i, gradient in enumerate(dE_dY):
 
@@ -79,6 +79,6 @@ class Softmax:
             dE_dX = dZ_dX @ dE_dZ
 
             # reshape back to the original (13x13x1) image before the flatten operation
-            print(dE_dX.reshape(self.original_shape).shape)
+            # print(dE_dX.reshape(self.original_shape).shape)
 
         return dE_dX.reshape(self.original_shape)

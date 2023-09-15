@@ -67,5 +67,5 @@ class MaxPoolingLayer:
                             dE_dK[h*self.kernel_size+idx_h, w *
                                   self.kernel_size+idx_w, idx_k] = dE_dY[h, w, idx_k]
 
-        print(dE_dK.shape)
+        # print(dE_dK.shape)
         return dE_dK

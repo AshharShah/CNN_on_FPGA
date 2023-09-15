@@ -1,5 +1,6 @@
 import numpy as np
 
+
 class ConvolutionLayer:
     # constructor for the convolutional layer
     def __init__(self, kernel_num, kernel_size):
@@ -7,7 +8,8 @@ class ConvolutionLayer:
         self.kernel_size = kernel_size
         # generate random filters
         # divide by (k_size**2) to normalize
-        self.kernels = np.random.randn(kernel_num, kernel_size, kernel_size) / (kernel_size**2)
+        self.kernels = np.random.randn(
+            kernel_num, kernel_size, kernel_size) / (kernel_size**2)
 
     # function to divide a input image to patches
     def patches_generator(self, image):
@@ -27,17 +29,18 @@ class ConvolutionLayer:
         image_h, image_w = image.shape
         self.image = image
         # initialize a empty numpy array which returns the output of the convolutional function
-        convolution_output = np.zeros((image_h-self.kernel_size+1, image_w-self.kernel_size+1, self.kernel_num))
+        convolution_output = np.zeros(
+            (image_h-self.kernel_size+1, image_w-self.kernel_size+1, self.kernel_num))
         # use the generator to get patches and their coordinates
         for patch, h, w in self.patches_generator(image):
             # perform convolution on each individual patch
-            convolution_output[h,w] = np.sum(patch*self.kernels, axis=(1,2))
+            convolution_output[h, w] = np.sum(patch*self.kernels, axis=(1, 2))
         return convolution_output
-    
+
     # function that performs backward propogation and adjusts the weights
     # the value of dE_dY comes from the following/next layers (MaxPool)
     def back_prop(self, dE_dY, alpha):
-        
+
         # initialize the gradient of the loss function
         dE_dk = np.zeros(self.kernels.shape)
         # iterate over all the patches in the image
@@ -48,4 +51,5 @@ class ConvolutionLayer:
                 dE_dk[f] += patch * dE_dY[h, w, f]
         # update the weights
         self.kernels -= alpha*dE_dk
-        return dE_dk    
+        # print(dE_dk.shape)
+        return dE_dk
