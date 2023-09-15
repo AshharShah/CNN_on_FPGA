@@ -38,6 +38,34 @@ class MaxPoolingLayer:
             max_pooling_output[h, w] = np.amax(patch, axis=(0, 1))
         return max_pooling_output
 
+    # function to perform backpropogation on the max pooling layer
     def back_prop(self, dE_dY):
+        """
+        In the max pooling class there are no trainable parameters so we have to perform the inverse
+        of the max pooling operation, that is we take the error from the subsequent layer and reshape
+        it so that it equals the shape before the max pooling operation.
 
-        return 0
+        The values where the maximum number was found will remain unchanged, all the rest of the values
+        will become zero
+        """
+
+        # create an empty array of the same size as the input to the max pooling layer
+        dE_dK = np.zeros(self.image.shape)
+
+        for patch, h, w in self.patches_generator(self.image):
+            img_h, img_w, num_kernels = patch.shape
+            # get the maximum value in each patch obtained
+            max_val = np.amax(patch, axis=(0, 1))
+
+            # iterate over all the values obtained in the patch
+            for idx_h in range(img_h):
+                for idx_w in range(img_w):
+                    for idx_k in range(num_kernels):
+                        # if we found the value where the maximum value is present
+                        if (patch[idx_h, idx_w, idx_k] == max_val[idx_k]):
+                            # add the max value to our backpropogation error
+                            dE_dK[h*self.kernel_size+idx_h, w *
+                                  self.kernel_size+idx_w, idx_k] = dE_dY[h, w, idx_k]
+
+        print(dE_dK.shape)
+        return dE_dK
