@@ -69,15 +69,19 @@ module riscv(clk, rst);
     alu                 alu(aluctl, alu_in1, alu_in2, alures, zero, overflow);
 
     //ex
-    exmemreg            ex1(clk, sumB,    zero,    alures,    alu_2_bef, rd_id, branch_id, memread_id, memtoreg_id, memwrite_id, regwrite_id,
-                                 sumB_ex, zero_ex, alures_ex, b_ex, rd_ex, branch_ex, memread_ex, memtoreg_ex, memwrite_ex, regwrite_ex);
-    datamemory          datamem(clk, alures_ex, b_ex, memread_ex, memwrite_ex, readdata);
+    exmemreg            ex1(clk, sumB,    zero,    alures,    alu_2_bef, rd_id, branch_id, memread_id, memtoreg_id, memwrite_id, regwrite_id, func3_id,
+                                 sumB_ex, zero_ex, alures_ex, b_ex, rd_ex, branch_ex, memread_ex, memtoreg_ex, memwrite_ex, regwrite_ex,      func3_ex);
+    
+    datamemory          datamem(clk, alures_ex, b_ex, memread_ex, memwrite_ex, func3_ex, readdata);
 
     assign pcsrc = branch_ex & zero_ex;
 
     //wb
     memwbreg            wb1(clk, readdata,    alures_ex, rd_ex, memtoreg_ex, regwrite_ex,
                                  readdata_wb, alures_wb, rd_wb, memtoreg_wb, regwrite_wb);
+    
     mux2_1              mux3(alures_wb, readdata_wb, memtoreg_wb, writedata);
+
+
 
 endmodule

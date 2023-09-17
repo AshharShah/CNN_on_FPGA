@@ -1,6 +1,7 @@
-module exmemreg(clk, sumB,    zero,    alures,    b_id, rd_id, branch_id, memread_id, memtoreg_id, memwrite_id, regwrite_id,
-                     sumB_ex, zero_ex, alures_ex, b_ex, rd_ex, branch_ex, memread_ex, memtoreg_ex, memwrite_ex, regwrite_ex);
+module exmemreg(clk, sumB,    zero,    alures,    b_id, rd_id, branch_id, memread_id, memtoreg_id, memwrite_id, regwrite_id, func3_id,
+                     sumB_ex, zero_ex, alures_ex, b_ex, rd_ex, branch_ex, memread_ex, memtoreg_ex, memwrite_ex, regwrite_ex, func3_ex);
 
+    input [2:0] func3_id;
     input clk, zero, branch_id, memread_id, memtoreg_id, memwrite_id, regwrite_id;
     input [31:0] sumB, alures, b_id;
     input [4:0] rd_id;
@@ -8,6 +9,7 @@ module exmemreg(clk, sumB,    zero,    alures,    b_id, rd_id, branch_id, memrea
     output reg zero_ex, branch_ex, memread_ex, memtoreg_ex, memwrite_ex, regwrite_ex;
     output reg [31:0] sumB_ex, alures_ex, b_ex;
     output reg [4:0] rd_ex;
+    output reg [2:0] func3_ex;
 
     initial 
     begin
@@ -21,6 +23,7 @@ module exmemreg(clk, sumB,    zero,    alures,    b_id, rd_id, branch_id, memrea
         b_ex        <=  0;
         rd_ex       <=  0;
         regwrite_ex <=  0;
+        func3_ex    <=  0;
     end
 
     always @(posedge clk) 
@@ -34,7 +37,8 @@ module exmemreg(clk, sumB,    zero,    alures,    b_id, rd_id, branch_id, memrea
         alures_ex   <=  alures;
         b_ex        <=  b_id;
         rd_ex       <=  rd_id;
-        regwrite_ex <= regwrite_id;
+        regwrite_ex <=  regwrite_id;
+        func3_ex    <=  func3_id;
     end
 
 endmodule

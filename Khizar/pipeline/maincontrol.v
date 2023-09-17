@@ -6,7 +6,7 @@ module maincontrol(opcode, branch, memread, memtoreg, aluop, memwrite, alusrc, r
   localparam SB   = 7'b1100011;
   localparam I_LD = 7'b0000011;
   localparam R    = 7'b0110011;
-  //localparam J    = 7'b1101111;
+  localparam J    = 7'b1101111;
 
   input enable_hazard_control;
   input [6:0] opcode;
@@ -27,8 +27,8 @@ module maincontrol(opcode, branch, memread, memtoreg, aluop, memwrite, alusrc, r
         {aluop, alusrc, memtoreg, regwrite, memread, memwrite, branch} <= 8'b01_0_0_0_0_0_1;
       I: // for addi (i-type)
         {aluop, alusrc, memtoreg, regwrite, memread, memwrite, branch} <= 8'b00_1_0_1_0_0_0;
-      //J:
-      //  {aluop, alusrc, memtoreg, regwrite, memread, memwrite, branch} <= 8'b01_1_0_1_0_0_1;
+      J:
+        {aluop, alusrc, memtoreg, regwrite, memread, memwrite, branch} <= 8'b01_1_0_1_0_0_1;
       default:
         {aluop, alusrc, memtoreg, regwrite, memread, memwrite, branch} <= 8'b00_0_0_0_0_0_0;
     endcase
