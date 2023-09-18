@@ -6,7 +6,7 @@ module hazarddetectionunit(memread_id, rs1_if, rs2_if, rd_id, enable_if, enable_
     output reg enable_if, enable_pc, enable_control;
 
     always @ (rs1_if, rs2_if, memread_id, rd_id)
-    begin
+    begin    
         if (memread_id & ((rd_id == rs1_if) | (rd_id == rs2_if)))
             begin
                 enable_control <= 0;

@@ -5,7 +5,7 @@ nop
 addi x10, x0, 1    # 1  
 addi x11, x10, 1   # 2
 slt x30, x10, x11  # 1 < 2 so true = 1 
-beq x10, x11, label  
+beq x10, x10, label
 addi x12, x10, 2   # 3
 sw x10, 0(x0)      # address 0 ---> 1
 addi x13, x10, 3   # 4    

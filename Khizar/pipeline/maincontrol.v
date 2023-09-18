@@ -1,4 +1,4 @@
-module maincontrol(opcode, branch, memread, memtoreg, aluop, memwrite, alusrc, regwrite);
+module maincontrol(opcode, branch, memread, memtoreg, aluop, memwrite, alusrc, regwrite, jump);
 
   //opcode types
   localparam I    = 7'b0010011;
@@ -11,26 +11,26 @@ module maincontrol(opcode, branch, memread, memtoreg, aluop, memwrite, alusrc, r
   input enable_hazard_control;
   input [6:0] opcode;
 
-  output reg branch, memread, memtoreg, memwrite, alusrc, regwrite;
+  output reg branch, memread, memtoreg, memwrite, alusrc, regwrite, jump;
   output reg [1:0] aluop;
 
   always @ (opcode)
   begin
     case (opcode)
       R:
-        {aluop, alusrc, memtoreg, regwrite, memread, memwrite, branch} <= 8'b10_0_0_1_0_0_0;
+        {aluop, alusrc, memtoreg, regwrite, memread, memwrite, branch, jump} <= 9'b10_0_0_1_0_0_0_0;
       I_LD:
-        {aluop, alusrc, memtoreg, regwrite, memread, memwrite, branch} <= 8'b11_1_1_1_1_0_0;
+        {aluop, alusrc, memtoreg, regwrite, memread, memwrite, branch, jump} <= 9'b11_1_1_1_1_0_0_0;
       S:
-        {aluop, alusrc, memtoreg, regwrite, memread, memwrite, branch} <= 8'b11_1_0_0_0_1_0;
+        {aluop, alusrc, memtoreg, regwrite, memread, memwrite, branch, jump} <= 9'b11_1_0_0_0_1_0_0;
       SB:
-        {aluop, alusrc, memtoreg, regwrite, memread, memwrite, branch} <= 8'b01_0_0_0_0_0_1;
+        {aluop, alusrc, memtoreg, regwrite, memread, memwrite, branch, jump} <= 9'b01_0_0_0_0_0_1_0;
       I: // for addi (i-type)
-        {aluop, alusrc, memtoreg, regwrite, memread, memwrite, branch} <= 8'b00_1_0_1_0_0_0;
+        {aluop, alusrc, memtoreg, regwrite, memread, memwrite, branch, jump} <= 9'b00_1_0_1_0_0_0_0;
       J:
-        {aluop, alusrc, memtoreg, regwrite, memread, memwrite, branch} <= 8'b01_1_0_1_0_0_1;
+        {aluop, alusrc, memtoreg, regwrite, memread, memwrite, branch, jump} <= 9'b01_1_0_1_0_0_1_1;
       default:
-        {aluop, alusrc, memtoreg, regwrite, memread, memwrite, branch} <= 8'b00_0_0_0_0_0_0;
+        {aluop, alusrc, memtoreg, regwrite, memread, memwrite, branch, jump} <= 9'b00_0_0_0_0_0_0_0;
     endcase
   end
 
