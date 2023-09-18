@@ -16,7 +16,7 @@ module riscv_tb;
             $dumpvars(4, riscv_tb);
 
             //$readmemh({"./set-instructions/test-", test_case_number, ".hex"}, core.insmem.memfile);
-            $readmemh("./set-instructions/corrected-test-15.hex", core.insmem.memfile);
+            $readmemh("./set-instructions/corrected-test-16.hex", core.insmem.memfile);
 
 
             clk = 0;
