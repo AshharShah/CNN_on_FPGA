@@ -18,6 +18,11 @@ module ifidreg(clk, enable_if, pcsrc, pc, ins, pc_if, ins_if);
             pc_if       <=  pc;
             ins_if      <= ins; 
         end
+        else
+        begin
+            pc_if       <= 0;
+            ins_if      <= 0;
+        end
     end
 
 endmodule

@@ -1,4 +1,4 @@
-test_cases = 14
+test_cases = 15
 
 all: compile ins tb vv gt
 

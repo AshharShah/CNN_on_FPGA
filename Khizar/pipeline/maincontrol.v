@@ -28,7 +28,7 @@ module maincontrol(opcode, branch, memread, memtoreg, aluop, memwrite, alusrc, r
       I: // for addi (i-type)
         {aluop, alusrc, memtoreg, regwrite, memread, memwrite, branch, jump} <= 9'b00_1_0_1_0_0_0_0;
       J:
-        {aluop, alusrc, memtoreg, regwrite, memread, memwrite, branch, jump} <= 9'b01_1_0_1_0_0_1_1;
+        {aluop, alusrc, memtoreg, regwrite, memread, memwrite, branch, jump} <= 9'b01_1_0_1_0_0_0_1;
       default:
         {aluop, alusrc, memtoreg, regwrite, memread, memwrite, branch, jump} <= 9'b00_0_0_0_0_0_0_0;
     endcase

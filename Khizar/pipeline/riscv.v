@@ -21,7 +21,7 @@ module riscv(clk, rst);
 
     input clk, rst;
 
-    wire memtoreg,    branch,    memread,    memwrite,    alusrc,    regwrite,    zero,    func7,    pcsrc, jump;
+    wire memtoreg,    branch,    memread,    memwrite,    alusrc,    regwrite,    zero,    func7,    pcsrc, jump, jump_id, jump_ex;
     wire memtoreg_if, branch_if, memread_if, memwrite_if, alusrc_if, regwrite_if, zero_ex, func7_id;
     wire memtoreg_id, branch_id, memread_id, memwrite_id, alusrc_id, regwrite_cn;
     wire memtoreg_ex, branch_ex, memread_ex, memwrite_ex;
@@ -57,8 +57,8 @@ module riscv(clk, rst);
     maincontrol         maincon(ins_if[6:0], branch, memread, memtoreg, aluop, memwrite, alusrc, regwrite, jump);
 
     //id
-    idexreg             id1(clk, pc_if, a,    b,    immediate,    ins_if[30], ins_if[14:12], ins_if[11:7], branch,    memread,    memtoreg,    aluop,    memwrite_cn,    alusrc, regwrite_cn, ins_if[19:15], ins_if[24:20], pcsrc, 
-                                 pc_id, a_id, b_id, immediate_id, func7_id,   func3_id,      rd_id,        branch_id, memread_id, memtoreg_id, aluop_id, memwrite_id, alusrc_id, regwrite_id, rs1_id,        rs2_id);
+    idexreg             id1(clk, pc_if, a,    b,    immediate,    ins_if[30], ins_if[14:12], ins_if[11:7], branch,    memread,    memtoreg,    aluop,    memwrite_cn,    alusrc, regwrite_cn, ins_if[19:15], ins_if[24:20], pcsrc, jump, 
+                                 pc_id, a_id, b_id, immediate_id, func7_id,   func3_id,      rd_id,        branch_id, memread_id, memtoreg_id, aluop_id, memwrite_id, alusrc_id, regwrite_id, rs1_id,        rs2_id, jump_id);
     
     adder               adder2(immediate_id, pc_id, sumB);
     alucontrol          alucon(aluop_id, func7_id, func3_id, aluctl);
@@ -67,24 +67,24 @@ module riscv(clk, rst);
     
     
     mux3_1              fwdAmux(a_id, alures_ex, writedata, forwardA, alu_in1);
-    mux2_1              mux7(alu_in1, pc_id, jump, alu_in1_enhanced);
+    mux2_1              mux7(alu_in1, pc_id, jump_id, alu_in1_enhanced);
     
     mux3_1              fwdBmux(b_id, alures_ex, writedata, forwardB, alu_2_bef);
     mux2_1              mux6(alu_2_bef, immediate_id, alusrc_id, alu_in2);
 
     assign four = {{29{1'b0}}, 3'b100};
 
-    mux2_1              mux8(alu_in2, four, jump, alu_in2_enhanced);
+    mux2_1              mux8(alu_in2, four, jump_id, alu_in2_enhanced);
 
     alu                 alu(aluctl, alu_in1_enhanced, alu_in2_enhanced, alures, zero, overflow);
 
     //ex
-    exmemreg            ex1(clk, sumB,    zero,    alures,    alu_2_bef, rd_id, branch_id, memread_id, memtoreg_id, memwrite_id, regwrite_id, func3_id, pcsrc, 
-                                 sumB_ex, zero_ex, alures_ex, b_ex, rd_ex, branch_ex, memread_ex, memtoreg_ex, memwrite_ex, regwrite_ex,      func3_ex);
+    exmemreg            ex1(clk, sumB,    zero,    alures,    alu_2_bef, rd_id, branch_id, memread_id, memtoreg_id, memwrite_id, regwrite_id, func3_id, pcsrc, jump_id, 
+                                 sumB_ex, zero_ex, alures_ex, b_ex, rd_ex, branch_ex, memread_ex, memtoreg_ex, memwrite_ex, regwrite_ex,      func3_ex, jump_ex);
     
     datamemory          datamem(clk, alures_ex, b_ex, memread_ex, memwrite_ex, func3_ex, readdata);
 
-    assign pcsrc = branch_ex & zero_ex;
+    assign pcsrc = (branch_ex & zero_ex) | jump_ex;
 
     //wb
     memwbreg            wb1(clk, readdata,    alures_ex, rd_ex, memtoreg_ex, regwrite_ex,
