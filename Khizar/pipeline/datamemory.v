@@ -1,7 +1,7 @@
-module datamemory(clk, address, writedata, memread, memwrite, readdata);
+module datamemory(clk, address, writedata, memread, memwrite, func3_ex, readdata);
 
-    input clk;
-    input memread, memwrite;
+    input clk, memread, memwrite;
+    input [2:0] func3_ex;
     input [31:0] writedata;
     input [31:0] address; // change later
     

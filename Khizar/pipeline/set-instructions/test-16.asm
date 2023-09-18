@@ -5,7 +5,7 @@ nop
 addi x10, x0, 1    # 1  
 addi x11, x10, 1   # 2
 slt x30, x10, x11  # 1 < 2 so true = 1 
-beq x10, x10, label
+beq x10, x11, label
 addi x12, x10, 2   # 3
 sw x10, 0(x0)      # address 0 ---> 1
 addi x13, x10, 3   # 4    
@@ -20,7 +20,8 @@ lw x18, 4(x0)      # x18 = 3  <----- address 4
 addi x19, x18, 0   # x19 = 3   
 and x20, x10, x18  # 1   
 addi x23, x20, 0   # 1  
-or x21, x11, x16   # 6     
+or x21, x11, x16   # 6
+bne x10, x10, label
 addi x24, x21, 0   # 6
 xor x22, x14, x17  # 2
 slti x25, x22, 6   # 2 < 6 so 1 is returned     
@@ -53,6 +54,8 @@ slti x7, x5, 5     # 6 < 5 so 0 is returned
 slti x7, x5, 6     # 6 < 5 so 0 is returned  
 slti x7, x5, 7     # 6 < 7 so 1 is returned  
 addi x7,  x7,  0   # 1
+label4:
+bne  x7, x6, label3
 addi x8,  x8,  0   # 2
 addi x9,  x9,  0   # XX
 addi x10, x10, 0   # 1
@@ -76,6 +79,7 @@ addi x16, x16, 0   # 4
 addi x17, x17, 0   # 4
 slli x16, x16, 0x5 # 4 << 5 ==> 8, 16, 32, 64, ====> 128
 addi x18, x18, 0   # 3
+jal  x1,  label2 
 srl  x18, x18, x10 # 1
 ori  x2,  x18, 0x4 # ------- x2 = 1 or 4 = 0001 or 0100 = 0101 = 5
 addi x19, x19, 0   # 3
@@ -96,3 +100,7 @@ slt  x29, x25, x26
 addi x30, x30, 0   # 2
 addi x31, x31, 0   # 2
 slt x31, x31, x30
+label3:
+addi x7, x0, 2
+addi x10, x0, 2
+beq x7, x10, label4

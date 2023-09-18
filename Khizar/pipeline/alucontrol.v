@@ -23,7 +23,18 @@ module alucontrol(aluop, func7, func3, aluctl);
                 endcase
               end
             2'b01:
-              aluctl <= 4'b0110;
+              begin
+                case (func7)
+                    7'b1101111: aluctl <= 4'b0010;
+                    default:
+                    begin
+                      case (func3)
+                        3'b000: aluctl <= 4'b0110;
+                        3'b001: aluctl <= 4'b1000; 
+                      endcase
+                    end
+                endcase
+              end
             2'b10: // for R-type instructions
               begin
                 case (func7)

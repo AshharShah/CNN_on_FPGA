@@ -21,6 +21,7 @@ module alu(aluctl, a, b, out, zero, overflow);
                 5: out <= a >> b;
                 6: out <= a - b;
                 7: out <= (a < b ? 1: 0);
+                8: out <= (a == b);
                 12: out <= a ^ b;
                 default: out <= 0;
             endcase

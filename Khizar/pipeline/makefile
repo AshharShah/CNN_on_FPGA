@@ -1,4 +1,4 @@
-test_cases = 13
+test_cases = 16
 
 all: compile ins tb vv gt
 
@@ -16,4 +16,8 @@ vv: ../vvp/tb_riscv_pipe.vvp
 
 gt:
 	open -a gtkwave '../vcd/riscv-pipeline.gtkw'
+
+newtest:
+	touch ./set-instructions/test-$(test_cases)-new.asm
+	touch ./set-instructions/test-$(test_cases)-new.hex
 	
