@@ -53,9 +53,8 @@ def CNN_train(image, y, layers, alpha=0.05):
 
     return loss, accuracy
 
+
 # function to test our CNN against the test images and get its accuracy and loss
-
-
 def CNN_test(image, y, layers):
     output, loss, accuracy = forward(image, y, layers)
 
@@ -64,3 +63,13 @@ def CNN_test(image, y, layers):
     gradient[y] = -1/output[y]
 
     return loss, accuracy
+
+def CNN_predict(image, layers):
+    # normalize the input image
+    output = image/255
+    # perform forward propogation on all the layers in the CNN architecture
+    for layer in layers:
+        output = layer.forward_prop(output)
+        
+    prediction = np.argmax(output)
+    return prediction
