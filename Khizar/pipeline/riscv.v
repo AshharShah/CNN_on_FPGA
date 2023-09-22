@@ -31,14 +31,15 @@ module riscv(clk, rst);
     wire [2:0] func3, func3_id, func3_ex;
     wire [3:0] aluctl;
     wire [4:0] rd_id, rd_ex, rd_wb, rs1_id, rs2_id;
+    wire [6:0] opcode_id;
 
     wire [31:0] sumB,       pc,     alures,     b,       a,       immediate,    readdata,    ins, four;
     wire [31:0] sumB_if,    pc_if,  alures_ex,  b_id,    a_id,    immediate_id, readdata_wb, ins_if;
     wire [31:0] sumB_id,    pc_id,  alures_wb,  alu_in1, alu_in1_enhanced, alu_in2, alu_in2_enhanced, writedata,    alu_2_bef;
-    wire [31:0] sumB_ex,    newpc,  mux_out,    b_ex,    sumA;
+    wire [31:0] sumB_ex,    newpc,  mux_out,    b_ex,    sumA,    sumB_in2;
 
     //new
-    wire enable_control;
+    wire enable_control, signal_pc_new;
 
     pc                  pcmod(clk, rst, newpc, enable_pc, pc);
     adder               adder(pc, 4, sumA);
@@ -57,11 +58,15 @@ module riscv(clk, rst);
     maincontrol         maincon(ins_if[6:0], branch, memread, memtoreg, aluop, memwrite, alusrc, regwrite, jump);
 
     //id
-    idexreg             id1(clk, pc_if, a,    b,    immediate,    ins_if[30], ins_if[14:12], ins_if[11:7], branch,    memread,    memtoreg,    aluop,    memwrite_cn,    alusrc, regwrite_cn, ins_if[19:15], ins_if[24:20], pcsrc, jump, 
-                                 pc_id, a_id, b_id, immediate_id, func7_id,   func3_id,      rd_id,        branch_id, memread_id, memtoreg_id, aluop_id, memwrite_id, alusrc_id, regwrite_id, rs1_id,        rs2_id, jump_id);
+    idexreg             id1(clk, pc_if, a,    b,    immediate,    ins_if[30], ins_if[14:12], ins_if[11:7], ins_if[6:0], branch,    memread,    memtoreg,    aluop,    memwrite_cn,    alusrc, regwrite_cn, ins_if[19:15], ins_if[24:20], pcsrc, jump, 
+                                 pc_id, a_id, b_id, immediate_id, func7_id,   func3_id,      rd_id,        opcode_id,   branch_id, memread_id, memtoreg_id, aluop_id, memwrite_id, alusrc_id, regwrite_id, rs1_id,        rs2_id, jump_id);
     
-    adder               adder2(immediate_id, pc_id, sumB);
-    alucontrol          alucon(aluop_id, func7_id, func3_id, aluctl);
+    assign signal_pc_new = (opcode_id == 7'b1100111);
+
+    mux2_1              mux9(pc_id, a_id, signal_pc_new, sumB_in2);
+
+    adder               adder2(immediate_id, sumB_in2, sumB);
+    alucontrol          alucon(aluop_id, func7_id, func3_id, jump_id, aluctl);
     //mux2_1              mux2(b_id, immediate_id, alusrc_id, mux_out);
     forwardingunit      fwdunit(rs1_id, rs2_id, rd_ex, regwrite_ex, rd_wb, regwrite_wb, forwardA, forwardB);
     
@@ -91,7 +96,5 @@ module riscv(clk, rst);
                                  readdata_wb, alures_wb, rd_wb, memtoreg_wb, regwrite_wb);
     
     mux2_1              mux3(alures_wb, readdata_wb, memtoreg_wb, writedata);
-
-
 
 endmodule
