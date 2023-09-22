@@ -30,7 +30,8 @@ module alucontrol(aluop, func7, func3, jump, aluctl);
                   begin
                     case (func3)
                       3'b000: aluctl <= 4'b0110;
-                      3'b001: aluctl <= 4'b1000; 
+                      3'b001: aluctl <= 4'b1000;
+                      3'b101: aluctl <= 4'b0111;
                     endcase
                   end
               end

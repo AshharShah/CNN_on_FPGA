@@ -36,7 +36,7 @@ module riscv(clk, rst);
     wire [31:0] sumB,       pc,     alures,     b,       a,       immediate,    readdata,    ins, four;
     wire [31:0] sumB_if,    pc_if,  alures_ex,  b_id,    a_id,    immediate_id, readdata_wb, ins_if;
     wire [31:0] sumB_id,    pc_id,  alures_wb,  alu_in1, alu_in1_enhanced, alu_in2, alu_in2_enhanced, writedata,    alu_2_bef;
-    wire [31:0] sumB_ex,    newpc,  mux_out,    b_ex,    sumA,    sumB_in2;
+    wire [31:0] sumB_ex,    newpc,  mux_out,    b_ex,    sumA,    sumB_in2, alu_or_mem_ex;
 
     //new
     wire enable_control, signal_pc_new;
@@ -49,7 +49,7 @@ module riscv(clk, rst);
     //if
     ifidreg             if1(clk, enable_if, pcsrc, pc, ins, pc_if, ins_if);
 
-    hazarddetectionunit hdetect(memread_id, ins_if[19:15], ins_if[24:20], rd_id, enable_if, enable_pc, enable_control);
+    hazarddetectionunit hdetect(memread_id, ins_if[19:15], ins_if[24:20], rd_id, jump_ex, enable_if, enable_pc, enable_control);
     mux2_1b             mux4(1'b0, regwrite, enable_control, regwrite_cn);
     mux2_1b             mux5(1'b0, memwrite, enable_control, memwrite_cn);
 
@@ -71,10 +71,10 @@ module riscv(clk, rst);
     forwardingunit      fwdunit(rs1_id, rs2_id, rd_ex, regwrite_ex, rd_wb, regwrite_wb, forwardA, forwardB);
     
     
-    mux3_1              fwdAmux(a_id, alures_ex, writedata, forwardA, alu_in1);
+    mux3_1              fwdAmux(a_id, alu_or_mem_ex, writedata, forwardA, alu_in1);
     mux2_1              mux7(alu_in1, pc_id, jump_id, alu_in1_enhanced);
     
-    mux3_1              fwdBmux(b_id, alures_ex, writedata, forwardB, alu_2_bef);
+    mux3_1              fwdBmux(b_id, alu_or_mem_ex, writedata, forwardB, alu_2_bef);
     mux2_1              mux6(alu_2_bef, immediate_id, alusrc_id, alu_in2);
 
     assign four = {{29{1'b0}}, 3'b100};
@@ -88,6 +88,8 @@ module riscv(clk, rst);
                                  sumB_ex, zero_ex, alures_ex, b_ex, rd_ex, branch_ex, memread_ex, memtoreg_ex, memwrite_ex, regwrite_ex,      func3_ex, jump_ex);
     
     datamemory          datamem(clk, alures_ex, b_ex, memread_ex, memwrite_ex, func3_ex, readdata);
+
+    mux2_1              mux10(alures_ex, readdata, memread_ex, alu_or_mem_ex);
 
     assign pcsrc = (branch_ex & zero_ex) | jump_ex;
 

@@ -1,24 +1,21 @@
 [*]
 [*] GTKWave Analyzer v3.3.107 (w)1999-2020 BSI
-[*] Fri Sep 22 14:05:11 2023
+[*] Fri Sep 22 16:20:23 2023
 [*]
 [dumpfile] "/Volumes/myData/fyp/CNN_on_FPGA/Khizar/vcd/riscv_pipeline.vcd"
-[dumpfile_mtime] "Fri Sep 22 13:58:09 2023"
-[dumpfile_size] 157816
+[dumpfile_mtime] "Fri Sep 22 16:19:44 2023"
+[dumpfile_size] 267535
 [savefile] "/Volumes/myData/fyp/CNN_on_FPGA/Khizar/vcd/riscv-pipeline.gtkw"
-[timestart] 258
-[size] 1280 997
-[pos] 398 0
-*-2.708450 274 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[timestart] 146
+[size] 1680 1050
+[pos] -1 -1
+*-2.708450 155 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] riscv_tb.
 [treeopen] riscv_tb.core.
-[sst_width] 278
+[sst_width] 193
 [signals_width] 306
 [sst_expanded] 1
-[sst_vpaned_height] 508
-@28
-riscv_tb.rst
-riscv_tb.clk
+[sst_vpaned_height] 785
 @24
 [color] 2
 riscv_tb.core.pc[31:0]
@@ -35,31 +32,19 @@ riscv_tb.core.pc_if[31:0]
 riscv_tb.core.ins_if[31:0]
 @24
 [color] 3
-riscv_tb.core.a[31:0]
-[color] 3
-riscv_tb.core.b[31:0]
-[color] 3
 riscv_tb.core.immediate[31:0]
 @28
 [color] 3
 riscv_tb.core.alusrc
-[color] 3
-riscv_tb.core.jump
 [color] 6
 riscv_tb.core.opcode_id[6:0]
 @24
-[color] 6
-riscv_tb.core.pc_id[31:0]
 [color] 6
 riscv_tb.core.immediate_id[31:0]
 [color] 6
 riscv_tb.core.a_id[31:0]
 [color] 6
 riscv_tb.core.b_id[31:0]
-@29
-[color] 6
-riscv_tb.core.jump_id
-@24
 [color] 6
 riscv_tb.core.alu_in1[31:0]
 [color] 6
@@ -99,7 +84,6 @@ riscv_tb.core.sumB_ex[31:0]
 riscv_tb.core.b_ex[31:0]
 @28
 riscv_tb.core.jump_ex
-riscv_tb.core.forwardA[1:0]
 @24
 [color] 4
 riscv_tb.core.alures_ex[31:0]
@@ -111,18 +95,21 @@ riscv_tb.core.readdata[31:0]
 [color] 2
 riscv_tb.core.alures_wb[31:0]
 [color] 2
-riscv_tb.core.rd_wb[4:0]
+riscv_tb.core.readdata_wb[31:0]
 [color] 2
-riscv_tb.core.memtoreg_wb
+riscv_tb.core.rd_wb[4:0]
 @28
 [color] 2
 riscv_tb.core.regwrite_wb
 @24
 [color] 2
 riscv_tb.core.readdata_wb[31:0]
+[color] 2
+riscv_tb.core.memtoreg_wb
+@29
+riscv_tb.core.enable_pc
 @28
-riscv_tb.core.hdetect.enable_control
-riscv_tb.core.hdetect.enable_if
-riscv_tb.core.hdetect.enable_pc
+riscv_tb.core.memread_id
+riscv_tb.core.memread
 [pattern_trace] 1
 [pattern_trace] 0
