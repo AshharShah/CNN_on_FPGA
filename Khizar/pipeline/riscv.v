@@ -31,14 +31,15 @@ module riscv(clk, rst);
     wire [2:0] func3, func3_id, func3_ex;
     wire [3:0] aluctl;
     wire [4:0] rd_id, rd_ex, rd_wb, rs1_id, rs2_id;
+    wire [6:0] opcode_id;
 
     wire [31:0] sumB,       pc,     alures,     b,       a,       immediate,    readdata,    ins, four;
     wire [31:0] sumB_if,    pc_if,  alures_ex,  b_id,    a_id,    immediate_id, readdata_wb, ins_if;
     wire [31:0] sumB_id,    pc_id,  alures_wb,  alu_in1, alu_in1_enhanced, alu_in2, alu_in2_enhanced, writedata,    alu_2_bef;
-    wire [31:0] sumB_ex,    newpc,  mux_out,    b_ex,    sumA;
+    wire [31:0] sumB_ex,    newpc,  mux_out,    b_ex,    sumA,    sumB_in2, alu_or_mem_ex;
 
     //new
-    wire enable_control;
+    wire enable_control, signal_pc_new;
 
     pc                  pcmod(clk, rst, newpc, enable_pc, pc);
     adder               adder(pc, 4, sumA);
@@ -48,7 +49,7 @@ module riscv(clk, rst);
     //if
     ifidreg             if1(clk, enable_if, pcsrc, pc, ins, pc_if, ins_if);
 
-    hazarddetectionunit hdetect(memread_id, ins_if[19:15], ins_if[24:20], rd_id, enable_if, enable_pc, enable_control);
+    hazarddetectionunit hdetect(memread_id, ins_if[19:15], ins_if[24:20], rd_id, jump_ex, enable_if, enable_pc, enable_control);
     mux2_1b             mux4(1'b0, regwrite, enable_control, regwrite_cn);
     mux2_1b             mux5(1'b0, memwrite, enable_control, memwrite_cn);
 
@@ -57,19 +58,23 @@ module riscv(clk, rst);
     maincontrol         maincon(ins_if[6:0], branch, memread, memtoreg, aluop, memwrite, alusrc, regwrite, jump);
 
     //id
-    idexreg             id1(clk, pc_if, a,    b,    immediate,    ins_if[30], ins_if[14:12], ins_if[11:7], branch,    memread,    memtoreg,    aluop,    memwrite_cn,    alusrc, regwrite_cn, ins_if[19:15], ins_if[24:20], pcsrc, jump, 
-                                 pc_id, a_id, b_id, immediate_id, func7_id,   func3_id,      rd_id,        branch_id, memread_id, memtoreg_id, aluop_id, memwrite_id, alusrc_id, regwrite_id, rs1_id,        rs2_id, jump_id);
+    idexreg             id1(clk, pc_if, a,    b,    immediate,    ins_if[30], ins_if[14:12], ins_if[11:7], ins_if[6:0], branch,    memread,    memtoreg,    aluop,    memwrite_cn,    alusrc, regwrite_cn, ins_if[19:15], ins_if[24:20], pcsrc, jump, 
+                                 pc_id, a_id, b_id, immediate_id, func7_id,   func3_id,      rd_id,        opcode_id,   branch_id, memread_id, memtoreg_id, aluop_id, memwrite_id, alusrc_id, regwrite_id, rs1_id,        rs2_id, jump_id);
     
-    adder               adder2(immediate_id, pc_id, sumB);
-    alucontrol          alucon(aluop_id, func7_id, func3_id, aluctl);
+    assign signal_pc_new = (opcode_id == 7'b1100111);
+
+    mux2_1              mux9(pc_id, a_id, signal_pc_new, sumB_in2);
+
+    adder               adder2(immediate_id, sumB_in2, sumB);
+    alucontrol          alucon(aluop_id, func7_id, func3_id, jump_id, aluctl);
     //mux2_1              mux2(b_id, immediate_id, alusrc_id, mux_out);
     forwardingunit      fwdunit(rs1_id, rs2_id, rd_ex, regwrite_ex, rd_wb, regwrite_wb, forwardA, forwardB);
     
     
-    mux3_1              fwdAmux(a_id, alures_ex, writedata, forwardA, alu_in1);
+    mux3_1              fwdAmux(a_id, alu_or_mem_ex, writedata, forwardA, alu_in1);
     mux2_1              mux7(alu_in1, pc_id, jump_id, alu_in1_enhanced);
     
-    mux3_1              fwdBmux(b_id, alures_ex, writedata, forwardB, alu_2_bef);
+    mux3_1              fwdBmux(b_id, alu_or_mem_ex, writedata, forwardB, alu_2_bef);
     mux2_1              mux6(alu_2_bef, immediate_id, alusrc_id, alu_in2);
 
     assign four = {{29{1'b0}}, 3'b100};
@@ -84,6 +89,8 @@ module riscv(clk, rst);
     
     datamemory          datamem(clk, alures_ex, b_ex, memread_ex, memwrite_ex, func3_ex, readdata);
 
+    mux2_1              mux10(alures_ex, readdata, memread_ex, alu_or_mem_ex);
+
     assign pcsrc = (branch_ex & zero_ex) | jump_ex;
 
     //wb
@@ -91,7 +98,5 @@ module riscv(clk, rst);
                                  readdata_wb, alures_wb, rd_wb, memtoreg_wb, regwrite_wb);
     
     mux2_1              mux3(alures_wb, readdata_wb, memtoreg_wb, writedata);
-
-
 
 endmodule

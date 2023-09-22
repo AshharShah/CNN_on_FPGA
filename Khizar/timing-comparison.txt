@@ -1,0 +1,6 @@
+N		Single Cycle Time (sec)			Pipeline Time (sec)
+10		254							321
+12		310							390
+15		394							492
+17		447							560
+20		534							662
