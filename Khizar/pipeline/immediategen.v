@@ -6,6 +6,7 @@ module immediategen(instruction, result);
     localparam SB   = 7'b1100011;
     localparam I_LD = 7'b0000011;
     localparam J    = 7'b1101111;
+    localparam JR   = 7'b1100111;
 
     input [31:0] instruction;
 
@@ -20,7 +21,7 @@ module immediategen(instruction, result);
                     result <= {{19{instruction[31]}}, instruction[31:25], instruction[11:7]};
                 SB: 
                     result <= {{19{instruction[31]}}, instruction[31], instruction[7], instruction[30:25], instruction[11:8], 1'b0};
-                J:
+                J, JR:
                     result <= {{11{instruction[31]}}, instruction[31], instruction[19:12], instruction[20], instruction[30:21], 1'b0};
                     
                 default: result <= 0;

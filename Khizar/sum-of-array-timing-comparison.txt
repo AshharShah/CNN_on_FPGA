@@ -1,0 +1,5 @@
+Sum of Array (test-20.asm)
+
+N		Single Cycle (clk)		Pipeline (clk)
+10						402
+20						773
