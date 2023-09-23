@@ -1,5 +1,5 @@
 addi x3, x0, 0x100 		# x3 = 0x100 = 16^2 = 256 decimal
-addi x4, x0, 20			# x4 = 10			  
+addi x4, x0, 50			# x4 = 10			  
 addi x1, x0, 0
 
 loop: beq x1 x4 next

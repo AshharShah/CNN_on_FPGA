@@ -27,6 +27,6 @@ module riscv_tb;
             #2
             rst = 0;
 
-            #1000 $finish;
+            #2000 $finish;
         end
 endmodule
