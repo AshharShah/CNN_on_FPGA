@@ -1,0 +1,7 @@
+{
+  "liveServer.settings.multiRootWorkspaceName": "Ashhar",
+  "files.associations": {
+    "*.ejs": "html",
+    "matrix.h": "c"
+  }
+}
