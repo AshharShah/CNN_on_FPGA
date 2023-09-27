@@ -4,6 +4,7 @@ module registerfile(clk, rs1, rs2, rd, writedata, regwrite, readdata1, readdata2
     input [4:0] rs1, rs2, rd;
     input [31:0] writedata;
     input regwrite;
+    input [2:0] func3_wb;
 
     output wire [31:0] readdata1, readdata2;
 

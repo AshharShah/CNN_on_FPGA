@@ -94,7 +94,7 @@ module riscv(clk, rst);
     assign pcsrc = (branch_ex & zero_ex) | jump_ex;
 
     //wb
-    memwbreg            wb1(clk, readdata,    alures_ex, rd_ex, memtoreg_ex, regwrite_ex,
+    memwbreg            wb1(clk, readdata,    alures_ex, rd_ex, memtoreg_ex, regwrite_ex, 
                                  readdata_wb, alures_wb, rd_wb, memtoreg_wb, regwrite_wb);
     
     mux2_1              mux3(alures_wb, readdata_wb, memtoreg_wb, writedata);
