@@ -1,13 +1,15 @@
-module memwbreg(clk, readdata,    alures_ex, rd_ex, memtoreg_ex, regwrite_ex,
+module memwbreg(clk, readdata,    alures_ex, rd_ex, memtoreg_ex, regwrite_ex, 
                      readdata_wb, alures_wb, rd_wb, memtoreg_wb, regwrite_wb);
 
     input clk, memtoreg_ex, regwrite_ex;
     input [31:0] readdata, alures_ex;
     input [4:0] rd_ex;
+    input [2:0] func3_ex;
 
     output reg memtoreg_wb, regwrite_wb;
     output reg [31:0] readdata_wb, alures_wb;
     output reg [4:0]  rd_wb;
+    output reg [2:0] func3_wb;
 
     initial 
     begin
@@ -24,7 +26,7 @@ module memwbreg(clk, readdata,    alures_ex, rd_ex, memtoreg_ex, regwrite_ex,
         alures_wb   <= alures_ex;
         readdata_wb <= readdata;
         rd_wb       <= rd_ex;
-        regwrite_wb <= regwrite_ex;  
+        regwrite_wb <= regwrite_ex;
     end
 
 endmodule

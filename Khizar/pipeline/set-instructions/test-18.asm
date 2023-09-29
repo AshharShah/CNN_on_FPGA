@@ -1,8 +1,7 @@
 addi sp, x0, 200
 jal x0, main
 
-calc:
-	lw x12, (8)sp
+calc:lw x12, (8)sp
     add x11, x12, x12
     add x11, x11, x12
     lw x12, (4)sp

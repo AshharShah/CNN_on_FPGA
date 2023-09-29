@@ -1,0 +1,17 @@
+Fibonacci-type Function (test-18.asm)
+
+2 sec = 1 clk
+
+Formula in Pipeline 	= "19N + 20" clk where 'N' is the input array size
+Formula in Single-Cycle = "13N + 10" clk
+
+Pipeline Delay = 3 * (number of jal ins + number of branch-trues) + 4 for last ins to finish
+
+
+N		Single Cycle Time (sec)			Pipeline Time (sec)
+7		172							222	
+10		254							321
+12		310							390
+15		394							492
+17		447							560
+20		534							662
