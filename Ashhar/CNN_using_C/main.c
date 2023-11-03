@@ -6,7 +6,7 @@ extern void Num_Zeros(struct Matrix *x, int r, int c);
 extern void print_matrix(struct Matrix *x, int r, int c);
 extern void free_matrix(struct Matrix *x);
 extern struct Matrix add_matrices(struct Matrix *matrix1, struct Matrix *matrix2);
-// extern void multiply_matrices(Matrix *matrix1, Matrix *matrix2);
+extern struct Matrix multiply_matrices(struct Matrix *matrix1, struct Matrix *matrix2);
 
 int main()
 {
@@ -39,15 +39,20 @@ int main()
     }
 
     // print the kernel and patch matrices
-    printf("\nKernel Matrix: \n");
+    printf("\n Kernel Matrix: \n");
     print_matrix(&kernel, rows, cols);
-    printf("\nPatch Matrix: \n");
+    printf("\n Patch Matrix: \n");
     print_matrix(&patch, rows, cols);
 
     // program to test the sum of the matrices
-    struct Matrix result = add_matrices(&kernel, &patch);
+    struct Matrix add_result = add_matrices(&kernel, &patch);
     printf("\n Sum Result Matrix: \n");
-    print_matrix(&result, rows, cols);
+    print_matrix(&add_result, rows, cols);
+
+    // program to test the sum of the matrices
+    struct Matrix multiply_result = multiply_matrices(&kernel, &patch);
+    printf("\n Multiplication Result Matrix: \n");
+    print_matrix(&multiply_result, rows, cols);
 
     return 0;
 }
