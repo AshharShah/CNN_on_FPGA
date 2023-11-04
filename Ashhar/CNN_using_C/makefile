@@ -1,2 +1,2 @@
 all:
-	gcc -o matrix matrix.c main.c
+	gcc -o matrix matrix.c main.c getData.c -lpng
