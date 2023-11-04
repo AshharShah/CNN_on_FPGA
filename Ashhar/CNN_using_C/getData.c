@@ -67,3 +67,69 @@ struct Image *read_image(char *filename) {
 
     return image;
 }
+
+struct Image ***read_folder_of_images(char *folder_path){
+
+    // Get the list of image files in the folder.
+    DIR *dir = opendir(folder_path);
+    if (dir == NULL) {
+      return NULL;
+    }
+
+    // Count the number of image files in the folder.
+    int num_images = 0;
+    struct dirent *entry;
+    while ((entry = readdir(dir)) != NULL) {
+      if (strstr(entry->d_name, ".png") != NULL || strstr(entry->d_name, ".jpg") != NULL) {
+        num_images++;
+      }
+    }  
+
+    // Allocate memory for the 3D array of images.
+    struct Image ***images = malloc(sizeof(struct Image **) * num_images);
+    for (int i = 0; i < num_images; i++) {
+      images[i] = malloc(sizeof(struct Image *) * 3);
+    }   
+
+    // Read each image file and store the image data in the 3D array.
+    int image_index = 0;
+    rewinddir(dir);
+
+    while ((entry = readdir(dir)) != NULL) {
+        if (strstr(entry->d_name, ".png") != NULL || strstr(entry->d_name, ".jpg") != NULL) {
+            // Get the full path to the image file.
+            char image_file_path[1024];
+            sprintf(image_file_path, "%s/%s", folder_path, entry->d_name);
+
+            // Read the image file.
+            struct Image *image = read_image(image_file_path);
+
+            // Store the image data in the 3D array.
+            images[image_index][0] = image;
+
+            // Use a union to cast the integer value to a pointer to a struct Image structure.
+            union {
+                int width;
+                int height;
+                struct Image *image;
+            } image_union;
+
+            image_union.width = image->width;
+            images[image_index][1] = image_union.image;
+
+            image_union.height = image->height;
+            images[image_index][2] = image_union.image;
+
+            image_index++;
+        }   
+    }
+
+    // Close the directory.
+    closedir(dir);  
+    return images;
+}
+
+int main(){
+    char folder_path[] = "/home/ashhar/Desktop/CNN_on_FPGA/Ashhar/CNN_using_C/mnist_png/training/0";
+    struct Image ***images = read_folder_of_images(folder_path);
+}
