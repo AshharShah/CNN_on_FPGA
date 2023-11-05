@@ -15,12 +15,23 @@ extern struct Matrix add_matrices(struct Matrix *matrix1, struct Matrix *matrix2
 extern struct Matrix multiply_matrices(struct Matrix *matrix1, struct Matrix *matrix2);
 extern struct Matrix multiply_matrices(struct Matrix *matrix1, struct Matrix *matrix2);
 
+
+
+void filter_init();
+
 struct Image{
     // Declare a 2D array to store the image data.
     uint8_t image_array[28][28];
     int height;
     int width;
 };
+
+int **filter;
+struct Image image[2];
+int paddedImage[30][30] = {0};
+int output[14][14];
+int img_index = 1;
+
 
 int main()
 {
@@ -69,10 +80,8 @@ int main()
     print_matrix(&multiply_result, rows, cols);
     printf("\n\n");
 
-    struct Image image;
-
     // Load the image data into the array.
-    unsigned char* image_data = stbi_load("/home/ashhar/Desktop/CNN_on_FPGA/Ashhar/CNN_using_C/mnist_png/training/0/6034.png", &image.width, &image.height, NULL, 0);
+    unsigned char* image_data = stbi_load("/home/ashhar/Desktop/CNN_on_FPGA/Ashhar/CNN_using_C/mnist_png/training/0/6034.png", &image[0].width, &image[0].height, NULL, 0);
 
     if (image_data == NULL) {
         printf("\nError Opening The Image!\n");
@@ -80,36 +89,39 @@ int main()
         return 1;
     }
 
-    memcpy(image.image_array, image_data, image.width * image.height);
+    memcpy(image[0].image_array, image_data, image[0].width * image[0].height);
+
+    image_data = stbi_load("/home/ashhar/Desktop/CNN_on_FPGA/Ashhar/CNN_using_C/mnist_png/training/3/59957.png", &image[1].width, &image[1].height, NULL, 0);
+
+    if (image_data == NULL) {
+        printf("\nError Opening The Image!\n");
+        // Handle error.
+        return 1;
+    }
+
+    memcpy(image[1].image_array, image_data, image[1].width * image[1].height);
 
 
+    // display the input image which we are dealing with
     printf("\t\t\t\t *******************INPUT IMAGE******************* \n\n");
-
-    printf(" Height Of Image: %d\n", image.height);
-    printf(" Width Of Image: %d\n", image.width);
+    printf(" Height Of Image: %d\n", image[img_index].height);
+    printf(" Width Of Image: %d\n", image[img_index].width);
     printf("\n\n");
-
     for(int i = 0; i < 28; i++){
         for(int j =0; j < 28; j++){
-            printf(" %3d ", image.image_array[i][j]);
+            printf(" %3d ", image[img_index].image_array[i][j]);
         }
         printf("\n");
     }
 
-    int paddedImage[30][30] = {0}; // Padded image with zeros
-    int output[14][14];
-    int filter[3][3];
+    // initialize the filter for the convolution layer
+    filter_init();
 
-    for(int i = 0; i < 3; i++){
-        for(int j = 0; j < 3; j++){
-            filter[i][j] = rand() % 10;
-        }
-    }
 
     // Pad the image with zeros
     for (int i = 0; i < 28; i++) {
         for (int j = 0; j < 28; j++) {
-            paddedImage[i + 1][j + 1] = image.image_array[i][j];
+            paddedImage[i + 1][j + 1] = image[img_index].image_array[i][j];
         }
     }
 
@@ -153,5 +165,23 @@ int main()
     }
 
 
+    for(int i = 0; i < 3; i++){
+        free(filter[i]);
+    }
+    free(filter);
     return 0;
+}
+
+void filter_init(){
+    filter = (int**)malloc(3 * sizeof(int*));
+    for(int i = 0; i < 3; i++){
+        filter[i] = (int*)malloc(sizeof(int));
+    }
+
+    for(int i = 0; i < 3; i++){
+        for(int j = 0; j < 3; j++){
+            filter[i][j] = rand() % 10;
+        }
+    }
+
 }
