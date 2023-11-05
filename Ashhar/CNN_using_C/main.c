@@ -15,6 +15,14 @@ extern struct Matrix add_matrices(struct Matrix *matrix1, struct Matrix *matrix2
 extern struct Matrix multiply_matrices(struct Matrix *matrix1, struct Matrix *matrix2);
 extern struct Matrix multiply_matrices(struct Matrix *matrix1, struct Matrix *matrix2);
 
+struct Image{
+    // Declare a 2D array to store the image data.
+    uint8_t image_array[28][28];
+    int height;
+    int width;
+    int channels;
+};
+
 int main()
 {
     struct Matrix kernel;
@@ -62,14 +70,10 @@ int main()
     print_matrix(&multiply_result, rows, cols);
     printf("\n\n");
 
-    // Declare a 2D array to store the image data.
-    uint8_t image_array[640][480];
-    int height = 0;
-    int width = 0;
-    int channels = 0;
+    struct Image image;
 
     // Load the image data into the array.
-    unsigned char* image_data = stbi_load("/home/ashhar/Desktop/CNN_on_FPGA/Ashhar/CNN_using_C/mnist_png/training/0/6034.png", &width, &height, &channels, 0);
+    unsigned char* image_data = stbi_load("/home/ashhar/Desktop/CNN_on_FPGA/Ashhar/CNN_using_C/mnist_png/training/0/6034.png", &image.width, &image.height, &image.channels, 0);
 
     if (image_data == NULL) {
         printf("\nError Opening The Image!\n");
@@ -77,11 +81,67 @@ int main()
         return 1;
     }
 
-    memcpy(image_array, image_data, width * height * channels);
+    memcpy(image.image_array, image_data, image.width * image.height * image.channels);
 
-    printf("Height Of Image: %d\n", height);
-    printf("Width Of Image: %d\n", width);
-    printf("Channels In Image: %d\n", channels);
+    printf(" Height Of Image: %d\n", image.height);
+    printf(" Width Of Image: %d\n", image.width);
+    printf(" Channels In Image: %d\n", image.channels);
+    printf("\n\n");
+
+    printf("\t\t INPUT IMAGE \t\t\n\n");
+    for(int i = 0; i < 28; i++){
+        for(int j =0; j < 28; j++){
+            printf(" %3d ", image.image_array[i][j]);
+        }
+        printf("\n");
+    }
+
+    int paddedImage[30][30] = {0}; // Padded image with zeros
+    int output[14][14];
+    int filter[3][3];
+
+    for(int i = 0; i < 3; i++){
+        for(int j = 0; j < 3; j++){
+            filter[i][j] = rand() % 10;
+        }
+    }
+
+    // Pad the image with zeros
+    for (int i = 0; i < 28; i++) {
+        for (int j = 0; j < 28; j++) {
+            paddedImage[i + 1][j + 1] = image.image_array[i][j];
+        }
+    }
+
+    printf("\n\n\t\t PADDED IMAGE \t\t\n\n");
+    for(int i = 0; i < 30; i++){
+        for(int j =0; j < 30; j++){
+            printf(" %3d ", paddedImage[i][j]);
+        }
+        printf("\n");
+    }
+
+    // Perform convolution with stride 2
+    for (int i = 0; i < 28; i += 2) {
+        for (int j = 0; j < 28; j += 2) {
+            int sum = 0;
+            for (int k = 0; k < 3; k++) {
+                for (int l = 0; l < 3; l++) {
+                    sum += paddedImage[i + k][j + l] * filter[k][l];
+                }
+            }
+            output[i / 2][j / 2] = sum; // Divide indices by 2 for output image
+        }
+    }
+
+    printf("\n\n\t\t FEATURE MAP \t\t\n\n");
+    for(int i = 0; i < 14; i++){
+        for(int j =0; j < 14; j++){
+            printf(" %5d ", output[i][j]);
+        }
+        printf("\n");
+    }
+
 
     return 0;
 }
