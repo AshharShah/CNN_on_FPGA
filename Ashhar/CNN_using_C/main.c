@@ -23,7 +23,7 @@ int img_index = 0;
 
 struct Image{
     // Declare a 2D array to store the image data.
-    uint8_t image_array[30][30];
+    float image_array[30][30];
     int height;
     int width;
 };
@@ -36,9 +36,9 @@ void convolution_forward(struct Image);
 
 
 // objects required by the convolutional layer
-int **filter;
+float **filter;
 struct Image image[2];
-int conv_output[14][14];
+float conv_output[14][14];
 
 
 
@@ -104,7 +104,7 @@ int main()
     printf("\n\n");
     for(int i = 0; i < 30; i++){
         for(int j = 0; j < 30; j++){
-            printf(" %3d ", image[img_index].image_array[i][j]);
+            printf(" %4d ", (int)(image[img_index].image_array[i][j] * 255));
         }
         printf("\n");
     }
@@ -119,7 +119,7 @@ int main()
     printf("\n\n");
     for(int i = 0; i < 14; i++){
         for(int j =0; j < 14; j++){
-            printf(" %5d ", conv_output[i][j]);
+            printf(" %4d ", (int)conv_output[i][j]);
         }
         printf("\n\n");
     }
@@ -128,7 +128,7 @@ int main()
     for(int i = 0; i < 3; i++){
         free(filter[i]);
     }
-    free(filter);
+    free(filter);]
 
     return 0;
 }
@@ -165,7 +165,7 @@ void get_images(int per_num){
     // Pad the image with zeros
     for (int i = 0; i < 28; i++) {
         for (int j = 0; j < 28; j++) {
-            image[0].image_array[i+1][j+1] = img[i][j];
+            image[0].image_array[i+1][j+1] = img[i][j] / (float) 255;
         }
     }
 
@@ -193,7 +193,7 @@ void get_images(int per_num){
     // Pad the image with zeros
     for (int i = 0; i < 28; i++) {
         for (int j = 0; j < 28; j++) {
-            image[1].image_array[i+1][j+1] = img[i][j];
+            image[1].image_array[i+1][j+1] = img[i][j] / (float)255;
         }
     }
     image[1].width += 2;
@@ -217,9 +217,9 @@ void get_images(int per_num){
 
 // function to initialize the filters that are to be used in the convolution layer
 void filter_init(){
-    filter = (int**)malloc(3 * sizeof(int*));
+    filter = (float**)malloc(3 * sizeof(float*));
     for(int i = 0; i < 3; i++){
-        filter[i] = (int*)malloc(sizeof(int));
+        filter[i] = (float*)malloc(sizeof(float));
     }
 
     for(int i = 0; i < 3; i++){
