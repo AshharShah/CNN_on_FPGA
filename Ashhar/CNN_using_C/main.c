@@ -20,7 +20,6 @@ struct Image{
     uint8_t image_array[28][28];
     int height;
     int width;
-    int channels;
 };
 
 int main()
@@ -73,7 +72,7 @@ int main()
     struct Image image;
 
     // Load the image data into the array.
-    unsigned char* image_data = stbi_load("/home/ashhar/Desktop/CNN_on_FPGA/Ashhar/CNN_using_C/mnist_png/training/0/6034.png", &image.width, &image.height, &image.channels, 0);
+    unsigned char* image_data = stbi_load("/home/ashhar/Desktop/CNN_on_FPGA/Ashhar/CNN_using_C/mnist_png/training/0/6034.png", &image.width, &image.height, NULL, 0);
 
     if (image_data == NULL) {
         printf("\nError Opening The Image!\n");
@@ -81,14 +80,15 @@ int main()
         return 1;
     }
 
-    memcpy(image.image_array, image_data, image.width * image.height * image.channels);
+    memcpy(image.image_array, image_data, image.width * image.height);
+
+
+    printf("\t\t\t\t *******************INPUT IMAGE******************* \n\n");
 
     printf(" Height Of Image: %d\n", image.height);
     printf(" Width Of Image: %d\n", image.width);
-    printf(" Channels In Image: %d\n", image.channels);
     printf("\n\n");
 
-    printf("\t\t INPUT IMAGE \t\t\n\n");
     for(int i = 0; i < 28; i++){
         for(int j =0; j < 28; j++){
             printf(" %3d ", image.image_array[i][j]);
@@ -113,7 +113,12 @@ int main()
         }
     }
 
-    printf("\n\n\t\t PADDED IMAGE \t\t\n\n");
+    printf("\n\n\t\t\t\t *******************PADDED IMAGE******************* \n\n");
+
+    printf(" Height Of Padded Image: %d\n", 30);
+    printf(" Width Of Padded Image: %d\n", 30);
+    printf("\n\n");
+
     for(int i = 0; i < 30; i++){
         for(int j =0; j < 30; j++){
             printf(" %3d ", paddedImage[i][j]);
@@ -134,12 +139,17 @@ int main()
         }
     }
 
-    printf("\n\n\t\t FEATURE MAP \t\t\n\n");
+    printf("\n\n\t\t\t\t *******************FEATURE MAP*******************\n\n");
+
+    printf(" Height Of Feature Map: %d\n", 14);
+    printf(" Width Of Feature Map: %d\n", 14);
+    printf("\n\n");
+
     for(int i = 0; i < 14; i++){
         for(int j =0; j < 14; j++){
             printf(" %5d ", output[i][j]);
         }
-        printf("\n");
+        printf("\n\n");
     }
 
 
