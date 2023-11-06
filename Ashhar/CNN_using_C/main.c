@@ -6,7 +6,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 
-int img_index = 1;
+int img_index = 0 ;
 
 
 // extern void Matrix_Init(struct Matrix *x, int r, int c);
@@ -25,11 +25,14 @@ extern void get_images(int per_num, struct Image* image);
 void filter_init();
 void convolution_forward(struct Image);
 
+void maxpool_forward();
+
 
 // objects required by the convolutional layer
 float **filter;
 struct Image image[2];
-float conv_output[14][14];
+float conv_output[14][14] = {0};
+float maxpool_output[7][7] = {0};
 
 
 
@@ -115,6 +118,21 @@ int main()
         printf("\n\n");
     }
 
+    // perform maxpool forward propogation for a single image
+    maxpool_forward(image[img_index]);
+
+    // display the feature map for the convolved image
+    printf("\n\n\t\t\t\t ******************* REDUCED FEATURE MAP *******************\n\n");
+    printf(" Height Of Feature Map: %d\n", 7);
+    printf(" Width Of Feature Map: %d\n", 7);
+    printf("\n\n");
+    for(int i = 0; i < 7; i++){
+        for(int j =0; j < 7; j++){
+            printf(" %4d ", (int)(maxpool_output[i][j] * 255));
+        }
+        printf("\n\n");
+    }
+
 
     for(int i = 0; i < 3; i++){
         free(filter[i]);
@@ -160,13 +178,32 @@ void convolution_forward(struct Image img){
     // Perform convolution with stride 2
     for (int i = 0; i < 28; i += 2) {
         for (int j = 0; j < 28; j += 2) {
-            int sum = 0;
+            float sum = 0;
             for (int k = 0; k < 3; k++) {
                 for (int l = 0; l < 3; l++) {
                     sum += img.image_array[i + k][j + l] * filter[k][l];
                 }
             }
             conv_output[i / 2][j / 2] = sum; // Divide indices by 2 for output image
+        }
+    }
+}
+
+
+// function to perform maxpooling forward propogation and generate a reduced feature map
+void maxpool_forward(){
+    // Perform max pooling operation
+    for (int i = 0; i < 14; i += 2) {
+        for (int j = 0; j < 14; j += 2) {
+            float maxVal = 0;
+            for (int k = i; k < i + 2; k++) {
+                for (int l = j; l < j + 2; l++) {
+                    if (conv_output[k][l] > maxVal) {
+                        maxVal = conv_output[k][l];
+                    }
+                }
+            }
+            maxpool_output[i / 2][j / 2] = maxVal;
         }
     }
 }
