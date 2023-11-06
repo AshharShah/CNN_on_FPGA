@@ -17,7 +17,7 @@ int img_index = 1;
 // extern struct Matrix multiply_matrices(struct Matrix *matrix1, struct Matrix *matrix2);
 // extern struct Matrix multiply_matrices(struct Matrix *matrix1, struct Matrix *matrix2);
 
-// function that will retrieve the images that are to be used for training the CNN
+// function that will retrieve the images that are to be processed
 extern void get_images(int per_num, struct Image* image);
 
 
@@ -110,7 +110,7 @@ int main()
     printf("\n\n");
     for(int i = 0; i < 14; i++){
         for(int j =0; j < 14; j++){
-            printf(" %4d ", (int)conv_output[i][j]);
+            printf(" %4d ", (int)(conv_output[i][j] * 255));
         }
         printf("\n\n");
     }
