@@ -31,6 +31,9 @@ void maxpool_forward();
 // functions for the flatten layer
 void flatten_forward();
 
+// functions for the dense layer
+void dense_weight_init();
+
 
 // objects required by the convolutional layer
 float **filter;
@@ -44,7 +47,7 @@ float maxpool_output[7][7] = {0};
 float flatten_output[7*7] = {0};
 
 // objects required by the dense layer
-float *dense_weights;
+float dense_weights[49][10] = {0};
 float dense_output[7*7] = {0};
 
 
@@ -152,6 +155,22 @@ int main()
     printf("\n\n\t\t\t\t ******************* FLATTENED FEATURE MAP *******************\n\n");
     for(int i = 0; i < 7*7; i++){
         printf("%5d\n", (int)(flatten_output[i]*255));
+    }
+
+    // initialize the weights for the dense layer
+    dense_weight_init();
+
+    printf("\n\n\t\t\t\t ******************* DENSE LAYER WEIGHTS *******************\n\n  ");
+
+    for(int i = 0; i < 10; i++){
+        printf(" Class %d    ", i);
+    }
+    printf("\n\n");
+    for(int i = 0; i < 7*7; i++){
+        for(int j = 0; j < 10; j++){
+            printf(" %10f ", dense_weights[i][j]);
+        }
+        printf("\n");
     }
 
 
@@ -266,17 +285,16 @@ void flatten_forward(){
         //   of the input image and apply the softmax activation function to it.
 
 void dense_weight_init(){
-
-    dense_weights = (float*)malloc((7*7) * sizeof(float));
-
-    for(int i = 0; i < 7*7; i++){
-        dense_weights[i] = (rand() % 10) / 10.0;
+    for(int i = 0; i < 49; i++){
+        for(int j = 0; j < 10; j++){
+            dense_weights[i][j] = (rand() % 10) / 10.0;
+        }
     }
 }
 
-void dense_forward(){
-    // now i have a vector for the dense outputs
-    for(int i = 0; i < 7*7; i++){
-        dense_output[i] = dense_weights[i] * flatten_output[i];
-    }
-}
+// void dense_forward(){
+//     // now i have a vector for the dense outputs
+//     for(int i = 0; i < 7*7; i++){
+//         dense_output[i] = dense_weights[i] * flatten_output[i];
+//     }
+// }
