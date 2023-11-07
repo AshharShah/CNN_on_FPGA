@@ -41,7 +41,11 @@ float conv_output[14][14] = {0};
 float maxpool_output[7][7] = {0};
 
 // objects required by the flatten layer
-float flatten_output[7*7];
+float flatten_output[7*7] = {0};
+
+// objects required by the dense layer
+float *dense_weights;
+float dense_output[7*7] = {0};
 
 
 
@@ -184,7 +188,7 @@ void filter_init(){
 
     for(int i = 0; i < 3; i++){
         for(int j = 0; j < 3; j++){
-            filter[i][j] = rand() % 10;
+            filter[i][j] = (rand() % 10) / 10.0;
         }
     }
 
@@ -236,7 +240,7 @@ void maxpool_forward(){
     }
 }
 
-// THESE ARE THE FUNCTIONS THAT ARE USED BY THE FLATTEN LAYER;
+// THESE ARE THE FUNCTIONS THAT ARE USED BY THE FLATTEN LAYER
 
     // 1) flatten_forward()
 
@@ -246,10 +250,33 @@ void maxpool_forward(){
 
 void flatten_forward(){
     int index = 0;
-    for(int i = 0; i < 14; i++){
-        for(int j = 0; j < 14; j++){
+    for(int i = 0; i < 7; i++){
+        for(int j = 0; j < 7; j++){
             flatten_output[index] = maxpool_output[i][j];
             index++;
         }
+    }
+}
+
+// THESE ARE THE FUNCTIONS THAT ARE USED BY THE DENSE LAYER
+
+    // 1) dense_weight_init()
+
+        // - This function will initialize the dense layer vector for classification
+        //   of the input image and apply the softmax activation function to it.
+
+void dense_weight_init(){
+
+    dense_weights = (float*)malloc((7*7) * sizeof(float));
+
+    for(int i = 0; i < 7*7; i++){
+        dense_weights[i] = (rand() % 10) / 10.0;
+    }
+}
+
+void dense_forward(){
+    // now i have a vector for the dense outputs
+    for(int i = 0; i < 7*7; i++){
+        dense_output[i] = dense_weights[i] * flatten_output[i];
     }
 }
