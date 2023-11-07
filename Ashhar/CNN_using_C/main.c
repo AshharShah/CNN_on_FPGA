@@ -9,13 +9,13 @@
 int img_index = 0;
 
 
-// extern void Matrix_Init(struct Matrix *x, int r, int c);
+extern void Matrix_Init(struct Matrix *x, int r, int c);
 // extern void Num_Zeros(struct Matrix *x, int r, int c);
-// extern void print_matrix(struct Matrix *x, int r, int c);
+extern void print_matrix(struct Matrix *x, int r, int c);
 // extern void free_matrix(struct Matrix *x);
 // extern struct Matrix add_matrices(struct Matrix *matrix1, struct Matrix *matrix2);
 // extern struct Matrix multiply_matrices(struct Matrix *matrix1, struct Matrix *matrix2);
-// extern struct Matrix multiply_matrices(struct Matrix *matrix1, struct Matrix *matrix2);
+extern struct Matrix multiply_matrices(struct Matrix *matrix1, struct Matrix *matrix2);
 
 // function that will retrieve the images that are to be processed
 extern void get_images(int per_num, struct Image* image);
@@ -33,6 +33,7 @@ void flatten_forward();
 
 // functions for the dense layer
 void dense_weight_init();
+void dense_forward();
 
 
 // objects required by the convolutional layer
@@ -161,7 +162,6 @@ int main()
     dense_weight_init();
 
     printf("\n\n\t\t\t\t ******************* DENSE LAYER WEIGHTS *******************\n\n  ");
-
     for(int i = 0; i < 10; i++){
         printf(" Class %d    ", i);
     }
@@ -172,6 +172,8 @@ int main()
         }
         printf("\n");
     }
+
+    dense_forward();
 
 
     for(int i = 0; i < 3; i++){
@@ -292,9 +294,35 @@ void dense_weight_init(){
     }
 }
 
-// void dense_forward(){
-//     // now i have a vector for the dense outputs
-//     for(int i = 0; i < 7*7; i++){
-//         dense_output[i] = dense_weights[i] * flatten_output[i];
-//     }
-// }
+void dense_forward(){
+    struct Matrix flatten_transpose;
+    struct Matrix weights;
+
+    Matrix_Init(&flatten_transpose, 1, 49);
+    Matrix_Init(&weights, 49, 10);
+
+    for(int i = 0; i < 1; i++){
+        for(int j = 0; j < 49; j++){
+            flatten_transpose.elements[i][j] = flatten_output[j];
+        }
+    }
+
+    printf("\n\n\t\t\t\t ******************* FLATTEN LAYER TRANSPOSE *******************\n\n");
+    for(int i = 0; i < 1; i++){
+        for(int j = 0; j < 49; j++){
+            printf("%4d ", (int)(flatten_transpose.elements[i][j] * 255));
+        }
+    }
+    printf("\n");
+
+    for(int i = 0; i < 49; i++){
+        for(int j = 0; j < 10; j++){
+            weights.elements[i][j] = dense_weights[i][j];
+        }
+    }
+    
+    struct Matrix logits = multiply_matrices(&flatten_transpose, &weights);
+    printf("\n\n\t\t\t\t ******************* LOGITS *******************\n\n");
+    print_matrix(&logits, 1, 10);
+
+}
