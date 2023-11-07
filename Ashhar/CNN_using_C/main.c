@@ -28,6 +28,9 @@ void convolution_forward(struct Image);
 // functions for the maxpooling layer
 void maxpool_forward();
 
+// functions for the flatten layer
+void flatten_forward();
+
 
 // objects required by the convolutional layer
 float **filter;
@@ -36,6 +39,9 @@ float conv_output[14][14] = {0};
 
 // objects required by the maxpooling layer
 float maxpool_output[7][7] = {0};
+
+// objects required by the flatten layer
+float flatten_output[7*7];
 
 
 
@@ -136,6 +142,14 @@ int main()
         printf("\n\n");
     }
 
+    // convert the 2D reduced feature map to a 1D feature map
+    flatten_forward();
+
+    printf("\n\n\t\t\t\t ******************* FLATTENED FEATURE MAP *******************\n\n");
+    for(int i = 0; i < 7*7; i++){
+        printf("%5d\n", (int)(flatten_output[i]*255));
+    }
+
 
     for(int i = 0; i < 3; i++){
         free(filter[i]);
@@ -218,6 +232,24 @@ void maxpool_forward(){
                 }
             }
             maxpool_output[i / 2][j / 2] = maxVal;
+        }
+    }
+}
+
+// THESE ARE THE FUNCTIONS THAT ARE USED BY THE FLATTEN LAYER;
+
+    // 1) flatten_forward()
+
+    //     - This function will convert the 2D array `maxpool_output` that contains the 
+    //       reduced feature map into a 1D array and store it in the variable `flatten_output`
+
+
+void flatten_forward(){
+    int index = 0;
+    for(int i = 0; i < 14; i++){
+        for(int j = 0; j < 14; j++){
+            flatten_output[index] = maxpool_output[i][j];
+            index++;
         }
     }
 }
