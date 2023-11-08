@@ -8,6 +8,7 @@
 #include <math.h>
 
 int img_index = 0;
+float alpha = 0.10;
 
 
 extern void Matrix_Init(struct Matrix *x, int r, int c);
@@ -36,7 +37,7 @@ void flatten_forward();
 void dense_weight_init();
 void dense_forward();
 int predict();
-void dense_backward();
+void dense_backward(float);
 
 
 // objects required by the convolutional layer
@@ -195,9 +196,19 @@ int main()
     }
     printf("\n\n");
 
-    dense_backward();
+    dense_backward(alpha);
 
-    
+    // printf("\n\n\t\t\t\t ******************* DENSE LAYER WEIGHTS *******************\n\n  ");
+    // for(int i = 0; i < 10; i++){
+    //     printf(" Class %d    ", i);
+    // }
+    // printf("\n\n");
+    // for(int i = 0; i < 7*7; i++){
+    //     for(int j = 0; j < 10; j++){
+    //         printf(" %10f ", dense_weights[i][j]);
+    //     }
+    //     printf("\n");
+    // }
 
 
     for(int i = 0; i < 3; i++){
@@ -386,7 +397,7 @@ void dense_forward(){
 
 }
 
-void dense_backward(){
+void dense_backward(float learn_rate){
 
     float transformation_eq[10];
     float S_total = 0;
@@ -431,6 +442,12 @@ void dense_backward(){
         struct Matrix dE_dW_Matrix = multiply_matrices(&dZ_dw_Matrix, &dE_dZ_Matrix);
         printf("\n\n\t\t\t\t ******************* dE_dW *******************\n\n");
         print_matrix(&dE_dW_Matrix, 49, 10);
+
+        for(int j = 0; j < 49; j++){
+            for(int k = 0; k < 10; k++){
+                dense_weights[j][k] = dense_weights[j][k] - (learn_rate * dE_dW_Matrix.elements[j][k]);
+            }
+        }
 
 
     }
