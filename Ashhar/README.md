@@ -53,3 +53,12 @@ Coded a Cat and Dog CNN classifier.
     4) Created function `maxpool_forward` that performs the forward propogation for
     our maxpooling layer and updates the variable `maxpool_output`, which is essentially
     a 2D array to contain the reduced feature map.
+
+    5) Created function `dense_forward` that takes the maxpooled image, flattens it and computes the 
+    function `y = mx + b` where m = dense_weights which is a 49x10 array where 10 represents the 
+    individual classes. It provides a 10x1 vector with the softmax function applied.
+
+    6) Created function `dense_backward` that takes the softmax vector, and uses it to find the 
+    gradients of loss with respect to weights and updates the weights for the dense layer. 
+    It also provides a 7x7 matrix of the gradients of the loss with respect to the inputs (x) which 
+    will be used by the maxpooling layer.
