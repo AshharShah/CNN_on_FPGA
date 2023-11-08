@@ -66,7 +66,7 @@ struct Matrix multiply_matrices(struct Matrix *matrix1, struct Matrix *matrix2) 
 
   struct Matrix result;
 
-  Matrix_Init(&result, matrix1->rows, matrix1->columns);
+  Matrix_Init(&result, matrix1->rows, matrix2->columns);
 
   for (int i = 0; i < matrix1->rows; i++) {
     for (int j = 0; j < matrix2->columns; j++) {

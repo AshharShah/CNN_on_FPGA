@@ -36,6 +36,7 @@ void flatten_forward();
 void dense_weight_init();
 void dense_forward();
 int predict();
+void dense_backward();
 
 
 // objects required by the convolutional layer
@@ -53,6 +54,7 @@ float flatten_output[7*7] = {0};
 float dense_weights[49][10] = {0};
 float dense_logits[10] = {0};
 float softmax_vectors[10] = {0};
+float dE_dY[10] = {0};
 
 
 int main()
@@ -184,6 +186,18 @@ int main()
     }
 
     printf(" SUM OF SOFTMAX VECTORS: %f \n", soft_sum);
+    
+    dE_dY[0] = -1 / softmax_vectors[0];
+
+    printf("\n\n\t\t\t\t ******************* GRADIENT FOR SOFTMAX LAYER *******************\n\n  ");
+    for(int i = 0; i < 10; i++){
+        printf(" %10f ", dE_dY[i]);
+    }
+    printf("\n\n");
+
+    dense_backward();
+
+    
 
 
     for(int i = 0; i < 3; i++){
@@ -369,6 +383,73 @@ void dense_forward(){
     int prediction = predict();
 
     printf("\n\n The Predicted Class: %d\n\n", prediction);
+
+}
+
+void dense_backward(){
+
+    float transformation_eq[10];
+    float S_total = 0;
+    float dY_dZ[10] = {0};
+    float dE_dZ[10] = {0};
+    
+    struct Matrix dZ_dw_Matrix;
+    Matrix_Init(&dZ_dw_Matrix, 49, 1);
+    struct Matrix dE_dZ_Matrix;
+    Matrix_Init(&dE_dZ_Matrix, 1, 10);
+
+    for(int i = 0; i < 10; i++){
+        transformation_eq[i] = exp(dense_logits[i]);
+    }
+
+    for(int i = 0; i < 10; i++){
+        S_total += transformation_eq[i];
+    }
+
+
+    for(int i = 0; i < 10; i++){
+        if(dE_dY[i] == 0){
+            continue;
+        }
+
+        for(int j = 0; j < 10; j++){
+            dY_dZ[j] = (-1.0 * transformation_eq[i] * transformation_eq[j]) / (S_total * S_total);
+        }
+        dY_dZ[i] = ( transformation_eq[i] * (S_total - transformation_eq[i]) ) / (S_total * S_total);
+
+        for(int j = 0; j < 10; j++){
+            dE_dZ[j] = dE_dY[j] * dY_dZ[j];
+        }
+
+        for(int j = 0; j < 10; j++){
+            dE_dZ_Matrix.elements[0][j] = dE_dZ[j];
+        }
+        for(int j = 0; j < 49; j++){
+            dZ_dw_Matrix.elements[j][0] = flatten_output[j];
+        }
+
+        struct Matrix dE_dW_Matrix = multiply_matrices(&dZ_dw_Matrix, &dE_dZ_Matrix);
+        printf("\n\n\t\t\t\t ******************* dE_dW *******************\n\n");
+        print_matrix(&dE_dW_Matrix, 49, 10);
+
+
+    }
+
+    printf("\n\n\t\t\t\t ******************* dY_dZ 10x1 Vector *******************\n\n");
+    for(int i = 0; i < 10; i++){
+        printf("%f\n", dY_dZ[i]);
+    }
+
+    printf("\n\n\t\t\t\t ******************* dE_dZ 10x1 Vector *******************\n\n");
+    for(int i = 0; i < 10; i++){
+        printf("%f\n", dE_dZ[i]);
+    }
+
+    printf("\n\n\t\t\t\t ******************* dZ_dw *******************\n\n");
+    print_matrix(&dZ_dw_Matrix, 49, 1);
+
+    printf("\n\n\t\t\t\t ******************* dE_dZ *******************\n\n");
+    print_matrix(&dE_dZ_Matrix, 1, 10);
 
 }
 
