@@ -35,6 +35,7 @@ void flatten_forward();
 // functions for the dense layer
 void dense_weight_init();
 void dense_forward();
+int predict();
 
 
 // objects required by the convolutional layer
@@ -354,7 +355,24 @@ void dense_forward(){
 
     printf("\n\n\t\t\t\t ******************* SOFTMAX PROBABILITIES*******************\n\n");
     for(int i = 0; i < 10; i++){
-        printf(" %10f\n", softmax_vectors[i]);
+        printf(" CLASS %d:  %10f\n", i, softmax_vectors[i]);
     }
 
+    int prediction = predict();
+
+    printf("\n\n The Predicted Class: %d\n\n", prediction);
+
+}
+
+int predict(){
+    int max_index = 0;
+    float max_val = softmax_vectors[0];
+
+    for(int i = 1; i < 10; i++){
+        if(softmax_vectors[i] > max_val){
+            max_val = softmax_vectors[i];
+            max_index = i;
+        }
+    }
+    return max_index;
 }
