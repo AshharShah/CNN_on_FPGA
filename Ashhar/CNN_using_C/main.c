@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <math.h>
 
 int img_index = 0;
 
@@ -49,8 +50,8 @@ float flatten_output[7*7] = {0};
 
 // objects required by the dense layer
 float dense_weights[49][10] = {0};
-float dense_output[7*7] = {0};
-
+float dense_logits[10] = {0};
+float softmax_vectors[10] = {0};
 
 
 int main()
@@ -295,18 +296,21 @@ void dense_weight_init(){
 }
 
 void dense_forward(){
+    // create matrix objects that will be used to perform multiplication on the two matrices
     struct Matrix flatten_transpose;
     struct Matrix weights;
 
+    // initialize both of the matrices
     Matrix_Init(&flatten_transpose, 1, 49);
     Matrix_Init(&weights, 49, 10);
-
+    // copy the flattened image and take its transpose to allow multiplication of the two
     for(int i = 0; i < 1; i++){
         for(int j = 0; j < 49; j++){
             flatten_transpose.elements[i][j] = flatten_output[j];
         }
     }
 
+    // print the transposed matrix
     printf("\n\n\t\t\t\t ******************* FLATTEN LAYER TRANSPOSE *******************\n\n");
     for(int i = 0; i < 1; i++){
         for(int j = 0; j < 49; j++){
@@ -315,14 +319,42 @@ void dense_forward(){
     }
     printf("\n");
 
+    // perform the dense layer operation y = w{t} * x to retrieve the logits
     for(int i = 0; i < 49; i++){
         for(int j = 0; j < 10; j++){
             weights.elements[i][j] = dense_weights[i][j];
         }
     }
     
+    // display the logits to the user
     struct Matrix logits = multiply_matrices(&flatten_transpose, &weights);
     printf("\n\n\t\t\t\t ******************* LOGITS *******************\n\n");
     print_matrix(&logits, 1, 10);
+
+    for(int i = 0; i < 1; i++){
+        for(int j = 0; j < 10; j++){
+            dense_logits[j] = logits.elements[i][j];
+        }
+    }
+
+    printf("\n\n\t\t\t\t ******************* LOGITS TRANSPOSED *******************\n\n");
+    for(int i = 0; i < 10; i++){
+        printf(" %10f\n", dense_logits[i]);
+    }
+
+    // now we will apply the softmax activation function 
+    float deno = 0;
+    for(int i = 0; i < 10; i++){
+        deno += exp(dense_logits[i]);
+    }
+
+    for(int i = 0; i < 10; i++){
+        softmax_vectors[i] = exp(dense_logits[i]) / deno;
+    }
+
+    printf("\n\n\t\t\t\t ******************* SOFTMAX PROBABILITIES*******************\n\n");
+    for(int i = 0; i < 10; i++){
+        printf(" %10f\n", softmax_vectors[i]);
+    }
 
 }
