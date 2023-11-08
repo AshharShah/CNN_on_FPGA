@@ -70,6 +70,7 @@ struct Matrix multiply_matrices(struct Matrix *matrix1, struct Matrix *matrix2) 
 
   for (int i = 0; i < matrix1->rows; i++) {
     for (int j = 0; j < matrix2->columns; j++) {
+      result.elements[i][j] = 0;
       for (int k = 0; k < matrix1->columns; k++) {
         result.elements[i][j] += matrix1->elements[i][k] * matrix2->elements[k][j];
       }

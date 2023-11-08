@@ -40,8 +40,16 @@ Coded a Cat and Dog CNN classifier.
 
 ## Working On CNN in C from scratch
 
-    1) Created a file `matrix.c` and `matrix.h` that contain the functions and the structure for the matrix multiplication and addition steps.
+    1) Created a file `matrix.c` and `matrix.h` that contain the functions and the structure for the matrix 
+    multiplication and addition steps.
 
-    2) Created a file `image.c` and `image.h` that contain the function to retrieve and Image and the structure that defines our Images.
+    2) Created a file `image.c` and `image.h` that contain the function to retrieve and Image and the structure
+    that defines our Images.
 
-    3) Created functions called `filiter_init()` and `convolution_forward()` that initialize the **kernel of size 3x3** and use it with a **stride of 2** to perform forward propogation for the convolution layer which in turn initializes a 2D matrix `conv_output` that contains the feature map.
+    3) Created functions called `filiter_init()` and `convolution_forward()` that initialize the **kernel of size
+    3x3** and use it with a **stride of 2** to perform forward propogation for the convolution layer which in turn
+    initializes a 2D matrix `conv_output` that contains the feature map.
+
+    4) Created function `maxpool_forward` that performs the forward propogation for
+    our maxpooling layer and updates the variable `maxpool_output`, which is essentially
+    a 2D array to contain the reduced feature map.

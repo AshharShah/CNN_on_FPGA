@@ -5,17 +5,18 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <math.h>
 
 int img_index = 0;
 
 
-// extern void Matrix_Init(struct Matrix *x, int r, int c);
+extern void Matrix_Init(struct Matrix *x, int r, int c);
 // extern void Num_Zeros(struct Matrix *x, int r, int c);
-// extern void print_matrix(struct Matrix *x, int r, int c);
+extern void print_matrix(struct Matrix *x, int r, int c);
 // extern void free_matrix(struct Matrix *x);
 // extern struct Matrix add_matrices(struct Matrix *matrix1, struct Matrix *matrix2);
 // extern struct Matrix multiply_matrices(struct Matrix *matrix1, struct Matrix *matrix2);
-// extern struct Matrix multiply_matrices(struct Matrix *matrix1, struct Matrix *matrix2);
+extern struct Matrix multiply_matrices(struct Matrix *matrix1, struct Matrix *matrix2);
 
 // function that will retrieve the images that are to be processed
 extern void get_images(int per_num, struct Image* image);
@@ -28,6 +29,14 @@ void convolution_forward(struct Image);
 // functions for the maxpooling layer
 void maxpool_forward();
 
+// functions for the flatten layer
+void flatten_forward();
+
+// functions for the dense layer
+void dense_weight_init();
+void dense_forward();
+int predict();
+
 
 // objects required by the convolutional layer
 float **filter;
@@ -37,6 +46,13 @@ float conv_output[14][14] = {0};
 // objects required by the maxpooling layer
 float maxpool_output[7][7] = {0};
 
+// objects required by the flatten layer
+float flatten_output[7*7] = {0};
+
+// objects required by the dense layer
+float dense_weights[49][10] = {0};
+float dense_logits[10] = {0};
+float softmax_vectors[10] = {0};
 
 
 int main()
@@ -136,6 +152,39 @@ int main()
         printf("\n\n");
     }
 
+    // convert the 2D reduced feature map to a 1D feature map
+    flatten_forward();
+
+    printf("\n\n\t\t\t\t ******************* FLATTENED FEATURE MAP *******************\n\n");
+    for(int i = 0; i < 7*7; i++){
+        printf("%5d\n", (int)(flatten_output[i]*255));
+    }
+
+    // initialize the weights for the dense layer
+    dense_weight_init();
+
+    printf("\n\n\t\t\t\t ******************* DENSE LAYER WEIGHTS *******************\n\n  ");
+    for(int i = 0; i < 10; i++){
+        printf(" Class %d    ", i);
+    }
+    printf("\n\n");
+    for(int i = 0; i < 7*7; i++){
+        for(int j = 0; j < 10; j++){
+            printf(" %10f ", dense_weights[i][j]);
+        }
+        printf("\n");
+    }
+
+    dense_forward();
+
+    // perform validation to see if softmax was correctly computed
+    float soft_sum = 0.0;
+    for(int i = 0; i < 10; i++){
+        soft_sum += softmax_vectors[i];
+    }
+
+    printf(" SUM OF SOFTMAX VECTORS: %f \n", soft_sum);
+
 
     for(int i = 0; i < 3; i++){
         free(filter[i]);
@@ -170,7 +219,7 @@ void filter_init(){
 
     for(int i = 0; i < 3; i++){
         for(int j = 0; j < 3; j++){
-            filter[i][j] = rand() % 10;
+            filter[i][j] = (rand() % 10) / 10.0;
         }
     }
 
@@ -220,4 +269,118 @@ void maxpool_forward(){
             maxpool_output[i / 2][j / 2] = maxVal;
         }
     }
+}
+
+// THESE ARE THE FUNCTIONS THAT ARE USED BY THE FLATTEN LAYER
+
+    // 1) flatten_forward()
+
+    //     - This function will convert the 2D array `maxpool_output` that contains the 
+    //       reduced feature map into a 1D array and store it in the variable `flatten_output`
+
+
+void flatten_forward(){
+    int index = 0;
+    for(int i = 0; i < 7; i++){
+        for(int j = 0; j < 7; j++){
+            flatten_output[index] = maxpool_output[i][j];
+            index++;
+        }
+    }
+}
+
+// THESE ARE THE FUNCTIONS THAT ARE USED BY THE DENSE LAYER
+
+    // 1) dense_weight_init()
+
+        // - This function will initialize the dense layer vector for classification
+        //   of the input image and apply the softmax activation function to it.
+
+void dense_weight_init(){
+    for(int i = 0; i < 49; i++){
+        for(int j = 0; j < 10; j++){
+            dense_weights[i][j] = (rand() % 10) / 10.0;
+        }
+    }
+}
+
+void dense_forward(){
+    // create matrix objects that will be used to perform multiplication on the two matrices
+    struct Matrix flatten_transpose;
+    struct Matrix weights;
+
+    // initialize both of the matrices
+    Matrix_Init(&flatten_transpose, 1, 49);
+    Matrix_Init(&weights, 49, 10);
+    // copy the flattened image and take its transpose to allow multiplication of the two
+    for(int i = 0; i < 1; i++){
+        for(int j = 0; j < 49; j++){
+            flatten_transpose.elements[i][j] = flatten_output[j];
+        }
+    }
+
+    // print the transposed matrix
+    printf("\n\n\t\t\t\t ******************* FLATTEN LAYER TRANSPOSE *******************\n\n");
+    for(int i = 0; i < 1; i++){
+        for(int j = 0; j < 49; j++){
+            printf("%4d ", (int)(flatten_transpose.elements[i][j] * 255));
+        }
+    }
+    printf("\n");
+
+    // perform the dense layer operation y = w{t} * x to retrieve the logits
+    for(int i = 0; i < 49; i++){
+        for(int j = 0; j < 10; j++){
+            weights.elements[i][j] = dense_weights[i][j];
+        }
+    }
+    
+    // display the logits to the user
+    struct Matrix logits = multiply_matrices(&flatten_transpose, &weights);
+    printf("\n\n\t\t\t\t ******************* LOGITS *******************\n\n");
+    print_matrix(&logits, 1, 10);
+
+    for(int i = 0; i < 1; i++){
+        for(int j = 0; j < 10; j++){
+            dense_logits[j] = logits.elements[i][j];
+        }
+    }
+
+    printf("\n\n\t\t\t\t ******************* LOGITS TRANSPOSED *******************\n\n");
+    for(int i = 0; i < 10; i++){
+        printf(" %10f\n", dense_logits[i]);
+    }
+
+    // now we will apply the softmax activation function 
+    float deno = 0;
+    for(int i = 0; i < 10; i++){
+        deno += exp(dense_logits[i]);
+    }
+
+    for(int i = 0; i < 10; i++){
+        softmax_vectors[i] = exp(dense_logits[i]) / deno;
+    }
+
+    printf("\n\n\t\t\t\t ******************* SOFTMAX PROBABILITIES*******************\n\n");
+    for(int i = 0; i < 10; i++){
+        printf(" CLASS %d:  %10f\n", i, softmax_vectors[i]);
+    }
+
+    int prediction = predict();
+
+    printf("\n\n The Predicted Class: %d\n\n", prediction);
+
+}
+
+int predict(){
+    int max_index = 0;
+    float max_val = softmax_vectors[0];
+
+    for(int i = 1; i < 10; i++){
+        if(softmax_vectors[i] > max_val){
+            max_val = softmax_vectors[i];
+            max_index = i;
+        }
+    }
+    return max_index;
 }
