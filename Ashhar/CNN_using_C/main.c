@@ -56,6 +56,7 @@ float dense_weights[49][10] = {0};
 float dense_logits[10] = {0};
 float softmax_vectors[10] = {0};
 float dE_dY[10] = {0};
+float dense_gradients[7][7] = {0};
 
 
 int main()
@@ -155,30 +156,27 @@ int main()
         printf("\n\n");
     }
 
-    // convert the 2D reduced feature map to a 1D feature map
-    flatten_forward();
-
-    printf("\n\n\t\t\t\t ******************* FLATTENED FEATURE MAP *******************\n\n");
-    for(int i = 0; i < 7*7; i++){
-        printf("%5d\n", (int)(flatten_output[i]*255));
-    }
-
     // initialize the weights for the dense layer
     dense_weight_init();
 
-    printf("\n\n\t\t\t\t ******************* DENSE LAYER WEIGHTS *******************\n\n  ");
-    for(int i = 0; i < 10; i++){
-        printf(" Class %d    ", i);
-    }
-    printf("\n\n");
-    for(int i = 0; i < 7*7; i++){
-        for(int j = 0; j < 10; j++){
-            printf(" %10f ", dense_weights[i][j]);
-        }
-        printf("\n");
-    }
+    // printf("\n\n\t\t\t\t ******************* DENSE LAYER WEIGHTS *******************\n\n  ");
+    // for(int i = 0; i < 10; i++){
+    //     printf(" Class %d    ", i);
+    // }
+    // printf("\n\n");
+    // for(int i = 0; i < 7*7; i++){
+    //     for(int j = 0; j < 10; j++){
+    //         printf(" %10f ", dense_weights[i][j]);
+    //     }
+    //     printf("\n");
+    // }
 
     dense_forward();
+
+    // printf("\n\n\t\t\t\t ******************* FLATTENED FEATURE MAP *******************\n\n");
+    // for(int i = 0; i < 7*7; i++){
+    //     printf("%5d\n", (int)(flatten_output[i]*255));
+    // }
 
     // perform validation to see if softmax was correctly computed
     float soft_sum = 0.0;
@@ -186,7 +184,7 @@ int main()
         soft_sum += softmax_vectors[i];
     }
 
-    printf(" SUM OF SOFTMAX VECTORS: %f \n", soft_sum);
+    printf("\n\n SUM OF SOFTMAX VECTORS: %f \n", soft_sum);
     
     dE_dY[0] = -1 / softmax_vectors[0];
 
@@ -209,6 +207,15 @@ int main()
     //     }
     //     printf("\n");
     // }
+
+    // display the feature map for the convolved image
+    printf("\n\n\t\t\t\t ******************* MAXPOOL GRADIENTS *******************\n\n");
+    for(int i = 0; i < 7; i++){
+        for(int j =0; j < 7; j++){
+            printf(" %10f ", dense_gradients[i][j]);
+        }
+        printf("\n\n");
+    }
 
 
     for(int i = 0; i < 3; i++){
@@ -330,6 +337,10 @@ void dense_weight_init(){
 }
 
 void dense_forward(){
+
+    // convert the 2D reduced feature map to a 1D feature map
+    flatten_forward();
+
     // create matrix objects that will be used to perform multiplication on the two matrices
     struct Matrix flatten_transpose;
     struct Matrix weights;
@@ -345,13 +356,13 @@ void dense_forward(){
     }
 
     // print the transposed matrix
-    printf("\n\n\t\t\t\t ******************* FLATTEN LAYER TRANSPOSE *******************\n\n");
-    for(int i = 0; i < 1; i++){
-        for(int j = 0; j < 49; j++){
-            printf("%4d ", (int)(flatten_transpose.elements[i][j] * 255));
-        }
-    }
-    printf("\n");
+    // printf("\n\n\t\t\t\t ******************* FLATTEN LAYER TRANSPOSE *******************\n\n");
+    // for(int i = 0; i < 1; i++){
+    //     for(int j = 0; j < 49; j++){
+    //         printf("%4d ", (int)(flatten_transpose.elements[i][j] * 255));
+    //     }
+    // }
+    // printf("\n");
 
     // perform the dense layer operation y = w{t} * x to retrieve the logits
     for(int i = 0; i < 49; i++){
@@ -371,10 +382,10 @@ void dense_forward(){
         }
     }
 
-    printf("\n\n\t\t\t\t ******************* LOGITS TRANSPOSED *******************\n\n");
-    for(int i = 0; i < 10; i++){
-        printf(" %10f\n", dense_logits[i]);
-    }
+    // printf("\n\n\t\t\t\t ******************* LOGITS TRANSPOSED *******************\n\n");
+    // for(int i = 0; i < 10; i++){
+    //     printf(" %10f\n", dense_logits[i]);
+    // }
 
     // now we will apply the softmax activation function 
     float deno = 0;
@@ -409,6 +420,15 @@ void dense_backward(float learn_rate){
     struct Matrix dE_dZ_Matrix;
     Matrix_Init(&dE_dZ_Matrix, 1, 10);
 
+    struct Matrix dE_dZ_Matrix_2;
+    Matrix_Init(&dE_dZ_Matrix_2, 10, 1);
+
+    struct Matrix dZ_dX_Matrix;
+    Matrix_Init(&dZ_dX_Matrix, 49, 10);
+
+    struct Matrix dE_dX_Matrix;
+    
+
     for(int i = 0; i < 10; i++){
         transformation_eq[i] = exp(dense_logits[i]);
     }
@@ -440,8 +460,8 @@ void dense_backward(float learn_rate){
         }
 
         struct Matrix dE_dW_Matrix = multiply_matrices(&dZ_dw_Matrix, &dE_dZ_Matrix);
-        printf("\n\n\t\t\t\t ******************* dE_dW *******************\n\n");
-        print_matrix(&dE_dW_Matrix, 49, 10);
+        // printf("\n\n\t\t\t\t ******************* dE_dW *******************\n\n");
+        // print_matrix(&dE_dW_Matrix, 49, 10);
 
         for(int j = 0; j < 49; j++){
             for(int k = 0; k < 10; k++){
@@ -449,24 +469,46 @@ void dense_backward(float learn_rate){
             }
         }
 
+        for(int j = 0; j < 10; j++){
+            dE_dZ_Matrix_2.elements[j][0] = dE_dZ[j];
+        }
+
+        for(int j = 0; j < 49; j++){
+            for(int k = 0; k < 10; k++){
+                dZ_dX_Matrix.elements[j][k] = dense_weights[j][k];
+            }
+        }
+
+        dE_dX_Matrix = multiply_matrices(&dZ_dX_Matrix, &dE_dZ_Matrix_2);
+        // printf("\n\n\t\t\t\t ******************* dE_dX *******************\n\n");
+        // print_matrix(&dE_dX_Matrix, 49, 1);
+
 
     }
 
-    printf("\n\n\t\t\t\t ******************* dY_dZ 10x1 Vector *******************\n\n");
-    for(int i = 0; i < 10; i++){
-        printf("%f\n", dY_dZ[i]);
+    // printf("\n\n\t\t\t\t ******************* dY_dZ 10x1 Vector *******************\n\n");
+    // for(int i = 0; i < 10; i++){
+    //     printf("%f\n", dY_dZ[i]);
+    // }
+
+    // printf("\n\n\t\t\t\t ******************* dE_dZ 10x1 Vector *******************\n\n");
+    // for(int i = 0; i < 10; i++){
+    //     printf("%f\n", dE_dZ[i]);
+    // }
+
+    // printf("\n\n\t\t\t\t ******************* dZ_dw *******************\n\n");
+    // print_matrix(&dZ_dw_Matrix, 49, 1);
+
+    // printf("\n\n\t\t\t\t ******************* dE_dZ *******************\n\n");
+    // print_matrix(&dE_dZ_Matrix, 1, 10);
+    
+    int k = 0;
+    for(int i = 0; i < 7; i++){
+        for(int j = 0; j < 7; j++){
+            dense_gradients[i][j] = dE_dX_Matrix.elements[k][0];
+            k++;
+        }
     }
-
-    printf("\n\n\t\t\t\t ******************* dE_dZ 10x1 Vector *******************\n\n");
-    for(int i = 0; i < 10; i++){
-        printf("%f\n", dE_dZ[i]);
-    }
-
-    printf("\n\n\t\t\t\t ******************* dZ_dw *******************\n\n");
-    print_matrix(&dZ_dw_Matrix, 49, 1);
-
-    printf("\n\n\t\t\t\t ******************* dE_dZ *******************\n\n");
-    print_matrix(&dE_dZ_Matrix, 1, 10);
 
 }
 
