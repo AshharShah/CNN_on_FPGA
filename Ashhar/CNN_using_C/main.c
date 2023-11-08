@@ -177,6 +177,14 @@ int main()
 
     dense_forward();
 
+    // perform validation to see if softmax was correctly computed
+    float soft_sum = 0.0;
+    for(int i = 0; i < 10; i++){
+        soft_sum += softmax_vectors[i];
+    }
+
+    printf(" SUM OF SOFTMAX VECTORS: %f \n", soft_sum);
+
 
     for(int i = 0; i < 3; i++){
         free(filter[i]);
