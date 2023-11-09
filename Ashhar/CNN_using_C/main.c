@@ -8,7 +8,8 @@
 #include <math.h>
 
 int img_index = 0;
-float alpha = 0.10;
+int target_class = 0;
+float alpha = 0.01;
 
 
 extern void Matrix_Init(struct Matrix *x, int r, int c);
@@ -26,6 +27,7 @@ extern void get_images(int per_num, struct Image* image);
 // functions for the convolutional layer
 void filter_init();
 void convolution_forward(struct Image);
+void convolution_backward(struct Image, float);
 
 // functions for the maxpooling layer
 void maxpool_forward();
@@ -45,6 +47,7 @@ void dense_backward(float);
 float **filter;
 struct Image image[2];
 float conv_output[14][14] = {0};
+float conv_gradients[3][3] = {0};
 
 // objects required by the maxpooling layer
 float maxpool_output[7][7] = {0};
@@ -188,7 +191,7 @@ int main()
 
     printf("\n\n SUM OF SOFTMAX VECTORS: %f \n", soft_sum);
     
-    dE_dY[0] = -1 / softmax_vectors[0];
+    dE_dY[target_class] = -1 / softmax_vectors[target_class];
 
     printf("\n\n\t\t\t\t ******************* GRADIENT FOR SOFTMAX LAYER *******************\n\n  ");
     for(int i = 0; i < 10; i++){
@@ -220,6 +223,23 @@ int main()
     }
 
     maxpool_backward(alpha);
+
+    convolution_backward(image[img_index], alpha);
+
+    for(int i = 0; i < 15; i++){
+        convolution_forward(image[img_index]);
+        maxpool_forward();
+        dense_forward();
+        dE_dY[target_class] = -1 / softmax_vectors[target_class];
+        float loss = -1.0 * log(softmax_vectors[0]);
+        printf("\n\n LOSS: %f \n\n", loss);
+        if(loss < 0.05){
+            break;
+        }
+        dense_backward(alpha);
+        maxpool_backward(alpha);
+        convolution_backward(image[img_index], alpha);
+    }
 
 
     for(int i = 0; i < 3; i++){
@@ -255,10 +275,17 @@ void filter_init(){
 
     for(int i = 0; i < 3; i++){
         for(int j = 0; j < 3; j++){
-            filter[i][j] = (rand() % 10) / 10.0;
+            filter[i][j] = (rand() % 10) / 100.0;
         }
     }
 
+    printf("\n\n\t\t\t\t ******************* INITIAL KERNEL *******************\n\n");
+    for(int i = 0; i < 3; i++){
+        for(int j = 0; j < 3; j++){
+            printf(" %10f ", filter[i][j]);
+        }
+        printf("\n\n");
+    }
 }
 
 // function to perform forward propogation on the input image that is passed as an argument
@@ -274,6 +301,66 @@ void convolution_forward(struct Image img){
             }
             conv_output[i / 2][j / 2] = sum; // Divide indices by 2 for output image
         }
+    }
+}
+
+void convolution_backward(struct Image img, float learn_rate){
+
+    // retrieve the patches for the input image
+    struct Patch patches[14*14];
+    int m = 0;
+        // Perform convolution with stride 2
+    for (int i = 0; i < 28; i += 2) {
+        for (int j = 0; j < 28; j += 2) {
+
+            for (int k = 0; k < 3; k++) {
+                for (int l = 0; l < 3; l++) {
+                    patches[m].image_array[k][l] = img.image_array[i + k][j + l];
+                }
+            }
+            m++;
+        }
+    }
+
+    for(int i = 0; i < (14*14); i++){
+        for(int j = 0; j < 3; j++){
+            for(int k = 0; k < 3; k++){
+                conv_gradients[j][k] += patches[i].image_array[j][k] * maxpool_gradients[j][k];
+            }
+        }
+    }
+
+    // printf("\n\n\t\t\t\t ******************* PATCHES *******************\n\n");
+    // for(int i = 0; i < 14*14; i++){
+    //     printf(" PATCH %d :  ", i);
+    //     for(int j = 0; j < 3; j++){
+    //         for(int k = 0; k < 3; k++){
+    //             printf(" %10f ", patches[i].image_array[j][k]);
+    //         }
+    //     }
+    //     printf("\n\n");
+    // }
+
+    printf("\n\n\t\t\t\t ******************* CONV GRADIENTS *******************\n\n");
+    for(int i = 0; i < 3; i++){
+        for(int j = 0; j < 3; j++){
+            printf(" %10f ", conv_gradients[i][j]);
+        }
+        printf("\n\n");
+    }
+
+    for(int i = 0; i < 3; i++){
+        for(int j = 0; j < 3; j++){
+            filter[i][j] = filter[i][j] -  (learn_rate * conv_gradients[i][j]);
+        }
+    }
+
+    printf("\n\n\t\t\t\t ******************* UPDATED KERNEL *******************\n\n");
+    for(int i = 0; i < 3; i++){
+        for(int j = 0; j < 3; j++){
+            printf(" %10f ", filter[i][j]);
+        }
+        printf("\n\n");
     }
 }
 
@@ -376,7 +463,7 @@ void flatten_forward(){
 void dense_weight_init(){
     for(int i = 0; i < 49; i++){
         for(int j = 0; j < 10; j++){
-            dense_weights[i][j] = (rand() % 10) / 10.0;
+            dense_weights[i][j] = (rand() % 10) / 100.0;
         }
     }
 }
