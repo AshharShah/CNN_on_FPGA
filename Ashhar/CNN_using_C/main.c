@@ -308,6 +308,17 @@ void maxpool_forward(){
 }
 
 void maxpool_backward(float learn_rate){
+
+    float grad_copy[7*7] = {0};
+    int x = 0;
+    for(int i = 0; i < 7; i++){
+        for(int j = 0; j < 7; j++){
+            grad_copy[x] = dense_gradients[i][j];
+            x++;
+        }
+    }
+    
+    x = 0;
     // Perform max pooling operation
     for (int i = 0; i < 14; i += 2) {
         for (int j = 0; j < 14; j += 2) {
@@ -323,14 +334,15 @@ void maxpool_backward(float learn_rate){
                     }
                 }
             }
-            maxpool_gradients[i][j] = maxVal;
+            maxpool_gradients[maxI][maxJ] = grad_copy[x];
+            x++;
         }
     }
 
     printf("\n\n\t\t\t\t ******************* CONVOLUTION GRADIENTS *******************\n\n");
     for(int i = 0; i < 14; i++){
         for(int j =-0; j < 14; j++){
-            printf(" %5d ", (int)( maxpool_gradients[i][j] * 255));
+            printf(" %10f ", ( maxpool_gradients[i][j]));
         }
         printf("\n\n");
     }
