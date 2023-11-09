@@ -29,6 +29,7 @@ void convolution_forward(struct Image);
 
 // functions for the maxpooling layer
 void maxpool_forward();
+void maxpool_backward(float);
 
 // functions for the flatten layer
 void flatten_forward();
@@ -47,6 +48,7 @@ float conv_output[14][14] = {0};
 
 // objects required by the maxpooling layer
 float maxpool_output[7][7] = {0};
+float maxpool_gradients[14][14] = {0};
 
 // objects required by the flatten layer
 float flatten_output[7*7] = {0};
@@ -217,6 +219,8 @@ int main()
         printf("\n\n");
     }
 
+    maxpool_backward(alpha);
+
 
     for(int i = 0; i < 3; i++){
         free(filter[i]);
@@ -300,6 +304,35 @@ void maxpool_forward(){
             }
             maxpool_output[i / 2][j / 2] = maxVal;
         }
+    }
+}
+
+void maxpool_backward(float learn_rate){
+    // Perform max pooling operation
+    for (int i = 0; i < 14; i += 2) {
+        for (int j = 0; j < 14; j += 2) {
+            float maxVal = 0;
+            int maxI = i;
+            int maxJ = j;            
+            for (int k = i; k < i + 2; k++) {
+                for (int l = j; l < j + 2; l++) {
+                    if (conv_output[k][l] > maxVal) {
+                        maxVal = conv_output[k][l];
+                        maxI = k;
+                        maxJ = l;
+                    }
+                }
+            }
+            maxpool_gradients[i][j] = maxVal;
+        }
+    }
+
+    printf("\n\n\t\t\t\t ******************* CONVOLUTION GRADIENTS *******************\n\n");
+    for(int i = 0; i < 14; i++){
+        for(int j =-0; j < 14; j++){
+            printf(" %5d ", (int)( maxpool_gradients[i][j] * 255));
+        }
+        printf("\n\n");
     }
 }
 
