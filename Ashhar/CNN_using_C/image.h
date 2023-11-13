@@ -3,6 +3,7 @@ struct Image{
     float image_array[30][30];
     int height;
     int width;
+    int target;
 };
 
 struct Patch{

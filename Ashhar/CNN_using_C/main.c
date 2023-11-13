@@ -7,9 +7,11 @@
 #include <fcntl.h>
 #include <math.h>
 
-int img_index = 0;
-int target_class = 0;
+int img_index = 750;
+int target_class = 7;
 float alpha = 0.01;
+
+#define num_of_train_images 1000
 
 // these are the functions that we will use for matrix related operations
 extern void Matrix_Init(struct Matrix *x, int r, int c);
@@ -39,7 +41,7 @@ int predict();
 void dense_backward(float);
 
 // an array of images which represents our trainging data
-struct Image image[2];  
+struct Image image[num_of_train_images];  
 
 // objects required by the convolutional layer
 float **filter; // this is a 2D kernel of size 3x3 which is used to perform convolution operation
@@ -64,7 +66,15 @@ float dense_gradients[7][7] = {0};  // this 2D array will store the gradients wh
 int main(){
 
     // initialize the images for the training dataset
-    get_images(10, image);
+    get_images(num_of_train_images, image);
+
+    printf("\n\n\t\t\t\t ******************* IMAGE *******************\n\n");
+    for(int i = 0; i < 30; i++){
+        for(int j =-0; j < 30; j++){
+            printf(" %4d ", (int)( image[img_index].image_array[i][j] * 255));
+        }
+        printf("\n");
+    }
     
     // initialize the filter for the convolution layer
     filter_init();
@@ -83,7 +93,7 @@ int main(){
         dE_dY[target_class] = -1 / softmax_vectors[target_class];
 
         // print the loss onto the console
-        float loss = -1.0 * log(softmax_vectors[0]);
+        float loss = -1.0 * log(softmax_vectors[target_class]);
         printf("\n\n LOSS: %f \n\n", loss);
 
         // set a threshold value for the loss to end training
