@@ -7,11 +7,11 @@
 #include <fcntl.h>
 #include <math.h>
 
-int img_index = 750;
-int target_class = 7;
+int img_index = 780;
 float alpha = 0.01;
 
-#define num_of_train_images 1000
+// number should be divisible by 10
+#define num_of_train_images 2000
 
 // these are the functions that we will use for matrix related operations
 extern void Matrix_Init(struct Matrix *x, int r, int c);
@@ -75,6 +75,10 @@ int main(){
         }
         printf("\n");
     }
+
+    
+    printf("\n\n IMAGE TARGET: %d \n\n", image[img_index].target);
+
     
     // initialize the filter for the convolution layer
     filter_init();
@@ -83,23 +87,25 @@ int main(){
     dense_weight_init();
 
     // loop over the image 15 times to train the neural network
-    for(int i = 0; i < 15; i++){
+    for(int i = 0; i < 1000; i++){
 
         convolution_forward(image[img_index]);  // get the feature map
         maxpool_forward();  // get the reduced feature map
         dense_forward();    // get the softmax probability vector
         
         // compute the error vector (cross-entropy)
-        dE_dY[target_class] = -1 / softmax_vectors[target_class];
+        dE_dY[image[img_index].target] = -1 / softmax_vectors[image[img_index].target];
 
         // print the loss onto the console
-        float loss = -1.0 * log(softmax_vectors[target_class]);
+        float loss = -1.0 * log(softmax_vectors[image[img_index].target]);
         printf("\n\n LOSS: %f \n\n", loss);
 
         // set a threshold value for the loss to end training
-        if(loss < 1.05){
+        if(loss < 0.5){
             break;
         }
+
+        sleep(2);
 
         dense_backward(alpha);  // update the weights for the dense layer
         maxpool_backward(alpha);    // form a 14x14 matrix for errors
