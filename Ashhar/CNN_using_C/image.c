@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include "image.h"
+#include <dirent.h>
+#include <string.h>
 
 
 #define STB_IMAGE_IMPLEMENTATION
@@ -11,6 +13,33 @@
 
 // function to populate the "images" object of our Image structure (will generalize later on)
 void get_images(int per_num, struct Image* image){
+
+    char* folder_path = "/home/ashhar/Desktop/CNN_on_FPGA/Ashhar/CNN_using_C/mnist_png/training/0/";
+
+    DIR *dir;
+    struct dirent *entry;
+
+    // check if the directory can be opened
+    dir = opendir(folder_path);
+    if (dir == NULL) {
+        perror("opendir");
+        return;
+    }
+
+
+    while ((entry = readdir(dir)) != NULL) {
+        char result[512];
+
+        snprintf(result, sizeof(result), "%s%s", folder_path, entry->d_name);
+        //char *result = strcat(folder_path, entry->d_name);
+
+        printf("%s\n", result);
+
+        //printf("%s\n",  strcat(folder_path, entry->d_name));
+    }
+
+    closedir(dir);
+
     uint8_t img[28][28];
     unsigned char* image_data;
     
