@@ -62,3 +62,12 @@ Coded a Cat and Dog CNN classifier.
     gradients of loss with respect to weights and updates the weights for the dense layer. 
     It also provides a 7x7 matrix of the gradients of the loss with respect to the inputs (x) which 
     will be used by the maxpooling layer.
+
+    7) Created function `maxpool_backard` that takes the 7x7 error matrix from the dense layer and uses
+    it to generate an error feature map of size 14x14 by inserting the errors at their respective indexes.
+
+    8) Created function `convoltion_backward` that generates the patches that were taken from the 
+    original image and finds  the 3x3 gradient error matrix by multiplying the patches with their 
+    respective error's and summing them together. Then we update the values in the kernel with the new one.
+
+    9) Tested the CNN on a single image and validated if the loss decreases and the number is correctly classified. 
