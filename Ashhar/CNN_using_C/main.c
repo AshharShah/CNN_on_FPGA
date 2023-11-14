@@ -6,12 +6,12 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <math.h>
-
-int img_index = 780;
 float alpha = 0.01;
 
+float loss = 0;
+
 // number should be divisible by 10
-#define num_of_train_images 2000
+#define num_of_train_images 5000
 
 // these are the functions that we will use for matrix related operations
 extern void Matrix_Init(struct Matrix *x, int r, int c);
@@ -62,22 +62,27 @@ float softmax_vectors[10] = {0};    // the probability vector after we have appl
 float dE_dY[10] = {0};  // this will hold the loss for the softmax layer (cross-entropy)
 float dense_gradients[7][7] = {0};  // this 2D array will store the gradients which are to be sent to the max-pooling layer
 
+int forward(struct Image);
+void backward(struct Image);
+void shuffle_images(int);
+
 
 int main(){
 
     // initialize the images for the training dataset
     get_images(num_of_train_images, image);
+    shuffle_images(num_of_train_images);
 
     printf("\n\n\t\t\t\t ******************* IMAGE *******************\n\n");
     for(int i = 0; i < 30; i++){
         for(int j =-0; j < 30; j++){
-            printf(" %4d ", (int)( image[img_index].image_array[i][j] * 255));
+            printf(" %4d ", (int)( image[3500].image_array[i][j] * 255));
         }
         printf("\n");
     }
 
     
-    printf("\n\n IMAGE TARGET: %d \n\n", image[img_index].target);
+    printf("\n\n IMAGE TARGET: %d \n\n", image[3500].target);
 
     
     // initialize the filter for the convolution layer
@@ -86,30 +91,51 @@ int main(){
     // initialize the weights for the dense layer
     dense_weight_init();
 
-    // loop over the image 15 times to train the neural network
-    for(int i = 0; i < 1000; i++){
+    float local_loss;
+    int local_acc;
 
-        convolution_forward(image[img_index]);  // get the feature map
-        maxpool_forward();  // get the reduced feature map
-        dense_forward();    // get the softmax probability vector
-        
-        // compute the error vector (cross-entropy)
-        dE_dY[image[img_index].target] = -1 / softmax_vectors[image[img_index].target];
+    // for(int k = 0; k < num_of_train_images; k++){
+    //     local_loss = 0;
+    //     local_acc = 0;
+    //     int acc = forward(image[k]);
+    //     local_loss += loss;
+    //     local_acc += acc;
+    //     backward(image[k]);
+    //     printf("Average Loss: %f , Accuracy: %d", local_loss, local_acc);
+    // }
 
-        // print the loss onto the console
-        float loss = -1.0 * log(softmax_vectors[image[img_index].target]);
-        printf("\n\n LOSS: %f \n\n", loss);
+    for(int k = 0; k < 10; k++){
+        local_acc = 0;
+        local_loss = 0;
+        for(int i = 0; i < num_of_train_images; i++){
 
-        // set a threshold value for the loss to end training
-        if(loss < 0.5){
+            for(int l = 0; l < 30; l++){
+                for(int m = 0; m < 30; m++){
+                    image[i].image_array[l][m] = image[i].image_array[l][m] / (float)255;
+                }
+            }
+
+            int acc = forward(image[i]);
+            local_loss += loss;
+            local_acc += acc;
+
+            for(int x = 0; x < 10; x++){
+                dE_dY[x] = 0.0;
+            }
+
+            // compute the error vector (cross-entropy)
+            dE_dY[image[i].target] = -1 / softmax_vectors[image[i].target];
+            backward(image[i]);
+            if(i % 100 == 0){
+                printf("Step: %d, Average Loss: %f , Accuracy: %d\n", i, local_loss, local_acc);
+                local_acc = 0;
+                local_loss = 0;
+            }
+        }
+        if(local_loss < 1){
             break;
         }
-
-        sleep(2);
-
-        dense_backward(alpha);  // update the weights for the dense layer
-        maxpool_backward(alpha);    // form a 14x14 matrix for errors
-        convolution_backward(image[img_index], alpha);  // update the kernel weights for the convolution layer
+        printf("\n\n");
     }
 
     // free memory utilized by the kernel
@@ -159,7 +185,7 @@ void filter_init(){
     // initialize with random numbers from 0.01 - 0.001
     for(int i = 0; i < 3; i++){
         for(int j = 0; j < 3; j++){
-            filter[i][j] = (rand() % 10) / 100.0;
+            filter[i][j] = (rand() % 1000) / 10000.0;
         }
     }
 }
@@ -360,7 +386,7 @@ void dense_weight_init(){
     // initialize values for the 49x10 sized weight matrix
     for(int i = 0; i < 49; i++){
         for(int j = 0; j < 10; j++){
-            dense_weights[i][j] = (rand() % 10) / 100.0;
+            dense_weights[i][j] = (rand() % 1000) / 10000.0;
         }
     }
 }
@@ -409,10 +435,6 @@ void dense_forward(){
     for(int i = 0; i < 10; i++){
         softmax_vectors[i] = exp(dense_logits[i]) / deno;
     }
-
-    int prediction = predict();
-
-    printf("\nThe Predicted Class: %d\n", prediction);
 
 }
 
@@ -510,4 +532,39 @@ int predict(){
         }
     }
     return max_index;
+}
+
+int forward(struct Image img){
+
+    int target = img.target;
+
+    convolution_forward(img);  // get the feature map
+    maxpool_forward();  // get the reduced feature map
+    dense_forward();    // get the softmax probability vector
+
+    // print the loss onto the console
+    loss = -1.0 * log(softmax_vectors[target]);
+    
+    int accuracy = 0;
+
+    if(predict() == target){
+        accuracy = 1;
+    }
+
+    return accuracy;
+}
+
+void backward(struct Image img){
+    dense_backward(alpha);  // update the weights for the dense layer
+    maxpool_backward(alpha);    // form a 14x14 matrix for errors
+    convolution_backward(img, alpha);  // update the kernel weights for the convolution layer
+}
+
+void shuffle_images(int length) {
+    for (int i = length - 1; i > 0; i--) {
+        int j = rand() % (i + 1);
+        struct Image temp = image[i];
+        image[i] = image[j];
+        image[j] = temp;
+    }
 }
