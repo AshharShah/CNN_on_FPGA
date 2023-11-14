@@ -6,12 +6,13 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <math.h>
-float alpha = 0.01;
+
+float alpha = 0.05;
 
 float loss = 0;
 
 // number should be divisible by 10
-#define num_of_train_images 5000
+#define num_of_train_images 3000
 
 // these are the functions that we will use for matrix related operations
 extern void Matrix_Init(struct Matrix *x, int r, int c);
@@ -76,20 +77,36 @@ int main(){
     printf("\n\n\t\t\t\t ******************* IMAGE *******************\n\n");
     for(int i = 0; i < 30; i++){
         for(int j =-0; j < 30; j++){
-            printf(" %4d ", (int)( image[3500].image_array[i][j] * 255));
+            printf(" %4d ", (int)( image[99].image_array[i][j] * 255));
         }
         printf("\n");
     }
 
     
-    printf("\n\n IMAGE TARGET: %d \n\n", image[3500].target);
+    printf("\n\n IMAGE TARGET: %d \n\n", image[99].target);
 
     
     // initialize the filter for the convolution layer
     filter_init();
-
     // initialize the weights for the dense layer
     dense_weight_init();
+
+    printf("\n\n\t\t\t\t ******************* FILTER *******************\n\n");
+    for(int i = 0; i < 3; i++){
+        for(int j =-0; j < 3; j++){
+            printf(" %10f ", filter[i][j]);
+        }
+        printf("\n");
+    }
+
+    printf("\n\n\t\t\t\t ******************* DENSE *******************\n\n");
+    for(int i = 0; i < 49; i++){
+        for(int j =-0; j < 10; j++){
+            printf(" %10f ", dense_weights[i][j]);
+        }
+        printf("\n");
+    }
+
 
     float local_loss;
     int local_acc;
@@ -104,7 +121,10 @@ int main(){
     //     printf("Average Loss: %f , Accuracy: %d", local_loss, local_acc);
     // }
 
-    for(int k = 0; k < 10; k++){
+    for(int k = 0; k < 1; k++){
+
+        printf("\n\n");
+
         local_acc = 0;
         local_loss = 0;
         for(int i = 0; i < num_of_train_images; i++){
@@ -124,18 +144,42 @@ int main(){
             }
 
             // compute the error vector (cross-entropy)
-            dE_dY[image[i].target] = -1 / softmax_vectors[image[i].target];
+            dE_dY[image[i].target] = (float)((double)-1.0 / (double)softmax_vectors[image[i].target]);
             backward(image[i]);
             if(i % 100 == 0){
                 printf("Step: %d, Average Loss: %f , Accuracy: %d\n", i, local_loss, local_acc);
                 local_acc = 0;
                 local_loss = 0;
+
+                printf("\n\n\t\t\t\t ******************* FILTER *******************\n\n");
+                for(int z = 0; z < 3; z++){
+                    for(int y =-0; y < 3; y++){
+                        printf(" %10f ", filter[z][y]);
+                    }
+                    printf("\n");
+                }
+
+                printf("\n\n\t\t\t\t ******************* DENSE *******************\n\n");
+                for(int z = 0; z < 49; z++){
+                    for(int y =-0; y < 10; y++){
+                        printf(" %10f ", dense_weights[z][y]);
+                    }
+                    printf("\n");
+                }
+
+
+                printf("\n\n\t\t\t\t ******************* DENSE *******************\n\n");
+                for(int z = 0; z < 10; z++){
+                    printf(" %10f ", dE_dY[z]);
+                }
+                printf("\n\n");
             }
         }
         if(local_loss < 1){
             break;
         }
         printf("\n\n");
+
     }
 
     // free memory utilized by the kernel
@@ -182,10 +226,12 @@ void filter_init(){
         filter[i] = (float*)malloc(sizeof(float));
     }
 
+    float stddev = sqrt(2.0 / 1);
+
     // initialize with random numbers from 0.01 - 0.001
     for(int i = 0; i < 3; i++){
         for(int j = 0; j < 3; j++){
-            filter[i][j] = (rand() % 1000) / 10000.0;
+            filter[i][j] = (float) rand() / RAND_MAX * 2.0 * stddev - stddev;
         }
     }
 }
@@ -384,9 +430,11 @@ void flatten_forward(){
 
 void dense_weight_init(){
     // initialize values for the 49x10 sized weight matrix
+    float stddev = sqrt(2.0 / (10 + 10));
+
     for(int i = 0; i < 49; i++){
         for(int j = 0; j < 10; j++){
-            dense_weights[i][j] = (rand() % 1000) / 10000.0;
+            dense_weights[i][j] = (float) rand() / RAND_MAX * 2.0 * stddev - stddev;
         }
     }
 }
