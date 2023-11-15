@@ -121,7 +121,7 @@ int main(){
     //     printf("Average Loss: %f , Accuracy: %d", local_loss, local_acc);
     // }
 
-    for(int k = 0; k < 1; k++){
+    for(int k = 0; k < 4; k++){
 
         printf("\n\n");
 
@@ -145,34 +145,42 @@ int main(){
 
             // compute the error vector (cross-entropy)
             dE_dY[image[i].target] = (float)((double)-1.0 / (double)softmax_vectors[image[i].target]);
+
+                // printf("\n\n\t\t\t\t ******************* Softmax Vector *******************\n\n");
+                // for(int z = 0; z < 10; z++){
+                //     printf(" %10f ", softmax_vectors[z]);
+                // }
+                // printf("\n\n");
+
+
+                // printf("\n\n\t\t\t\t ******************* dE_dY *******************\n\n");
+                // for(int z = 0; z < 10; z++){
+                //     printf(" %10f ", dE_dY[z]);
+                // }
+                // printf("\n\n");
+                
+                // printf("\n\n\t\t\t\t ******************* FILTER *******************\n\n");
+                // for(int z = 0; z < 3; z++){
+                //     for(int y =-0; y < 3; y++){
+                //         printf(" %10f ", filter[z][y]);
+                //     }
+                //     printf("\n");
+                // }
+
+                // printf("\n\n\t\t\t\t ******************* DENSE *******************\n\n");
+                // for(int z = 0; z < 49; z++){
+                //     for(int y =-0; y < 10; y++){
+                //         printf(" %10f ", dense_weights[z][y]);
+                //     }
+                //     printf("\n");
+                // }
+
             backward(image[i]);
             if(i % 100 == 0){
                 printf("Step: %d, Average Loss: %f , Accuracy: %d\n", i, local_loss, local_acc);
                 local_acc = 0;
                 local_loss = 0;
-
-                printf("\n\n\t\t\t\t ******************* FILTER *******************\n\n");
-                for(int z = 0; z < 3; z++){
-                    for(int y =-0; y < 3; y++){
-                        printf(" %10f ", filter[z][y]);
-                    }
-                    printf("\n");
-                }
-
-                printf("\n\n\t\t\t\t ******************* DENSE *******************\n\n");
-                for(int z = 0; z < 49; z++){
-                    for(int y =-0; y < 10; y++){
-                        printf(" %10f ", dense_weights[z][y]);
-                    }
-                    printf("\n");
-                }
-
-
-                printf("\n\n\t\t\t\t ******************* DENSE *******************\n\n");
-                for(int z = 0; z < 10; z++){
-                    printf(" %10f ", dE_dY[z]);
-                }
-                printf("\n\n");
+                sleep(1);
             }
         }
         if(local_loss < 1){
@@ -515,7 +523,6 @@ void dense_backward(float learn_rate){
         S_total += transformation_eq[i];
     }
 
-
     for(int i = 0; i < 10; i++){
         if(dE_dY[i] == 0){
             continue;
@@ -525,6 +532,17 @@ void dense_backward(float learn_rate){
             dY_dZ[j] = (-1.0 * transformation_eq[i] * transformation_eq[j]) / (S_total * S_total);
         }
         dY_dZ[i] = ( transformation_eq[i] * (S_total - transformation_eq[i]) ) / (S_total * S_total);
+        
+        if(isnan(dY_dZ[i])){
+            dY_dZ[i] = 0.0;
+        }
+
+        // printf("\n\n\t\t\t\t ******************* S_total *******************\n\n");
+        // printf(" %10f ", S_total);
+
+        // printf("\n\n\t\t\t\t ******************* dY_dZ *******************\n\n");
+        // printf(" %10f ", dY_dZ[i]);
+
 
         for(int j = 0; j < 10; j++){
             dE_dZ[j] = dE_dY[j] * dY_dZ[j];
