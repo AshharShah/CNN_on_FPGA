@@ -1,5 +1,5 @@
 module image;
 
-    reg [45*7:0] imfile;
+    reg [7:0] imfile [0:784];
 
 endmodule

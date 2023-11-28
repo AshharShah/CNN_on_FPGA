@@ -1,2 +1,7 @@
 all:
-	gcc -o matrix matrix.c main.c image.c -lpng -lm
+	gcc pngtohex.c
+	./a.out
+
+ver:
+	iverilog -o ./vvp/image_tb.vvp ./image_tb.v
+	vvp ./vvp/image_tb.vvp
