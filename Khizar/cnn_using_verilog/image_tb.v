@@ -1,4 +1,5 @@
 `include "./image.v"
+`include "./conv.v"
 
 module image_tb;
 
@@ -8,6 +9,7 @@ module image_tb;
     integer j;
 
     image im1();
+    convolution conv1();
 
     initial
         begin
@@ -20,5 +22,6 @@ module image_tb;
             begin
                 $display("%7b", im1.imfile[i]);
             end
+
         end
 endmodule
