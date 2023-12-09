@@ -25,7 +25,7 @@ int main()
 
     uint8_t *rgb_image = stbi_load("image2.png", &width, &height, &bpp, 0);
     FILE *fptr;
-    fptr = fopen("image1file", "wb");
+    fptr = fopen("image1file.bin", "wb");
 
     printf("h = %d\nw = %d\nn = %d\n", height, width, bpp);
 
@@ -37,7 +37,7 @@ int main()
             // printf(" %3d ", rgb_image[i * width + j]);
             // printf("%s\n", byte_to_binary(rgb_image[i * width + j]));
             // if (!(rgb_image[i * width + j] == 0))
-            uint8_t im = (float)rgb_image[i * width + j] / 255;
+            uint8_t im = (float)rgb_image[i * width + j];
             fprintf(fptr, "%s\n", byte_to_binary(im));
             printf(" %3.1f ", (float)rgb_image[i * width + j] / 255);
             // else
