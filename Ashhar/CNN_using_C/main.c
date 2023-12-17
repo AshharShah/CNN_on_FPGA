@@ -7,12 +7,12 @@
 #include <fcntl.h>
 #include <math.h>
 
-float alpha = 0.05;
+float alpha = 0.025;
 
 float loss = 0;
 
 // number should be divisible by 10
-#define num_of_train_images 3000
+#define num_of_train_images 6000
 
 // these are the functions that we will use for matrix related operations
 extern void Matrix_Init(struct Matrix *x, int r, int c);
@@ -627,7 +627,7 @@ void backward(struct Image img){
 }
 
 void shuffle_images(int length) {
-    for (int i = length - 1; i > 0; i--) {
+    for (int i = 0; i < length; i++) {
         int j = rand() % (i + 1);
         struct Image temp = image[i];
         image[i] = image[j];
