@@ -16,7 +16,7 @@ class Sigmoid:
 class Softmax:
     def __init__(self, input_shape, output_shape):
         # Initiallize weights and biases
-        self.weight = np.random.randn(input_shape, output_shape)/input_shape
+        self.weight = np.random.randn(input_shape, output_shape) / (input_shape)
         self.bias = np.zeros(output_shape)
 
     def forward_prop(self, image):
@@ -82,3 +82,7 @@ class Softmax:
             # print(dE_dX.reshape(self.original_shape).shape)
 
         return dE_dX.reshape(self.original_shape)
+    
+    def getParams(self):
+        return (self.weight, self.bias);
+

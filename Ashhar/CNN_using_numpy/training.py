@@ -11,6 +11,7 @@ from activations import Softmax
 def forward(image, y, layers):
     # normalize the input image
     output = image/255
+    #output = image
     # perform forward propogation on all the layers in the CNN architecture
     for layer in layers:
         output = layer.forward_prop(output)
@@ -67,6 +68,7 @@ def CNN_test(image, y, layers):
 def CNN_predict(image, layers):
     # normalize the input image
     output = image/255
+    #output = image
     # perform forward propogation on all the layers in the CNN architecture
     for layer in layers:
         output = layer.forward_prop(output)
