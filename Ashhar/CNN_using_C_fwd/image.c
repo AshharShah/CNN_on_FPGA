@@ -47,20 +47,18 @@ void read_images_from_folder(const char* folder_path, int per_class, int target_
 
         memcpy(img, image_data, image[*i].width * image[*i].height);
 
-        for (int j = 0; j < 30; j++) {
-            for (int k = 0; k < 30; k++) {
-                image[*i].image_array[j][k] = 0;
+        for (int j = 0; j < 28; j++) {
+            for (int k = 0; k < 28; k++) {
+                image[*i].image_array[j+1][k+1] = 0;
             }
         }
 
         for (int j = 0; j < 28; j++) {
             for (int k = 0; k < 28; k++) {
-                image[*i].image_array[j+1][k+1] = img[j][k] / (float)255;
+                image[*i].image_array[j+1][k+1] = (img[j][k] / (float)255) / (float)255;
             }
         }
-
-        image[*i].width += 2;
-        image[*i].height += 2;
+        
         image[*i].target = target_value;
         (*i)++;
     }
@@ -71,16 +69,16 @@ void read_images_from_folder(const char* folder_path, int per_class, int target_
 void get_images(int per_num, struct Image* image){
     int per_class = per_num / 10;
     char* folder_paths[] = {
-        "/home/ashhar/Desktop/CNN_on_FPGA/Ashhar/CNN_using_C/mnist_png/training/0/",
-        "/home/ashhar/Desktop/CNN_on_FPGA/Ashhar/CNN_using_C/mnist_png/training/1/",
-        "/home/ashhar/Desktop/CNN_on_FPGA/Ashhar/CNN_using_C/mnist_png/training/2/",
-        "/home/ashhar/Desktop/CNN_on_FPGA/Ashhar/CNN_using_C/mnist_png/training/3/",
-        "/home/ashhar/Desktop/CNN_on_FPGA/Ashhar/CNN_using_C/mnist_png/training/4/",
-        "/home/ashhar/Desktop/CNN_on_FPGA/Ashhar/CNN_using_C/mnist_png/training/5/",
-        "/home/ashhar/Desktop/CNN_on_FPGA/Ashhar/CNN_using_C/mnist_png/training/6/",
-        "/home/ashhar/Desktop/CNN_on_FPGA/Ashhar/CNN_using_C/mnist_png/training/7/",
-        "/home/ashhar/Desktop/CNN_on_FPGA/Ashhar/CNN_using_C/mnist_png/training/8/",
-        "/home/ashhar/Desktop/CNN_on_FPGA/Ashhar/CNN_using_C/mnist_png/training/9/"
+        "/home/ashhar/Desktop/CNN_on_FPGA/Ashhar/CNN_using_C/mnist_png/testing/0/",
+        "/home/ashhar/Desktop/CNN_on_FPGA/Ashhar/CNN_using_C/mnist_png/testing/1/",
+        "/home/ashhar/Desktop/CNN_on_FPGA/Ashhar/CNN_using_C/mnist_png/testing/2/",
+        "/home/ashhar/Desktop/CNN_on_FPGA/Ashhar/CNN_using_C/mnist_png/testing/3/",
+        "/home/ashhar/Desktop/CNN_on_FPGA/Ashhar/CNN_using_C/mnist_png/testing/4/",
+        "/home/ashhar/Desktop/CNN_on_FPGA/Ashhar/CNN_using_C/mnist_png/testing/5/",
+        "/home/ashhar/Desktop/CNN_on_FPGA/Ashhar/CNN_using_C/mnist_png/testing/6/",
+        "/home/ashhar/Desktop/CNN_on_FPGA/Ashhar/CNN_using_C/mnist_png/testing/7/",
+        "/home/ashhar/Desktop/CNN_on_FPGA/Ashhar/CNN_using_C/mnist_png/testing/8/",
+        "/home/ashhar/Desktop/CNN_on_FPGA/Ashhar/CNN_using_C/mnist_png/testing/9/"
     };
 
     int i = 0;
