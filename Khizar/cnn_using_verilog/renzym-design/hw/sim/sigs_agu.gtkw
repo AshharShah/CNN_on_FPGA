@@ -1,0 +1,80 @@
+[*]
+[*] GTKWave Analyzer v3.3.100 (w)1999-2019 BSI
+[*] Tue Jun 15 08:12:52 2021
+[*]
+[dumpfile] "C:\Users\Yasir\Desktop\efabless\hw\sim\wave.vcd"
+[dumpfile_mtime] "Tue Jun 15 08:12:26 2021"
+[dumpfile_size] 11404
+[savefile] "C:\Users\Yasir\Desktop\efabless\hw\sim\sigs_agu.gtkw"
+[timestart] 0
+[size] 2560 1377
+[pos] -165 -165
+*-6.721471 467 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] tb_agu.
+[sst_width] 197
+[signals_width] 158
+[sst_expanded] 1
+[sst_vpaned_height] 426
+@28
+tb_agu.agu_inst.clk
+tb_agu.agu_inst.clr_col_cnt
+tb_agu.agu_inst.clr_img_addr
+tb_agu.agu_inst.clr_img_st
+tb_agu.agu_inst.clr_k_col_cnt
+tb_agu.agu_inst.clr_kerns_cnt
+tb_agu.agu_inst.clr_result_addr
+@22
+tb_agu.agu_inst.col_cnt[7:0]
+tb_agu.agu_inst.cols[7:0]
+@28
+tb_agu.agu_inst.en_col_cnt
+tb_agu.agu_inst.en_img_addr
+tb_agu.agu_inst.en_img_st
+tb_agu.agu_inst.en_k_col_cnt
+tb_agu.agu_inst.en_kerns_cnt
+tb_agu.agu_inst.en_result_addr
+@22
+tb_agu.agu_inst.img_addr[7:0]
+tb_agu.agu_inst.img_st[7:0]
+@28
+tb_agu.agu_inst.k_col_cnt[2:0]
+@22
+tb_agu.agu_inst.kern_addr[5:0]
+@28
+tb_agu.agu_inst.kern_addr_mode
+tb_agu.agu_inst.kern_cols[2:0]
+tb_agu.agu_inst.kerns[2:0]
+tb_agu.agu_inst.kerns_cnt[2:0]
+tb_agu.agu_inst.reset
+@22
+tb_agu.agu_inst.result_addr[7:0]
+tb_agu.agu_inst.result_cols[7:0]
+@28
+tb_agu.agu_inst.start
+@22
+tb_agu.agu_inst.start_d[15:0]
+@28
+tb_agu.agu_inst.start_pedge
+tb_agu.agu_inst.start_res
+@22
+tb_agu.agu_inst.stride[7:0]
+@28
+tb_agu.clk
+@22
+tb_agu.cols[7:0]
+tb_agu.img_addr[7:0]
+tb_agu.kern_addr[5:0]
+@28
+tb_agu.kern_addr_mode
+tb_agu.kern_cols[2:0]
+tb_agu.kerns[2:0]
+tb_agu.reset
+@22
+tb_agu.result_addr[7:0]
+tb_agu.result_cols[7:0]
+@28
+tb_agu.start
+@22
+tb_agu.stride[7:0]
+[pattern_trace] 1
+[pattern_trace] 0
