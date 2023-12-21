@@ -1,0 +1,60 @@
+[*]
+[*] GTKWave Analyzer v3.3.100 (w)1999-2019 BSI
+[*] Tue Jun 15 07:48:50 2021
+[*]
+[dumpfile] "C:\Users\Yasir\Desktop\efabless\hw\sim\wave_mp.vcd"
+[dumpfile_mtime] "Tue Jun 15 07:45:31 2021"
+[dumpfile_size] 4874
+[savefile] "C:\Users\Yasir\Desktop\efabless\hw\sim\sigs_mp.gtkw"
+[timestart] 0
+[size] 1916 1008
+[pos] -1 -1
+*-6.361275 446 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[sst_width] 197
+[signals_width] 166
+[sst_expanded] 1
+[sst_vpaned_height] 296
+@28
+tb_maxpool.clk
+tb_maxpool.en_maxpool
+@29
+tb_maxpool.max_pool_inst.toggle
+@28
+tb_maxpool.max_pool_inst.valid_in
+@c00024
+tb_maxpool.max_pool_inst.data_r[7:0]
+@28
+(0)tb_maxpool.max_pool_inst.data_r[7:0]
+(1)tb_maxpool.max_pool_inst.data_r[7:0]
+(2)tb_maxpool.max_pool_inst.data_r[7:0]
+(3)tb_maxpool.max_pool_inst.data_r[7:0]
+(4)tb_maxpool.max_pool_inst.data_r[7:0]
+(5)tb_maxpool.max_pool_inst.data_r[7:0]
+(6)tb_maxpool.max_pool_inst.data_r[7:0]
+(7)tb_maxpool.max_pool_inst.data_r[7:0]
+@1401204
+-group_end
+@28
+tb_maxpool.max_pool_inst.valid_out
+@24
+tb_maxpool.data_in[7:0]
+tb_maxpool.data_out[7:0]
+@420
+tb_maxpool.i
+@28
+tb_maxpool.max_pool_inst.clk
+@22
+tb_maxpool.max_pool_inst.data_in[7:0]
+tb_maxpool.max_pool_inst.data_out[7:0]
+@28
+tb_maxpool.max_pool_inst.en_maxpool
+@22
+tb_maxpool.max_pool_inst.max_pool_out[7:0]
+@28
+tb_maxpool.max_pool_inst.max_pool_valid
+tb_maxpool.max_pool_inst.reset
+tb_maxpool.reset
+tb_maxpool.valid_in
+tb_maxpool.valid_out
+[pattern_trace] 1
+[pattern_trace] 0

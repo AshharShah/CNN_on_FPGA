@@ -1,0 +1,98 @@
+[*]
+[*] GTKWave Analyzer v3.3.100 (w)1999-2019 BSI
+[*] Thu Jun 17 18:26:35 2021
+[*]
+[dumpfile] "C:\Users\Yasir\Desktop\efabless\hw\sim\wave.vcd"
+[dumpfile_mtime] "Thu Jun 17 18:18:03 2021"
+[dumpfile_size] 7826208
+[savefile] "C:\Users\Yasir\Desktop\efabless\hw\sim\sigs_wrapper.gtkw"
+[timestart] 2545
+[size] 2560 1377
+[pos] -1 -1
+*-4.873282 2695 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] tb_ren_conv_top_wrapper.
+[treeopen] tb_ren_conv_top_wrapper.ren_conv_top_wrapper_inst.
+[treeopen] tb_ren_conv_top_wrapper.ren_conv_top_wrapper_inst.ren_conv_top_inst_0.
+[sst_width] 387
+[signals_width] 190
+[sst_expanded] 1
+[sst_vpaned_height] 426
+@28
+tb_ren_conv_top_wrapper.clk
+@22
+tb_ren_conv_top_wrapper.cols[7:0]
+@28
+tb_ren_conv_top_wrapper.en_max_pool
+@420
+tb_ren_conv_top_wrapper.i
+tb_ren_conv_top_wrapper.iter
+@28
+tb_ren_conv_top_wrapper.kern_addr_mode
+tb_ren_conv_top_wrapper.kern_cols[2:0]
+tb_ren_conv_top_wrapper.kerns[2:0]
+tb_ren_conv_top_wrapper.mask[2:0]
+tb_ren_conv_top_wrapper.reset
+@22
+tb_ren_conv_top_wrapper.result_cols[7:0]
+tb_ren_conv_top_wrapper.shift[3:0]
+tb_ren_conv_top_wrapper.stride[7:0]
+@28
+tb_ren_conv_top_wrapper.wb_clk_i
+tb_ren_conv_top_wrapper.wb_rst_i
+tb_ren_conv_top_wrapper.wbs_ack_o
+@22
+tb_ren_conv_top_wrapper.wbs_adr_i[31:0]
+@28
+tb_ren_conv_top_wrapper.wbs_cyc_i
+@22
+tb_ren_conv_top_wrapper.wbs_dat_i[31:0]
+tb_ren_conv_top_wrapper.wbs_dat_o[31:0]
+tb_ren_conv_top_wrapper.wbs_sel_i[3:0]
+@28
+tb_ren_conv_top_wrapper.wbs_stb_i
+tb_ren_conv_top_wrapper.wbs_we_i
+@200
+-####
+-#############
+@28
+tb_ren_conv_top_wrapper.ren_conv_top_wrapper_inst.ren_conv_top_inst_0.cfg_regs_inst.accum_ovrflow
+tb_ren_conv_top_wrapper.ren_conv_top_wrapper_inst.ren_conv_top_inst_0.cfg_regs_inst.addr[1:0]
+tb_ren_conv_top_wrapper.ren_conv_top_wrapper_inst.ren_conv_top_inst_0.cfg_regs_inst.clk
+@22
+tb_ren_conv_top_wrapper.ren_conv_top_wrapper_inst.ren_conv_top_inst_0.cfg_regs_inst.cols[7:0]
+tb_ren_conv_top_wrapper.ren_conv_top_wrapper_inst.ren_conv_top_inst_0.cfg_regs_inst.data_in[31:0]
+@28
+tb_ren_conv_top_wrapper.ren_conv_top_wrapper_inst.ren_conv_top_inst_0.cfg_regs_inst.done
+tb_ren_conv_top_wrapper.ren_conv_top_wrapper_inst.ren_conv_top_inst_0.cfg_regs_inst.en_max_pool
+tb_ren_conv_top_wrapper.ren_conv_top_wrapper_inst.ren_conv_top_inst_0.cfg_regs_inst.kern_addr_mode
+tb_ren_conv_top_wrapper.ren_conv_top_wrapper_inst.ren_conv_top_inst_0.cfg_regs_inst.kern_cols[2:0]
+tb_ren_conv_top_wrapper.ren_conv_top_wrapper_inst.ren_conv_top_inst_0.cfg_regs_inst.kerns[2:0]
+tb_ren_conv_top_wrapper.ren_conv_top_wrapper_inst.ren_conv_top_inst_0.cfg_regs_inst.mask[2:0]
+tb_ren_conv_top_wrapper.ren_conv_top_wrapper_inst.ren_conv_top_inst_0.cfg_regs_inst.reset
+@22
+tb_ren_conv_top_wrapper.ren_conv_top_wrapper_inst.ren_conv_top_inst_0.cfg_regs_inst.result_cols[7:0]
+tb_ren_conv_top_wrapper.ren_conv_top_wrapper_inst.ren_conv_top_inst_0.cfg_regs_inst.shift[3:0]
+@28
+tb_ren_conv_top_wrapper.ren_conv_top_wrapper_inst.ren_conv_top_inst_0.cfg_regs_inst.soft_reset
+tb_ren_conv_top_wrapper.ren_conv_top_wrapper_inst.ren_conv_top_inst_0.cfg_regs_inst.start
+@22
+tb_ren_conv_top_wrapper.ren_conv_top_wrapper_inst.ren_conv_top_inst_0.cfg_regs_inst.stride[7:0]
+@28
+tb_ren_conv_top_wrapper.ren_conv_top_wrapper_inst.ren_conv_top_inst_0.cfg_regs_inst.wr_en
+@22
+tb_ren_conv_top_wrapper.ren_conv_top_wrapper_inst.ren_conv_top_inst_0.cfg_regs_inst.data_out[31:0]
+tb_ren_conv_top_wrapper.ren_conv_top_wrapper_inst.ren_conv_top_inst_0.data_out_regs[31:0]
+tb_ren_conv_top_wrapper.ren_conv_top_wrapper_inst.ren_conv_top_inst_0.rdata[31:0]
+@28
+tb_ren_conv_top_wrapper.ren_conv_top_wrapper_inst.ren_conv_top_inst_0.ready
+tb_ren_conv_top_wrapper.ren_conv_top_wrapper_inst.ren_conv_top_inst_0.wbs_ack_o
+@22
+tb_ren_conv_top_wrapper.ren_conv_top_wrapper_inst.ren_conv_top_inst_0.wbs_dat_o[31:0]
+tb_ren_conv_top_wrapper.ren_conv_top_wrapper_inst.wbs_dat_o[31:0]
+@28
+tb_ren_conv_top_wrapper.ren_conv_top_wrapper_inst.wbs_ack_o
+tb_ren_conv_top_wrapper.wbs_ack_o
+@23
+tb_ren_conv_top_wrapper.wbs_dat_o[31:0]
+[pattern_trace] 1
+[pattern_trace] 0

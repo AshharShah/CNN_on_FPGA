@@ -9,7 +9,7 @@ class ConvolutionLayer:
         # generate random filters
         # divide by (k_size**2) to normalize
         self.kernels = np.random.randn(
-            kernel_num, kernel_size, kernel_size) / (kernel_size**2)
+            kernel_num, kernel_size, kernel_size) / ((kernel_size**2))
 
     # function to divide a input image to patches
     def patches_generator(self, image):
@@ -53,3 +53,6 @@ class ConvolutionLayer:
         self.kernels -= alpha*dE_dk
         # print(dE_dk.shape)
         return dE_dk
+
+    def getKernel(self):
+        return self.kernels;
