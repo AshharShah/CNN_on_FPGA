@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <time.h>
 #include <math.h>
 
 float alpha = 0.025;
@@ -12,7 +13,7 @@ float alpha = 0.025;
 float loss = 0;
 
 // number should be divisible by 10
-#define num_of_train_images 300
+#define num_of_train_images 10000
 
 // these are the functions that we will use for matrix related operations
 extern void Matrix_Init(struct Matrix *x, int r, int c);
@@ -56,16 +57,21 @@ float flatten_output[13*13] = {0};    // this is a 1D array of size 49 which wil
 
 // objects required by the dense layer
 float dense_weights[169][10] = {0};  // this represents the weights for the 10 classes of which we are to predict
+float bias_vector[10] = {0};
 float dense_logits[10] = {0};   // this 1D array will hold the values of the calculation z = w(t) * x
 float softmax_vectors[10] = {0};    // the probability vector after we have applied the softmax activation function
 
 int forward(struct Image);
 void backward(struct Image);
+void shuffle_images(int num_imgs);
 
 int main(){
 
     // initialize the images for the training dataset
     get_images(num_of_train_images, image);
+
+    // shuffle the images in the dataset
+    shuffle_images(num_of_train_images);
     
     // initialize the filter for the convolution layer
     filter_init();
@@ -73,48 +79,71 @@ int main(){
     dense_weight_init();
 
 
-    printf("\n\n\t\t\t\t ******************* Initial Image *******************\n\n");
-    for(int i = 0; i < 30; i++){
-        for(int j =-0; j < 30; j++){
-            printf(" %6d ", (int)( image[70].image_array[i][j] * 255 * 255));
+    // printf("\n\n\t\t\t\t ******************* Initial Image *******************\n\n");
+    // for(int i = 0; i < 30; i++){
+    //     for(int j =-0; j < 30; j++){
+    //         printf(" %6d ", (int)( image[70].image_array[i][j] * 255 * 255));
+    //     }
+    //     printf("\n\n");
+    // }
+    // printf("\n\n IMAGE TARGET: %d \n\n", image[70].target);
+
+
+    // convolution_forward(image[70]);
+
+    // printf("\n\n\t\t\t\t ******************* Convolution Image *******************\n\n");
+    // for(int i = 0; i < 26; i++){
+    //     for(int j =-0; j < 26; j++){
+    //         printf(" %6d ", (int)( conv_output[i][j] * 255 * 255));
+    //     }
+    //     printf("\n\n");
+    // }
+
+    // maxpool_forward();
+    // printf("\n\n\t\t\t\t ******************* MaxPool Image *******************\n\n");
+    // for(int i = 0; i < 13; i++){
+    //     for(int j =-0; j < 13; j++){
+    //         printf(" %6d ", (int)( maxpool_output[i][j] * 255 * 255));
+    //     }
+    //     printf("\n\n");
+    // }
+
+    // flatten_forward();
+    // printf("\n\n\t\t\t\t ******************* Flatten Image *******************\n\n");
+    // for(int i = 0; i < 13 * 13; i++){
+    //     printf(" %6d \n", (int)( flatten_output[i] * 255 * 255));
+    // }
+
+    // dense_forward();
+    // printf("\n\n\t\t\t\t ******************* Softmax Probabilities *******************\n\n");
+    // for(int i = 0; i < 10; i++){
+    //     printf(" %10f \n", softmax_vectors[i]);
+    // }
+
+    // printf("\nPredicted Value: %d\n", predict());
+
+    int total_acc = 0;
+    int total_loss = 0;
+
+    for(int k = 0; k < num_of_train_images; k++){
+
+        printf("\n\n\t\t\t\t\t\t\t\t******************* Initial Image *******************\n\n");
+        for(int i = 0; i < 30; i++){
+            for(int j =-0; j < 30; j++){
+                printf(" %4d ", (int)( image[k].image_array[i][j] * 255 * 255));
+            }
+            printf("\n");
         }
-        printf("\n\n");
+
+        int acc = forward(image[k]);
+
+        total_acc += acc;
+        total_loss += loss;
+
+        printf("\n\t||||||||||||||||| IMAGE TARGET: %d | Prediction: %d | Loss: %f |||||||||||||||||\n\n", image[k].target, predict(), loss);
     }
-    printf("\n\n IMAGE TARGET: %d \n\n", image[70].target);
-
-
-    convolution_forward(image[70]);
-
-    printf("\n\n\t\t\t\t ******************* Convolution Image *******************\n\n");
-    for(int i = 0; i < 26; i++){
-        for(int j =-0; j < 26; j++){
-            printf(" %6d ", (int)( conv_output[i][j] * 255 * 255));
-        }
-        printf("\n\n");
-    }
-
-    maxpool_forward();
-    printf("\n\n\t\t\t\t ******************* MaxPool Image *******************\n\n");
-    for(int i = 0; i < 13; i++){
-        for(int j =-0; j < 13; j++){
-            printf(" %6d ", (int)( maxpool_output[i][j] * 255 * 255));
-        }
-        printf("\n\n");
-    }
-
-    flatten_forward();
-    printf("\n\n\t\t\t\t ******************* Flatten Image *******************\n\n");
-    for(int i = 0; i < 13 * 13; i++){
-        printf(" %6d \n", (int)( flatten_output[i] * 255 * 255));
-    }
-
-    dense_forward();
-    printf("\n\n\t\t\t\t ******************* Softmax Probabilities *******************\n\n");
-    for(int i = 0; i < 10; i++){
-        printf(" %10f \n", softmax_vectors[i]);
-    }
-
-    printf("\nPredicted Value: %d\n", predict());
+    printf("\nAverage Accuracy: %f\n", (float)total_acc / (float)num_of_train_images);
+    printf("\nAverage Loss: %f\n", (float)total_loss / (float)num_of_train_images);
 
     // free memory utilized by the kernel
     for(int i = 0; i < 3; i++){
@@ -140,18 +169,6 @@ int main(){
 
 //         - It update the global variable named "conv_output" that will contain the feature map.
     
-//     3) convolution_backward()
-
-//         - This function will perform the back propogation for the convolution layer, it takes image on which it 
-//         applied the forward propogation function and the learning rate alpha.
-
-//         - It will first retrieve all the patches that were used in the forward propogation, those patches will be 
-//         multiplied with their respective errors to generate a 3x3 matrix which would then be added for the total 
-//         error for the weights.
-
-//         - After it has the error for the weights, it will update the weights of the kernel
-
-
 // function to initialize the filters that are to be used in the convolution layer
 void filter_init(){
     // a 2D array of size 3x3
@@ -221,18 +238,6 @@ void convolution_forward(struct Image img){
 //           of size 2x2 with a stride of 2 to generate a reduced feature map.
     
 //         - The reduced feature map is stored in the global variable named "maxpool_output" 
-    
-//     2) maxpool_backward()
-
-//         - This function perform the back propogation for the maxpooling layer.
-
-//         - It creates a 1D vector `grad_copy` of size 49 that represent the values of the gradient sent from dense layer of size 7x7.
-
-//         - It then perform the pooling operation to find the indexes which contained those max values in the 14x14 array. After it finds
-//         the index, it inserts the corresponding error value in that specific index forming a 14x14 matrix which is to be sent to the 
-//         convolution layer for back propogation. 
-
-//         - All the other indexes of the 14x14 error matrix will be 0 as they did not take part in the forward propogation.
 
 
 // function to perform maxpooling forward propogation and generate a reduced feature map
@@ -295,22 +300,6 @@ void flatten_forward(){
 //         - When we have the logits, we will apply the softmax activation function to retrieve the probality
 //         vector which we will use to make our prediction.
 
-//     3) dense_backward()
-
-//         - This function will be used to implement the back propogation for the dense layer.
-
-//         - It will use a 1D matrix of size 10 which contains the gradients of the cross-entropy loss. The gradients 
-//         will be multiplied/dot-product with the softmax derivative vector of size 10 (dY_dZ). This will inturn produce a
-//         vector dE_dZ of size 10.
-
-//         - The dE_dZ vector will be used to find the values dE_dw. First it will be converted to a (1x10) matrix and multiplied
-//         with the flattend matrix of size (49,1) to generate a 49x10 size matrix dE_dw. Once we have dE_dw, we will update the 49x10 
-//         weight matrix of the dense layer. 
-
-//         - Our next step is to find the error dE_dX which we need to propogate backward, for this we will use the weight matrix dZ_dW
-//         of size (49x10) and the dE_dZ of size (10x1) matrix we found above. This will generate a 2D matrix of size (49x1) which we will
-//         convert to a shape of 7x7 that will be sent backward to the max-pooling layer.
-
 void dense_weight_init(){
     // initialize values for the 49x10 sized weight matrix
     FILE *file;
@@ -344,6 +333,28 @@ void dense_weight_init(){
 
     // Close the file
     fclose(file);
+
+    file = fopen("denseBias.txt", "r");
+
+    if (file == NULL) {
+        printf("Error opening the file.\n");
+        exit(1);
+    }
+
+    for (int i = 0; i < 10; ++i) {
+        if (fscanf(file, "%f", &bias_vector[i]) != 1) {
+            printf("Error reading from file.\n");
+            fclose(file);
+            exit(1);
+        }
+    }
+
+    printf("\n\n\t\t****************************************** BIAS VECTOR VALUES ******************************************\n");
+    // Read numbers from the file
+    for (int i = 0; i < 10; ++i) {
+        printf("%10f ", bias_vector[i]);
+    }
+    printf("\n");
 }
 
 void dense_forward(){
@@ -378,7 +389,7 @@ void dense_forward(){
 
     for(int i = 0; i < 1; i++){
         for(int j = 0; j < 10; j++){
-            dense_logits[j] = logits.elements[i][j];
+            dense_logits[j] = logits.elements[i][j] + bias_vector[j];
         }
     }
 
@@ -426,4 +437,14 @@ int forward(struct Image img){
     }
 
     return accuracy;
+}
+
+void shuffle_images(int length) {
+    srand(time(NULL));
+    for (int i = length - 1; i >= 0; i--) {
+        int j = rand() % (i + 1);
+        struct Image temp = image[i];
+        image[i] = image[j];
+        image[j] = temp;
+    }
 }
