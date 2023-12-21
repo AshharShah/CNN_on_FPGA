@@ -6,6 +6,10 @@ ver:
 	iverilog -o ./vvp/image_tb.vvp ./image_tb.v
 	vvp ./vvp/image_tb.vvp
 
+cc:
+	iverilog -o ./vvp/conv.vvp ./conv.v
+	vvp ./vvp/conv.vvp
+
 conv:
 	iverilog -o ./vvp/conv_tb.vvp ./conv_tb.v
 	vvp ./vvp/conv_tb.vvp
