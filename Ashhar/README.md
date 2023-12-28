@@ -71,3 +71,4 @@ Coded a Cat and Dog CNN classifier.
     respective error's and summing them together. Then we update the values in the kernel with the new one.
 
     9) Tested the CNN on a single image and validated if the loss decreases and the number is correctly classified. 
+ 
