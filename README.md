@@ -46,7 +46,11 @@ and can barely be the filled with the energy and cost expensive GPUs.
 
 We are senior year undergraduate Computer Science students from [GIKI - Ghulam Ishaq Khan Institute](https://giki.edu.pk), and this is our Senior Design Project.
 
--   Mentor: [Dr. Muhammad Taj](https://github.com/tajkhan)
+Members:  
 -   [Hasaan Noor](https://github.com/hasaannoor)
 -   [Ashhar Shah](https://github.com/ashharshah)
 -   [Khizar Ali Shah](https://github.com/khizaralishah1)
+
+Mentors:
+-   [Yasir Javed (Renzym)](https://renzym.com/)
+-   [Taj Muhammad Khan (GIKI)](https://github.com/tajkhan)  
