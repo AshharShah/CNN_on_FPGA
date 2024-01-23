@@ -44,6 +44,8 @@ void dense_backward(float);
 
 // an array of images which represents our trainging data
 struct Image image[num_of_train_images];
+struct Image_Fixed image_fixed[num_of_train_images];
+void image_to_Fixed();
 
 // objects required by the convolutional layer
 int filter[3][3]; // this is a 2D kernel of size 3x3 which is used to perform convolution operation
@@ -65,18 +67,9 @@ int forward(struct Image);
 void backward(struct Image);
 void shuffle_images(int num_imgs);
 
-int floatToQ16_8(float value) {
-    // Scaling factor (2^8 for Q16.8)
-    float scale = 256.0;
-
-    // Scale the input value
-    float scaledValue = value * scale;
-
-    // Round to the nearest integer
-    int result = (int)(scaledValue + 0.5);
-
-    return result;
-}
+#define N 8
+#define M 16
+int floatToQ(float);
 
 int main(){
 
@@ -91,6 +84,25 @@ int main(){
 
     // initialize the weights for the dense layer
     dense_weight_init();
+
+    // convert the recived images to fixed point
+    image_to_Fixed();
+
+    printf("\n\n\t\t\t\t\t\t\t\t******************* Initial Image *******************\n\n");
+    for(int i = 0; i < 30; i++){
+        for(int j =-0; j < 30; j++){
+            printf(" %5d ", (int)( image[1].image_array[i][j] * 255 * 255));
+        }
+        printf("\n");
+    }
+
+    printf("\n\n\t\t\t\t\t\t\t\t******************* Initial Image Fixed Point *******************\n\n");
+    for(int i = 0; i < 30; i++){
+        for(int j =-0; j < 30; j++){
+            printf(" %5d ", (int)( image_fixed[1].image_array[i][j]));
+        }
+        printf("\n");
+    }
 
     // int total_acc = 0;
     // int total_loss = 0;
@@ -124,6 +136,30 @@ int main(){
     // return 0;
 }
 
+int floatToQ(float value) {
+    // Scaling factor (2^8 for Q16.8)
+    float scale = (int)pow(2,M);
+    // Scale the input value
+    float scaledValue = value * scale;
+
+    // Round to the nearest integer
+    int result = (int)(scaledValue + 0.5);
+
+    return result;
+}
+
+void image_to_Fixed(){
+    for(int current = 0; current < num_of_train_images; current++){
+        for(int i = 0; i < 30; i++){
+            for(int j = 0; j < 30; j++){
+                image_fixed[current].image_array[i][j] = floatToQ(image[current].image_array[i][j]);
+                image_fixed[current].height = image[current].height;
+                image_fixed[current].width = image[current].width;
+                image_fixed[current].target = image[current].target;
+            }
+        }
+    }
+}
 
 
 // THESE ARE THE FUNCTION THAT ARE USED BY THE CONVOLUTIONAL LAYER:
@@ -162,7 +198,7 @@ void filter_init(){
                 fclose(file);
                 exit(1);
             }
-            filter[i][j] = floatToQ16_8(temp);
+            filter[i][j] = floatToQ(temp);
         }
     }
 
@@ -170,7 +206,7 @@ void filter_init(){
     // Read numbers from the file
     for (int i = 0; i < 3; ++i) {
         for (int j = 0; j < 3; ++j) {
-            printf("%d  ", filter[i][j]);
+            printf("%10d  ", filter[i][j]);
         }
         printf("\n");
     }
@@ -292,7 +328,7 @@ void dense_weight_init(){
                 fclose(file);
                 exit(1);
             }
-            dense_weights[i][j] = floatToQ16_8(temp);
+            dense_weights[i][j] = floatToQ(temp);
         }
     }
 
@@ -300,7 +336,7 @@ void dense_weight_init(){
     // Read numbers from the file
     for (int i = 0; i < 169; ++i) {
         for (int j = 0; j < 10; ++j) {
-            printf("%5d  ", dense_weights[i][j]);
+            printf("%10d  ", dense_weights[i][j]);
         }
         printf("\n");
     }
@@ -323,13 +359,13 @@ void dense_weight_init(){
                 fclose(file);
                 exit(1);
             }
-            bias_vector[i] = floatToQ16_8(temp);
+            bias_vector[i] = floatToQ(temp);
     }
 
     printf("\n\n\t\t****************************************** BIAS VECTOR VALUES ******************************************\n");
     // Read numbers from the file
     for (int i = 0; i < 10; ++i) {
-        printf("%5d  ", bias_vector[i]);
+        printf("%10d  ", bias_vector[i]);
     }
     printf("\n");
 }

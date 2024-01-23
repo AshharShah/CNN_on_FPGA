@@ -12,3 +12,11 @@ struct Patch{
     int height;
     int width;
 };
+
+struct Image_Fixed{
+    // Declare a 2D array to store the image data.
+    int image_array[28][28];
+    int height;
+    int width;
+    int target;
+};
