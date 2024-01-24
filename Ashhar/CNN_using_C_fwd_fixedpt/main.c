@@ -26,7 +26,7 @@ extern void get_images(int per_num, struct Image* image);
 
 // functions for the convolutional layer
 void filter_init();
-void convolution_forward(struct Image);
+void convolution_forward(struct Image_Fixed);
 void convolution_backward(struct Image, float);
 
 // functions for the maxpooling layer
@@ -48,8 +48,8 @@ struct Image_Fixed image_fixed[num_of_train_images];
 void image_to_Fixed();
 
 // objects required by the convolutional layer
-int filter[3][3]; // this is a 2D kernel of size 3x3 which is used to perform convolution operation
-float conv_output[26][26] = {0};    // this will contain the feature map of size 14x14 after convolution operation is applied
+int filter[3][3] = {0}; // this is a 2D kernel of size 3x3 which is used to perform convolution operation
+int conv_output[26][26] = {0};    // this will contain the feature map of size 14x14 after convolution operation is applied
 
 // objects required by the maxpooling layer
 float maxpool_output[13][13] = {0};   // this will represent the reduced feature map after the convolution operation is performed
@@ -63,13 +63,18 @@ int bias_vector[10] = {0};
 float dense_logits[10] = {0};   // this 1D array will hold the values of the calculation z = w(t) * x
 float softmax_vectors[10] = {0};    // the probability vector after we have applied the softmax activation function
 
-int forward(struct Image);
+int forward(struct Image_Fixed);
 void backward(struct Image);
 void shuffle_images(int num_imgs);
 
+// variables that define the Qn.m format that we have selected for computation
 #define N 8
 #define M 16
+
+// functions that perform Q conversions and multiplication/addition operations on two nunmbers in Q formats
 int floatToQ(float);
+int QAdd(int, int);
+int QMult(int, int);
 
 int main(){
 
@@ -89,19 +94,30 @@ int main(){
     image_to_Fixed();
 
     printf("\n\n\t\t\t\t\t\t\t\t******************* Initial Image *******************\n\n");
-    for(int i = 0; i < 30; i++){
-        for(int j =-0; j < 30; j++){
-            printf(" %5d ", (int)( image[1].image_array[i][j] * 255 * 255));
+    for(int i = 0; i < 28; i++){
+        for(int j =-0; j < 28; j++){
+            printf(" %10lf ", (double)( image[1].image_array[i][j]));
         }
         printf("\n");
     }
 
     printf("\n\n\t\t\t\t\t\t\t\t******************* Initial Image Fixed Point *******************\n\n");
-    for(int i = 0; i < 30; i++){
-        for(int j =-0; j < 30; j++){
+    for(int i = 0; i < 28; i++){
+        for(int j =-0; j < 28; j++){
             printf(" %5d ", (int)( image_fixed[1].image_array[i][j]));
         }
         printf("\n");
+    }
+
+    convolution_forward(image_fixed[1]);
+
+    printf("\n\n\t\t****************************************** CONVOLUTION VALUES ******************************************\n");
+    // Read numbers from the file
+    for (int i = 0; i < 26; ++i) {
+        for (int j = 0; j < 26; ++j) {
+            printf("%10d  ", conv_output[i][j]);
+        }
+        printf("\n\n");
     }
 
     // int total_acc = 0;
@@ -137,21 +153,14 @@ int main(){
 }
 
 int floatToQ(float value) {
-    // Scaling factor (2^8 for Q16.8)
-    float scale = (int)pow(2,M);
-    // Scale the input value
-    float scaledValue = value * scale;
-
-    // Round to the nearest integer
-    int result = (int)(scaledValue + 0.5);
-
+    int result = value * (1 << M);
     return result;
 }
 
 void image_to_Fixed(){
     for(int current = 0; current < num_of_train_images; current++){
-        for(int i = 0; i < 30; i++){
-            for(int j = 0; j < 30; j++){
+        for(int i = 0; i < 28; i++){
+            for(int j = 0; j < 28; j++){
                 image_fixed[current].image_array[i][j] = floatToQ(image[current].image_array[i][j]);
                 image_fixed[current].height = image[current].height;
                 image_fixed[current].width = image[current].width;
@@ -160,6 +169,59 @@ void image_to_Fixed(){
         }
     }
 }
+
+// Q8.16 multiplication function
+int QMult(int a, int b) {
+
+    int Q8_16_SHIFT = M;
+    int Q8_16_ONE = (1 << Q8_16_SHIFT);
+
+    // Perform multiplication
+    int result = (int)a * b;
+
+    // Round the result
+    result = (result + Q8_16_ONE / 2) >> Q8_16_SHIFT;
+
+    // // Ensure the result is within the valid range for Q8.16 format
+    // if (result > INT32_MAX) {
+    //     return INT32_MAX;
+    // } else if (result < INT32_MIN) {
+    //     return INT32_MIN;
+    // }
+
+    return (int)result;
+}
+
+int QAdd(int num1, int num2) {
+    // Define masks for integer and fractional parts
+    int int_mask = (1 << N) - 1;    // Mask for N bits
+    int frac_mask = (1 << M) - 1;   // Mask for M bits
+
+    // Extract integer and fractional parts
+    int int_part1 = (num1 >> M) & int_mask;  // Right shift to get integer part
+    int frac_part1 = num1 & frac_mask;       // Mask to get fractional part
+
+    int int_part2 = (num2 >> M) & int_mask;
+    int frac_part2 = num2 & frac_mask;
+
+    // Add integer parts
+    int sum_int = int_part1 + int_part2;
+
+    // Add fractional parts
+    int sum_frac = frac_part1 + frac_part2;
+
+    // Check for overflow in fractional part
+    if (sum_frac > frac_mask) {
+        sum_int += 1;          // Carry overflow to integer part
+        sum_frac -= (1 << M);  // Subtract 2^M to get correct fractional part
+    }
+
+    // Combine integer and fractional parts
+    int result = ((sum_int & int_mask) << M) | (sum_frac & frac_mask);
+
+    return result;
+}
+
 
 
 // THESE ARE THE FUNCTION THAT ARE USED BY THE CONVOLUTIONAL LAYER:
@@ -215,23 +277,25 @@ void filter_init(){
     fclose(file);
 }
 
-// // function to perform forward propogation on the input image that is passed as an argument
-// void convolution_forward(struct Image img){
-//     // Perform convolution with stride 1
-//     for (int i = 0; i < 26; ++i) {
-//         for (int j = 0; j < 26; ++j) {
-//             // find the overall sum of the 3x3 patch
-//             float sum = 0;
-//             for (int k = 0; k < 3; ++k) {
-//                 for (int l = 0; l < 3; ++l) {
-//                     sum += img.image_array[i + k][j + l] * filter[k][l];
-//                 }
-//             }
-//             // update the output 26x26 matrix with the sum of the designated patch
-//             conv_output[i][j] = sum; // Update the output feature map
-//         }
-//     }
-// }
+// function to perform forward propogation on the input image that is passed as an argument
+void convolution_forward(struct Image_Fixed img){
+    // Perform convolution with stride 1
+    for (int i = 0; i < 26; ++i) {
+        for (int j = 0; j < 26; ++j) {
+            // find the overall sum of the 3x3 patch
+            int sum = 0;
+            for (int k = 0; k < 3; ++k) {
+                for (int l = 0; l < 3; ++l) {
+                    // int test = QMult(img.image_array[i + k][j + l], filter[k][l]);
+                    // printf("%d x %d : %d \n",img.image_array[i + k][j + l], filter[k][l], test);
+                    sum = QAdd(QMult(img.image_array[i + k][j + l], filter[k][l]) , sum);
+                }
+            }
+            // update the output 26x26 matrix with the sum of the designated patch
+            conv_output[i][j] = sum; // Update the output feature map
+        }
+    }
+}
 
 // // THESE ARE THE FUNCTIONS THAT ARE USED BY THE MAXPOOLING LAYER:
 
