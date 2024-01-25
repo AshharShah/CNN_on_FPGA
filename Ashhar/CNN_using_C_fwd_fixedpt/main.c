@@ -19,6 +19,10 @@ float loss = 0;
 extern void Matrix_Init(struct Matrix *x, int r, int c);
 extern void print_matrix(struct Matrix *x, int r, int c);
 extern struct Matrix multiply_matrices(struct Matrix *matrix1, struct Matrix *matrix2);
+// functions that perform Q conversions and multiplication/addition operations on two nunmbers in Q formats
+extern int floatToQ(float);
+extern int QAdd(int, int);
+extern int QMult(int, int);
 
 // function that will retrieve the images that are to be processed
 extern void get_images(int per_num, struct Image* image);
@@ -27,11 +31,9 @@ extern void get_images(int per_num, struct Image* image);
 // functions for the convolutional layer
 void filter_init();
 void convolution_forward(struct Image_Fixed);
-void convolution_backward(struct Image, float);
 
 // functions for the maxpooling layer
 void maxpool_forward();
-void maxpool_backward(float);
 
 // functions for the flatten layer
 void flatten_forward();
@@ -40,7 +42,6 @@ void flatten_forward();
 void dense_weight_init();
 void dense_forward();
 int predict();
-void dense_backward(float);
 
 // an array of images which represents our trainging data
 struct Image image[num_of_train_images];
@@ -52,29 +53,19 @@ int filter[3][3] = {0}; // this is a 2D kernel of size 3x3 which is used to perf
 int conv_output[26][26] = {0};    // this will contain the feature map of size 14x14 after convolution operation is applied
 
 // objects required by the maxpooling layer
-float maxpool_output[13][13] = {0};   // this will represent the reduced feature map after the convolution operation is performed
+int maxpool_output[13][13] = {0};   // this will represent the reduced feature map after the convolution operation is performed
 
 // objects required by the flatten layer
-float flatten_output[13*13] = {0};    // this is a 1D array of size 49 which will hold the reduced feature map in a flattened form
+int flatten_output[13*13] = {0};    // this is a 1D array of size 49 which will hold the reduced feature map in a flattened form
 
 // objects required by the dense layer
 int dense_weights[169][10] = {0};  // this represents the weights for the 10 classes of which we are to predict
 int bias_vector[10] = {0};
-float dense_logits[10] = {0};   // this 1D array will hold the values of the calculation z = w(t) * x
+int dense_logits[10] = {0};   // this 1D array will hold the values of the calculation z = w(t) * x
 float softmax_vectors[10] = {0};    // the probability vector after we have applied the softmax activation function
 
 int forward(struct Image_Fixed);
-void backward(struct Image);
 void shuffle_images(int num_imgs);
-
-// variables that define the Qn.m format that we have selected for computation
-#define N 8
-#define M 16
-
-// functions that perform Q conversions and multiplication/addition operations on two nunmbers in Q formats
-int floatToQ(float);
-int QAdd(int, int);
-int QMult(int, int);
 
 int main(){
 
@@ -82,7 +73,7 @@ int main(){
     get_images(num_of_train_images, image);
 
     // shuffle the images in the dataset
-    shuffle_images(num_of_train_images);
+    // shuffle_images(num_of_train_images);
     
     // initialize the filter for the convolution layer
     filter_init();
@@ -115,10 +106,39 @@ int main(){
     // Read numbers from the file
     for (int i = 0; i < 26; ++i) {
         for (int j = 0; j < 26; ++j) {
-            printf("%10d  ", conv_output[i][j]);
+            printf("%5d  ", conv_output[i][j]);
         }
         printf("\n\n");
     }
+
+    maxpool_forward();
+
+    printf("\n\n\t\t****************************************** MAXPOOL VALUES ******************************************\n");
+    // Read numbers from the file
+    for (int i = 0; i < 13; ++i) {
+        for (int j = 0; j < 13; ++j) {
+            printf("%10d  ", maxpool_output[i][j]);
+        }
+        printf("\n\n");
+    }
+
+    flatten_forward();
+
+    printf("\n\n\t\t****************************************** FLATTEN VALUES ******************************************\n");
+    // Read numbers from the file
+    for (int i = 0; i < 169; ++i) {
+        printf("%10d\n", flatten_output[i]);
+    }
+    printf("\n\n");
+
+    dense_forward();
+
+    printf("\n\n\t\t****************************************** DENSE LOGIT VALUES ******************************************\n");
+    // Read numbers from the file
+    for (int i = 0; i < 10; ++i) {
+        printf("%10d\n", dense_logits[i]);
+    }
+    printf("\n\n");
 
     // int total_acc = 0;
     // int total_loss = 0;
@@ -152,11 +172,6 @@ int main(){
     // return 0;
 }
 
-int floatToQ(float value) {
-    int result = value * (1 << M);
-    return result;
-}
-
 void image_to_Fixed(){
     for(int current = 0; current < num_of_train_images; current++){
         for(int i = 0; i < 28; i++){
@@ -169,60 +184,6 @@ void image_to_Fixed(){
         }
     }
 }
-
-// Q8.16 multiplication function
-int QMult(int a, int b) {
-
-    int Q8_16_SHIFT = M;
-    int Q8_16_ONE = (1 << Q8_16_SHIFT);
-
-    // Perform multiplication
-    int result = (int)a * b;
-
-    // Round the result
-    result = (result + Q8_16_ONE / 2) >> Q8_16_SHIFT;
-
-    // // Ensure the result is within the valid range for Q8.16 format
-    // if (result > INT32_MAX) {
-    //     return INT32_MAX;
-    // } else if (result < INT32_MIN) {
-    //     return INT32_MIN;
-    // }
-
-    return (int)result;
-}
-
-int QAdd(int num1, int num2) {
-    // Define masks for integer and fractional parts
-    int int_mask = (1 << N) - 1;    // Mask for N bits
-    int frac_mask = (1 << M) - 1;   // Mask for M bits
-
-    // Extract integer and fractional parts
-    int int_part1 = (num1 >> M) & int_mask;  // Right shift to get integer part
-    int frac_part1 = num1 & frac_mask;       // Mask to get fractional part
-
-    int int_part2 = (num2 >> M) & int_mask;
-    int frac_part2 = num2 & frac_mask;
-
-    // Add integer parts
-    int sum_int = int_part1 + int_part2;
-
-    // Add fractional parts
-    int sum_frac = frac_part1 + frac_part2;
-
-    // Check for overflow in fractional part
-    if (sum_frac > frac_mask) {
-        sum_int += 1;          // Carry overflow to integer part
-        sum_frac -= (1 << M);  // Subtract 2^M to get correct fractional part
-    }
-
-    // Combine integer and fractional parts
-    int result = ((sum_int & int_mask) << M) | (sum_frac & frac_mask);
-
-    return result;
-}
-
-
 
 // THESE ARE THE FUNCTION THAT ARE USED BY THE CONVOLUTIONAL LAYER:
 
@@ -309,25 +270,25 @@ void convolution_forward(struct Image_Fixed img){
 // //         - The reduced feature map is stored in the global variable named "maxpool_output" 
 
 
-// // function to perform maxpooling forward propogation and generate a reduced feature map
-// void maxpool_forward(){
-//     // Perform max pooling operation
-//     for (int i = 0; i < 26; i += 2) {
-//         for (int j = 0; j < 26; j += 2) {
-//             // find the max value in the patch
-//             float maxVal = 0;
-//             for (int k = i; k < i + 2; k++) {
-//                 for (int l = j; l < j + 2; l++) {
-//                     if (conv_output[k][l] > maxVal) {
-//                         maxVal = conv_output[k][l];
-//                     }
-//                 }
-//             }
-//             // insert the max value at the respective index
-//             maxpool_output[i / 2][j / 2] = maxVal;
-//         }
-//     }
-// }
+// function to perform maxpooling forward propogation and generate a reduced feature map
+void maxpool_forward(){
+    // Perform max pooling operation
+    for (int i = 0; i < 26; i += 2) {
+        for (int j = 0; j < 26; j += 2) {
+            // find the max value in the patch
+            int maxVal = 0;
+            for (int k = i; k < i + 2; k++) {
+                for (int l = j; l < j + 2; l++) {
+                    if (conv_output[k][l] > maxVal) {
+                        maxVal = conv_output[k][l];
+                    }
+                }
+            }
+            // insert the max value at the respective index
+            maxpool_output[i / 2][j / 2] = maxVal;
+        }
+    }
+}
 
 // // THESE ARE THE FUNCTIONS THAT ARE USED BY THE FLATTEN LAYER
 
@@ -339,15 +300,15 @@ void convolution_forward(struct Image_Fixed img){
 // //         - This function is used inside the dense layer and not as a stand-alone function.
 
 
-// void flatten_forward(){
-//     int index = 0;
-//     for(int i = 0; i < 13; i++){
-//         for(int j = 0; j < 13; j++){
-//             flatten_output[index] = maxpool_output[i][j];
-//             index++;
-//         }
-//     }
-// }
+void flatten_forward(){
+    int index = 0;
+    for(int i = 0; i < 13; i++){
+        for(int j = 0; j < 13; j++){
+            flatten_output[index] = maxpool_output[i][j];
+            index++;
+        }
+    }
+}
 
 // // THESE ARE THE FUNCTIONS THAT ARE USED BY THE DENSE LAYER
 
@@ -434,53 +395,57 @@ void dense_weight_init(){
     printf("\n");
 }
 
-// void dense_forward(){
+void dense_forward(){
 
-//     // convert the 2D reduced feature map to a 1D feature map
-//     flatten_forward();
+    // convert the 2D reduced feature map to a 1D feature map
+    flatten_forward();
 
-//     // create matrix objects that will be used to perform multiplication on the two matrices
-//     struct Matrix flatten_transpose;
-//     struct Matrix weights;
+    // create matrix objects that will be used to perform multiplication on the two matrices
+    struct Matrix flatten_transpose;
+    struct Matrix weights;
 
-//     // initialize both of the matrices
-//     Matrix_Init(&flatten_transpose, 1, 169);
-//     Matrix_Init(&weights, 169, 10);
+    // initialize both of the matrices
+    Matrix_Init(&flatten_transpose, 1, 169);
+    Matrix_Init(&weights, 169, 10);
 
-//     // copy the flattened image and take its transpose to allow multiplication of the two
-//     for(int i = 0; i < 1; i++){
-//         for(int j = 0; j < 169; j++){
-//             flatten_transpose.elements[i][j] = flatten_output[j];
-//         }
-//     }
+    // copy the flattened image and take its transpose to allow multiplication of the two
+    for(int i = 0; i < 1; i++){
+        for(int j = 0; j < 169; j++){
+            flatten_transpose.elements[i][j] = flatten_output[j];
+        }
+    }
 
-//     // perform the dense layer operation y = w{t} * x to retrieve the logits
-//     for(int i = 0; i < 169; i++){
-//         for(int j = 0; j < 10; j++){
-//             weights.elements[i][j] = dense_weights[i][j];
-//         }
-//     }
-    
-//     // display the logits to the user
-//     struct Matrix logits = multiply_matrices(&flatten_transpose, &weights);
+    // perform the dense layer operation y = w{t} * x to retrieve the logits
+    for(int i = 0; i < 169; i++){
+        for(int j = 0; j < 10; j++){
+            weights.elements[i][j] = dense_weights[i][j];
+        }
+    }
 
-//     for(int i = 0; i < 1; i++){
-//         for(int j = 0; j < 10; j++){
-//             dense_logits[j] = logits.elements[i][j] + bias_vector[j];
-//         }
-//     }
+    print_matrix(&flatten_transpose, 1, 169);
+    print_matrix(&weights, 169, 10);
 
-//     // now we will apply the softmax activation function 
-//     float deno = 0;
-//     for(int i = 0; i < 10; i++){
-//         deno += exp(dense_logits[i]);
-//     }
+    // display the logits to the user
+    struct Matrix logits = multiply_matrices(&flatten_transpose, &weights);
 
-//     for(int i = 0; i < 10; i++){
-//         softmax_vectors[i] = exp(dense_logits[i]) / deno;
-//     }
+    for(int i = 0; i < 1; i++){
+        for(int j = 0; j < 10; j++){
+            dense_logits[j] = QAdd(logits.elements[i][j], bias_vector[j]);
+            // dense_logits[j] = logits.elements[i][j] + bias_vector[j];
+        }
+    }
 
-// }
+    // now we will apply the softmax activation function 
+    float deno = 0;
+    for(int i = 0; i < 10; i++){
+        deno += exp(dense_logits[i]);
+    }
+
+    for(int i = 0; i < 10; i++){
+        softmax_vectors[i] = exp(dense_logits[i]) / deno;
+    }
+
+}
 
 // // function to make a prediction by retrieving the index with the max value of the softmax probability vector
 // int predict(){
