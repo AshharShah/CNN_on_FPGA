@@ -2,10 +2,11 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include "matrix.h"
+#include <stdint.h>
 
 // variables that define the Qn.m format that we have selected for computation
-#define N 8
-#define M 16
+#define N 28
+#define M 14
 
 // functions that perform Q conversions and multiplication/addition operations on two nunmbers in Q formats
 int floatToQ(float);
@@ -29,12 +30,12 @@ int QMult(int a, int b) {
     // Round the result
     result = (result + Q8_16_ONE / 2) >> Q8_16_SHIFT;
 
-    // // Ensure the result is within the valid range for Q8.16 format
-    // if (result > INT32_MAX) {
-    //     return INT32_MAX;
-    // } else if (result < INT32_MIN) {
-    //     return INT32_MIN;
-    // }
+    // Ensure the result is within the valid range for Q8.16 format
+    if (result > INT32_MAX) {
+        return INT32_MAX;
+    } else if (result < INT32_MIN) {
+        return INT32_MIN;
+    }
 
     return (int)result;
 }
@@ -134,20 +135,17 @@ struct Matrix multiply_matrices(struct Matrix *matrix1, struct Matrix *matrix2) 
 
   Matrix_Init(&result, matrix1->rows, matrix2->columns);
 
-  printf("\n\n MATRIX MULTIPLICATION \n\n");
-
   for (int i = 0; i < matrix1->rows; i++) {
     for (int j = 0; j < matrix2->columns; j++) {
       result.elements[i][j] = 0;
       for (int k = 0; k < matrix1->columns; k++) {
 
-        int test = QMult(matrix1->elements[i][k], matrix2->elements[k][j]);
-        printf("%d x %d : %d \n",matrix1->elements[i][k], matrix2->elements[k][j], test);
+        // int test = QMult(matrix1->elements[i][k], matrix2->elements[k][j]);
+        // printf("%d x %d : %d \n",matrix1->elements[i][k], matrix2->elements[k][j], test);
 
-        int test2 = QAdd(test, result.elements[i][j]);
-        printf("%d + %d : %d \n",test, result.elements[i][j], test2);
-        printf("\n\n");
-
+        // int test2 = QAdd(test, result.elements[i][j]);
+        // printf("%d + %d : %d \n",test, result.elements[i][j], test2);
+        // printf("\n\n");
 
         result.elements[i][j] = QAdd(result.elements[i][j], QMult(matrix1->elements[i][k], matrix2->elements[k][j]));
         // result.elements[i][j] += matrix1->elements[i][k] * matrix2->elements[k][j];

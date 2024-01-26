@@ -136,7 +136,7 @@ int main(){
     printf("\n\n\t\t****************************************** DENSE LOGIT VALUES ******************************************\n");
     // Read numbers from the file
     for (int i = 0; i < 10; ++i) {
-        printf("%10d\n", dense_logits[i]);
+        printf("%10d -> %10f\n", dense_logits[i], (float)(dense_logits[i] * (1.0 / (1 << 14))));
     }
     printf("\n\n");
 
@@ -421,9 +421,6 @@ void dense_forward(){
             weights.elements[i][j] = dense_weights[i][j];
         }
     }
-
-    print_matrix(&flatten_transpose, 1, 169);
-    print_matrix(&weights, 169, 10);
 
     // display the logits to the user
     struct Matrix logits = multiply_matrices(&flatten_transpose, &weights);
