@@ -13,7 +13,7 @@ float alpha = 0.025;
 float loss = 0;
 
 // number should be divisible by 10
-#define num_of_train_images 10
+#define num_of_train_images 100
 
 // these are the functions that we will use for matrix related operations
 extern void Matrix_Init(struct Matrix *x, int r, int c);
@@ -62,12 +62,13 @@ int flatten_output[13*13] = {0};    // this is a 1D array of size 49 which will 
 int dense_weights[169][10] = {0};  // this represents the weights for the 10 classes of which we are to predict
 int bias_vector[10] = {0};
 int dense_logits[10] = {0};   // this 1D array will hold the values of the calculation z = w(t) * x
-float softmax_vectors[10] = {0};    // the probability vector after we have applied the softmax activation function
 
 int forward(struct Image_Fixed);
 void shuffle_images(int num_imgs);
 
 int main(){
+
+    int sel = 45;
 
     // initialize the images for the training dataset
     get_images(num_of_train_images, image);
@@ -87,7 +88,7 @@ int main(){
     printf("\n\n\t\t\t\t\t\t\t\t******************* Initial Image *******************\n\n");
     for(int i = 0; i < 28; i++){
         for(int j =-0; j < 28; j++){
-            printf(" %10lf ", (double)( image[1].image_array[i][j]));
+            printf(" %10lf ", (double)( image[sel].image_array[i][j]));
         }
         printf("\n");
     }
@@ -95,12 +96,12 @@ int main(){
     printf("\n\n\t\t\t\t\t\t\t\t******************* Initial Image Fixed Point *******************\n\n");
     for(int i = 0; i < 28; i++){
         for(int j =-0; j < 28; j++){
-            printf(" %5d ", (int)( image_fixed[1].image_array[i][j]));
+            printf(" %5d ", (int)( image_fixed[sel].image_array[i][j]));
         }
         printf("\n");
     }
 
-    convolution_forward(image_fixed[1]);
+    convolution_forward(image_fixed[sel]);
 
     printf("\n\n\t\t****************************************** CONVOLUTION VALUES ******************************************\n");
     // Read numbers from the file
@@ -139,6 +140,9 @@ int main(){
         printf("%10d -> %10f\n", dense_logits[i], (float)(dense_logits[i] * (1.0 / (1 << 14))));
     }
     printf("\n\n");
+    
+    printf("\n\t\t\t IMAGE TARGET: %d | Prediction: %d\n\n", image_fixed[sel].target, predict());
+
 
     // int total_acc = 0;
     // int total_loss = 0;
@@ -431,32 +435,21 @@ void dense_forward(){
             // dense_logits[j] = logits.elements[i][j] + bias_vector[j];
         }
     }
-
-    // now we will apply the softmax activation function 
-    float deno = 0;
-    for(int i = 0; i < 10; i++){
-        deno += exp(dense_logits[i]);
-    }
-
-    for(int i = 0; i < 10; i++){
-        softmax_vectors[i] = exp(dense_logits[i]) / deno;
-    }
-
 }
 
-// // function to make a prediction by retrieving the index with the max value of the softmax probability vector
-// int predict(){
-//     int max_index = 0;
-//     float max_val = softmax_vectors[0];
+// function to make a prediction by retrieving the index with the max value of the softmax probability vector
+int predict(){
+    int max_index = 0;
+    int max_val = dense_logits[0];
 
-//     for(int i = 1; i < 10; i++){
-//         if(softmax_vectors[i] > max_val){
-//             max_val = softmax_vectors[i];
-//             max_index = i;
-//         }
-//     }
-//     return max_index;
-// }
+    for(int i = 1; i < 10; i++){
+        if(dense_logits[i] > max_val){
+            max_val = dense_logits[i];
+            max_index = i;
+        }
+    }
+    return max_index;
+}
 
 // int forward(struct Image img){
 
