@@ -1,0 +1,1 @@
+Used accuracy and loss data from both CNNS (Keras and made from scratch) to visualise data.

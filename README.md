@@ -1,3 +1,4 @@
+![Alt text](./Hassan/Final-Poster.jpg)
 # FPGA-based Hardware Accelerator of Convolutional Neural Network
 
 ![Contributors](https://img.shields.io/github/contributors/ashharshah/CNN_on_FPGA?style=plastic)
