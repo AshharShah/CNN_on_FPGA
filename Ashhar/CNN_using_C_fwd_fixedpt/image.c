@@ -49,13 +49,13 @@ void read_images_from_folder(const char* folder_path, int per_class, int target_
 
         for (int j = 0; j < 28; j++) {
             for (int k = 0; k < 28; k++) {
-                image[*i].image_array[j+1][k+1] = 0;
+                image[*i].image_array[j][k] = 0;
             }
         }
 
         for (int j = 0; j < 28; j++) {
             for (int k = 0; k < 28; k++) {
-                image[*i].image_array[j+1][k+1] = (img[j][k] / (float)255) / (float)255;
+                image[*i].image_array[j][k] = (img[j][k] / (float)255) / (float)255;
             }
         }
         

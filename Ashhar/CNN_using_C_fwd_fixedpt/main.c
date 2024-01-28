@@ -8,17 +8,14 @@
 #include <time.h>
 #include <math.h>
 
-float alpha = 0.025;
-
-float loss = 0;
-
 // number should be divisible by 10
-#define num_of_train_images 100
+#define num_of_train_images 1000
 
 // these are the functions that we will use for matrix related operations
 extern void Matrix_Init(struct Matrix *x, int r, int c);
 extern void print_matrix(struct Matrix *x, int r, int c);
 extern struct Matrix multiply_matrices(struct Matrix *matrix1, struct Matrix *matrix2);
+
 // functions that perform Q conversions and multiplication/addition operations on two nunmbers in Q formats
 extern int floatToQ(float);
 extern int QAdd(int, int);
@@ -26,6 +23,8 @@ extern int QMult(int, int);
 
 // function that will retrieve the images that are to be processed
 extern void get_images(int per_num, struct Image* image);
+void image_to_Fixed();  // this function converts the recieved images to fixed point notation
+void shuffle_images(int num_imgs); // this function is used to shuffle the images in the image container
 
 
 // functions for the convolutional layer
@@ -43,10 +42,11 @@ void dense_weight_init();
 void dense_forward();
 int predict();
 
+int forward(struct Image_Fixed); // this function is used to perform the forward progpogation by calling all forward functions
+
 // an array of images which represents our trainging data
 struct Image image[num_of_train_images];
 struct Image_Fixed image_fixed[num_of_train_images];
-void image_to_Fixed();
 
 // objects required by the convolutional layer
 int filter[3][3] = {0}; // this is a 2D kernel of size 3x3 which is used to perform convolution operation
@@ -63,18 +63,13 @@ int dense_weights[169][10] = {0};  // this represents the weights for the 10 cla
 int bias_vector[10] = {0};
 int dense_logits[10] = {0};   // this 1D array will hold the values of the calculation z = w(t) * x
 
-int forward(struct Image_Fixed);
-void shuffle_images(int num_imgs);
-
 int main(){
-
-    int sel = 45;
 
     // initialize the images for the training dataset
     get_images(num_of_train_images, image);
 
     // shuffle the images in the dataset
-    // shuffle_images(num_of_train_images);
+    shuffle_images(num_of_train_images);
     
     // initialize the filter for the convolution layer
     filter_init();
@@ -85,97 +80,30 @@ int main(){
     // convert the recived images to fixed point
     image_to_Fixed();
 
-    printf("\n\n\t\t\t\t\t\t\t\t******************* Initial Image *******************\n\n");
-    for(int i = 0; i < 28; i++){
-        for(int j =-0; j < 28; j++){
-            printf(" %10lf ", (double)( image[sel].image_array[i][j]));
+
+    int total_acc = 0;
+
+    for(int k = 0; k < num_of_train_images; k++){
+
+        printf("\n\n\t\t\t\t\t\t\t\t******************* Initial Image (Fixed Point Notation) *******************\n\n");
+        for(int i = 0; i < 28; i++){
+            for(int j =-0; j < 28; j++){
+                printf(" %4d ", (int)(image_fixed[k].image_array[i][j]));
+            }
+            printf("\n");
         }
-        printf("\n");
+
+        int acc = forward(image_fixed[k]);
+
+        total_acc += acc;
+
+        printf("\n\t||||||||||||||||| IMAGE TARGET: %d | Prediction: %d |||||||||||||||||\n\n", image_fixed[k].target, predict());
     }
-
-    printf("\n\n\t\t\t\t\t\t\t\t******************* Initial Image Fixed Point *******************\n\n");
-    for(int i = 0; i < 28; i++){
-        for(int j =-0; j < 28; j++){
-            printf(" %5d ", (int)( image_fixed[sel].image_array[i][j]));
-        }
-        printf("\n");
-    }
-
-    convolution_forward(image_fixed[sel]);
-
-    printf("\n\n\t\t****************************************** CONVOLUTION VALUES ******************************************\n");
-    // Read numbers from the file
-    for (int i = 0; i < 26; ++i) {
-        for (int j = 0; j < 26; ++j) {
-            printf("%5d  ", conv_output[i][j]);
-        }
-        printf("\n\n");
-    }
-
-    maxpool_forward();
-
-    printf("\n\n\t\t****************************************** MAXPOOL VALUES ******************************************\n");
-    // Read numbers from the file
-    for (int i = 0; i < 13; ++i) {
-        for (int j = 0; j < 13; ++j) {
-            printf("%10d  ", maxpool_output[i][j]);
-        }
-        printf("\n\n");
-    }
-
-    flatten_forward();
-
-    printf("\n\n\t\t****************************************** FLATTEN VALUES ******************************************\n");
-    // Read numbers from the file
-    for (int i = 0; i < 169; ++i) {
-        printf("%10d\n", flatten_output[i]);
-    }
-    printf("\n\n");
-
-    dense_forward();
-
-    printf("\n\n\t\t****************************************** DENSE LOGIT VALUES ******************************************\n");
-    // Read numbers from the file
-    for (int i = 0; i < 10; ++i) {
-        printf("%10d -> %10f\n", dense_logits[i], (float)(dense_logits[i] * (1.0 / (1 << 14))));
-    }
-    printf("\n\n");
-    
-    printf("\n\t\t\t IMAGE TARGET: %d | Prediction: %d\n\n", image_fixed[sel].target, predict());
-
-
-    // int total_acc = 0;
-    // int total_loss = 0;
-
-    // for(int k = 0; k < num_of_train_images; k++){
-
-    //     printf("\n\n\t\t\t\t\t\t\t\t******************* Initial Image *******************\n\n");
-    //     for(int i = 0; i < 30; i++){
-    //         for(int j =-0; j < 30; j++){
-    //             printf(" %4d ", (int)( image[k].image_array[i][j] * 255 * 255));
-    //         }
-    //         printf("\n");
-    //     }
-
-    //     int acc = forward(image[k]);
-
-    //     total_acc += acc;
-    //     total_loss += loss;
-
-    //     printf("\n\t||||||||||||||||| IMAGE TARGET: %d | Prediction: %d | Loss: %f |||||||||||||||||\n\n", image[k].target, predict(), loss);
-    // }
-    // printf("\nAverage Accuracy: %f\n", (float)total_acc / (float)num_of_train_images);
-    // printf("\nAverage Loss: %f\n", (float)total_loss / (float)num_of_train_images);
-
-    // // free memory utilized by the kernel
-    // for(int i = 0; i < 3; i++){
-    //     free(filter[i]);
-    // }
-    // free(filter);
-
-    // return 0;
+    printf("\nAverage Accuracy: %f\n", (float)total_acc / (float)num_of_train_images);
+    return 0;
 }
 
+// this function loops over all the floating point bytes in the recieved images and converts them into fixed point qformatted integers
 void image_to_Fixed(){
     for(int current = 0; current < num_of_train_images; current++){
         for(int i = 0; i < 28; i++){
@@ -186,6 +114,17 @@ void image_to_Fixed(){
                 image_fixed[current].target = image[current].target;
             }
         }
+    }
+}
+
+// this function is used to shuffle the images in the image vector
+void shuffle_images(int length) {
+    srand(time(NULL));
+    for (int i = length - 1; i >= 0; i--) {
+        int j = rand() % (i + 1);
+        struct Image temp = image[i];
+        image[i] = image[j];
+        image[j] = temp;
     }
 }
 
@@ -451,32 +390,20 @@ int predict(){
     return max_index;
 }
 
-// int forward(struct Image img){
+// this function takes as an arugment a single image and perform forward propogation against that image
+int forward(struct Image_Fixed img){
 
-//     int target = img.target;
+    int target = img.target;
 
-//     convolution_forward(img);  // get the feature map
-//     maxpool_forward();  // get the reduced feature map
-//     dense_forward();    // get the softmax probability vector
-
-//     // print the loss onto the console
-//     loss = -1.0 * log(softmax_vectors[target]);
+    convolution_forward(img);  // get the feature map
+    maxpool_forward();  // get the reduced feature map
+    dense_forward();    // get the softmax probability vector
     
-//     int accuracy = 0;
+    int accuracy = 0;
 
-//     if(predict() == target){
-//         accuracy = 1;
-//     }
-
-//     return accuracy;
-// }
-
-void shuffle_images(int length) {
-    srand(time(NULL));
-    for (int i = length - 1; i >= 0; i--) {
-        int j = rand() % (i + 1);
-        struct Image temp = image[i];
-        image[i] = image[j];
-        image[j] = temp;
+    if(predict() == target){
+        accuracy = 1;
     }
+
+    return accuracy;
 }
