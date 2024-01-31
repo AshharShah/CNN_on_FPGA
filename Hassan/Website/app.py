@@ -1,6 +1,11 @@
 from flask import Flask, request, render_template
 from werkzeug.utils import secure_filename
 import os
+from training import CNN_test
+# Load the shared library
+import ctypes
+
+#cnn_lib = ctypes.CDLL('C:\\Users\\Asif_\\Documents\\GitHub\\CNN_on_FPGA\\Hassan\\CNN_using_C\\libmymodel.dll')  # Use libmymodel.dll on Windows
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'uploads/'
